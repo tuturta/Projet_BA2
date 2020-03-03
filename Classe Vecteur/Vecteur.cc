@@ -10,7 +10,7 @@ void Vecteur::set_coord(size_t position, double valeur){ // A FAIRE : Exception 
 	if (position<dim()) {
 		coordonnees[position]=valeur;
 	}else{
-		cout << "la dimension du vecteur est trop petite. La coordonnee entree n existe pas"<<endl;
+		cout << "la dimension du vecteur est trop petite. La coordonnee entrée n existe pas"<<endl;
 	}
 }
 void Vecteur::affiche() const {
