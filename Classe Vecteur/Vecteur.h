@@ -6,7 +6,7 @@ class Vecteur
 public:
 //Constructeur
 	Vecteur(std::vector<double> coordonnees): coordonnees(coordonnees) {}
-	Vecteur() : {}
+	Vecteur() {}
 //Méthodes
 	void augmente(double valeur); // Ajoute une coordonnée au vecteur (ie une dimension) qui prend la valeur "valeur"
 	void set_coord(std::size_t position, double valeur); // permet de modifier la coordonnée à la position "position" et en lui inculcant la valeur "valeur". La première coordonnées est à la position 0.
