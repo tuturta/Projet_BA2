@@ -7,10 +7,10 @@ class Vecteur
 // Methodes:
 public:
 	void augmente(double valeur); // Ajoute une coordonnée au vecteur (ie une dimension) qui prend la valeur "valeur"
-	void set_coord(size_t position, double valeur); // permet de modifier la coordonnée à la position "position" et en lui inculcant la valeur "valeur". La première coordonnées est à la position 0.
+	void set_coord(std::size_t position, double valeur); // permet de modifier la coordonnée à la position "position" et en lui inculcant la valeur "valeur". La première coordonnées est à la position 0.
 	void affiche() const; // affiche le vecteur sous forme x1 x2 x3 x4 .....
 	bool compare(Vecteur v2) const; //
-	size_t dim() const; // renvoie la dimension du vecteur
+	std::size_t dim() const; // renvoie la dimension du vecteur
 	Vecteur oppose() const; // renvoie le vecteur unitaire
 	Vecteur addition(Vecteur autre) const; // additionne 2 vecteurs
 	Vecteur soustraction(Vecteur autre) const; // soustrait 2 vecteurs
