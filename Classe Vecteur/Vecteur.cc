@@ -2,15 +2,16 @@ using namespace std;
 #include <iostream>
 #include "Vecteur.h"
 #include <cmath>
+#include <string>
 
 void Vecteur::augmente(double valeur){
 	coordonnees.push_back(valeur);
 }
-void Vecteur::set_coord(size_t position, double valeur){ // A FAIRE : Exception pour la dimension à la place du cout
+void Vecteur::set_coord(size_t position, double valeur){ 
 	if (position<dim()) {
 		coordonnees[position]=valeur;
 	}else{
-		throw string("DIMENSIONS!");
+		throw "DIMENSIONS!"; //Lance une exception erreur dimensions
 	}
 }
 void Vecteur::affiche() const {
@@ -19,9 +20,9 @@ void Vecteur::affiche() const {
 	}
 	cout << endl;
 }
-bool Vecteur::compare(Vecteur v2) const { // A FAIRE : Lance une exception probleme de dimension
+bool Vecteur::compare(Vecteur v2) const {
 	if(dim() != v2.dim()) {
-		throw string("DIMENSIONS!");
+		throw "DIMENSIONS!"; //Lance une exception dimensions
 	}
 	size_t i(0);
 	while(i < dim() and coordonnees[i]==v2.coordonnees[i]){
@@ -29,22 +30,22 @@ bool Vecteur::compare(Vecteur v2) const { // A FAIRE : Lance une exception probl
 	}
 	if(i == dim()) {
 		return true;
+	} else {
+		return false;
 	}
-	return false;
 }
 size_t Vecteur::dim() const {
 	return coordonnees.size();
 }
-Vecteur Vecteur::addition(Vecteur autre) const { // A FAIRE : Lance une exception probleme de dimension
+Vecteur Vecteur::addition(Vecteur autre) const {
 	Vecteur C;
 	if (dim()==autre.dim()) {
 		for (size_t i(0); i<dim();++i) {
 			C.augmente(coordonnees[i]+autre.coordonnees[i]);
-			return C;
 		}
+		return C;
 	} else { 
-		/*cerr << "DIMENSIONS DIFFERENTES!" << endl;*/
-		throw string("DIMENSIONS!");
+		throw "DIMENSIONS!";
 	}
 }
 Vecteur Vecteur::oppose() const {
@@ -66,7 +67,7 @@ Vecteur Vecteur::mult(double a) const {
 }
 double Vecteur::prod_scal(Vecteur autre) const { 
 	if(dim()!=autre.dim()) {
-		throw string("DIMENSIOMS!");
+		throw "DIMENSIOMS!";
 	} else {
 		double x;
 		for (size_t i(0); i<dim(); ++i) {
@@ -78,18 +79,15 @@ double Vecteur::prod_scal(Vecteur autre) const {
 Vecteur Vecteur::prod_vect(Vecteur autre) const{
 	Vecteur C;
 	if(dim() != autre.dim()) {
-		throw string("DIMENSIONS!"); ///lance une exception erreur de dimensions
+		throw "DIMENSIONS!"; ///lance une exception erreur de dimensions
 	} else if (dim()!=3) {
-		throw string("DIM_PROD_VECT!"); ///lance exception erreur produit vect non defini
+		throw "DIM<3"; ///lance exception erreur produit vect non defini
 	} else {
-	 	C.augmente(0);
-		cerr << "Problème de dimension"<<endl;
+		C.augmente(coordonnees[1]*autre.coordonnees[2]-coordonnees[2]*autre.coordonnees[1]);
+		C.augmente(coordonnees[2]*autre.coordonnees[0]-coordonnees[0]*autre.coordonnees[2]);
+		C.augmente(coordonnees[0]*autre.coordonnees[1]-coordonnees[1]*autre.coordonnees[0]);
 		return C;
 	}
-	C.augmente(coordonnees[1]*autre.coordonnees[2]-coordonnees[2]*autre.coordonnees[1]);
-	C.augmente(coordonnees[2]*autre.coordonnees[0]-coordonnees[0]*autre.coordonnees[2]);
-	C.augmente(coordonnees[0]*autre.coordonnees[1]-coordonnees[1]*autre.coordonnees[0]);
-	return C;
 }
 double Vecteur::norme() const {
 	return sqrt(norme2());
