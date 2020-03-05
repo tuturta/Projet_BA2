@@ -64,7 +64,7 @@ Vecteur Vecteur::mult(double a) const {
 	}
 	return C;
 }
-double Vecteur::prod_scal(Vecteur autre) const { // A FAIRE: Lancer une exception si dimension non compatible
+double Vecteur::prod_scal(Vecteur autre) const { 
 	if(dim()!=autre.dim()) {
 		throw string("DIMENSIOMS!");
 	} else {
@@ -75,12 +75,12 @@ double Vecteur::prod_scal(Vecteur autre) const { // A FAIRE: Lancer une exceptio
 		return x;
 	}
  }	
-Vecteur Vecteur::prod_vect(Vecteur autre) const{ // A FAIRE : Lance une exception probleme de dimension
+Vecteur Vecteur::prod_vect(Vecteur autre) const{
 	Vecteur C;
 	if(dim() != autre.dim()) {
-		throw string("DIMENSIONS!");
+		throw string("DIMENSIONS!"); ///lance une exception erreur de dimensions
 	} else if (dim()!=3) {
-		throw string("DIM_PROD_VECT!");
+		throw string("DIM_PROD_VECT!"); ///lance exception erreur produit vect non defini
 	} else {
 	 	C.augmente(0);
 		cerr << "Problème de dimension"<<endl;

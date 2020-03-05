@@ -1,0 +1,14 @@
+SEMAINE 1 :
+[V] Faire le journal...................................2min 
+[V] Créer/configurer le repository sur github etc......5h    
+[V] lire le projet.....................................30min
+
+SEMAINE 2 :
+[V] Créer la classe vecteur................................3h
+[V] Créer le fichier réponse...............................30min
+[ ] Lire introduction OpenGL...............................?
+[V] Séparer les fichiers..................................30min
+
+SEMAINE 3 :
+[V] Ajouter les exceptions................................20min
+

@@ -1,0 +1,29 @@
+Réponse P1.1:
+Les vecteurs sont représentés par une classe.
+
+On a choisi de mettre en attribut seulement les composantes (x, y, z, …) du vecteur représentées dans un tableau dynamique (vector). Cela facilite la définition des méthodes qui effectuent des opérations sur les vecteurs et qui nécessitent très souvent des boucles sur les composantes du vecteurs.
+
+Pour le moment, on a choisi de mettre l’ensemble des méthodes en public et les attributs en private: 
+Méthodes : 
+    augmente():
+    set_coord():
+    affiche():
+    compare():
+    dim():
+    addition():
+    soustraction():
+    oppose():
+    mult():
+    prod_scal():
+    prod_vect():
+    norme() :
+    norme2() :
+    unitaire()
+
+Attributs:
+    tableau de double de la forme (x1, x2, …, xn) noté coordonnees
+
+
+Réponse P1.2:
+
+On lance une exception pour les erreurs de dimension.
