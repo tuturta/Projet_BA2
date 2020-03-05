@@ -10,7 +10,7 @@ void Vecteur::set_coord(size_t position, double valeur){ // A FAIRE : Exception 
 	if (position<dim()) {
 		coordonnees[position]=valeur;
 	}else{
-		cout << "la dimension du vecteur est trop petite. La coordonnee entrée n existe pas"<<endl;
+		throw string("DIMENSIONS!");
 	}
 }
 void Vecteur::affiche() const {
@@ -21,7 +21,7 @@ void Vecteur::affiche() const {
 }
 bool Vecteur::compare(Vecteur v2) const { // A FAIRE : Lance une exception probleme de dimension
 	if(dim() != v2.dim()) {
-		return false;
+		throw string("DIMENSIONS!");
 	}
 	size_t i(0);
 	while(i < dim() and coordonnees[i]==v2.coordonnees[i]){
@@ -40,12 +40,12 @@ Vecteur Vecteur::addition(Vecteur autre) const { // A FAIRE : Lance une exceptio
 	if (dim()==autre.dim()) {
 		for (size_t i(0); i<dim();++i) {
 			C.augmente(coordonnees[i]+autre.coordonnees[i]);
+			return C;
 		}
 	} else { 
-		cerr << "DIMENSIONS DIFFERENTES!" << endl;
-		C.augmente(0);
+		/*cerr << "DIMENSIONS DIFFERENTES!" << endl;*/
+		throw string("DIMENSIONS!");
 	}
-	return C;
 }
 Vecteur Vecteur::oppose() const {
 	Vecteur opp;
@@ -54,28 +54,35 @@ Vecteur Vecteur::oppose() const {
 	}
 	return opp;
 }
-Vecteur Vecteur::soustraction(Vecteur autre) const { // A FAIRE : Lance une exception probleme de dimension
+Vecteur Vecteur::soustraction(Vecteur autre) const { // A FAIRE : Lance une exception probleme de dimension --> fait par addition
 	return addition(autre.oppose());
 }
 Vecteur Vecteur::mult(double a) const {
 	Vecteur C;
 	for (size_t i(0); i<dim(); ++i) {
-		
 		C.augmente(coordonnees[i]*a);
 	}
 	return C;
 }
 double Vecteur::prod_scal(Vecteur autre) const { // A FAIRE: Lancer une exception si dimension non compatible
-	double x;
-	for (size_t i(0); i<dim(); ++i) {
+	if(dim()!=autre.dim()) {
+		throw string("DIMENSIOMS!");
+	} else {
+		double x;
+		for (size_t i(0); i<dim(); ++i) {
 		x+=coordonnees[i]*autre.coordonnees[i];	
+		}
+		return x;
 	}
-	return x;
  }	
 Vecteur Vecteur::prod_vect(Vecteur autre) const{ // A FAIRE : Lance une exception probleme de dimension
 	Vecteur C;
-	if(dim() != autre.dim() or dim() != 3){
-		C.augmente(0);
+	if(dim() != autre.dim()) {
+		throw string("DIMENSIONS!");
+	} else if (dim()!=3) {
+		throw string("DIM_PROD_VECT!");
+	} else {
+	 	C.augmente(0);
 		cerr << "Problème de dimension"<<endl;
 		return C;
 	}
