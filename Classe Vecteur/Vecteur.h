@@ -1,11 +1,21 @@
 #include <vector>
-
+#include <initializer_list>
+#include <cmath>
 
 class Vecteur 
 {
 public:
-//Constructeur (par défaut il construit un vecteur nul en 3 dimensions)
-	Vecteur(std::vector<double> coordonnees = {0.0,0.0,0.0}): coordonnees(coordonnees) {}
+//Constructeurs
+	Vecteur(double x, double y, double z): coordonnees({x,y,z}) {} //vecteur 3D
+	Vecteur(size_t dim) : coordonnees(dim,0.0) {} //Vecteur nul de la dimension voulue
+	Vecteur (std::initializer_list<double> const& list) { 
+		for (auto i : list) { coordonnees.push_back(i);} 
+	}
+	Vecteur (double r, double theta, double phi, bool sph) { //TEST COORD SPHERIQUES (A SUPPRIMER) POURQUOI POSERAIT-IL PROBLEME? 
+		coordonnees.push_back(r*sin(theta)*cos(phi));
+		coordonnees.push_back(r*sin(theta)*sin(phi));
+		coordonnees.push_back(r*cos(theta));
+	}
 //Méthodes
 	void augmente(double valeur); // Ajoute une coordonnée au vecteur (ie une dimension) qui prend la valeur "valeur"
 	void set_coord(std::size_t position, double valeur); // permet de modifier la coordonnée à la position "position" et en lui inculcant la valeur "valeur". La première coordonnées est à la position 0.

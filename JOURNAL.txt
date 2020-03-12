@@ -10,5 +10,10 @@ SEMAINE 2 :
 [V] Séparer les fichiers...................................30min
 
 SEMAINE 3 :
-[V] Ajouter les exceptions et les tester....................2h
+[V] Ajouter les exceptions/gestion d'erreurs, tester.......3h
 
+A faire : creer un fichier erreur.h avec une structure (ou classe?) erreur afin de pouvoir gérer plus facilement les erreurs 
+(configurer un code unique,niveau,indication sur l'arret ou non du programme suite à l'erreur...)  
+
+SEMAINE 4 :
+[]

@@ -27,3 +27,12 @@ Attributs:
 Réponse P1.2:
 
 On lance une exception pour les erreurs de dimension.
+
+Réponse P4.1:
+
+Nous n'ajoutons pas de constructeur de copie, celui par défaut convient pour l'instant puisquon veut seulement copier une à une les valeurs du tableau de coordonnees.
+
+Réponse P4.2:
+
+a] On peut ajouter un constructeur par coordonnées sphériques sans que cela ne change quoi que ce soit aux attributs.
+b]  
