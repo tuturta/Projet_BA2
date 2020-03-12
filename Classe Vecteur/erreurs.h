@@ -1,5 +1,6 @@
+#include <string>
 struct Erreur {
-    std::basic_string message; ///???!!!
+    std::string message;
     int code;
     int niveau;
     bool arret;
