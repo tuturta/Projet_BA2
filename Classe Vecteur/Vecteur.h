@@ -5,7 +5,7 @@
 class Vecteur 
 {
 public:
-//Constructeurs
+// Constructeurs
 	Vecteur(double x, double y, double z): coordonnees({x,y,z}) {} //vecteur 3D
 	Vecteur(size_t dim) : coordonnees(dim,0.0) {} //Vecteur nul de la dimension voulue
 	Vecteur (std::initializer_list<double> const& list) { 
@@ -16,7 +16,12 @@ public:
 		coordonnees.push_back(r*sin(theta)*sin(phi));
 		coordonnees.push_back(r*cos(theta));
 	}
-//Méthodes
+// Opérateurs insternes (ptototypes)
+	Vecteur& operator+=(Vecteur const& v);
+	Vecteur& operator-=(Vecteur const& v);
+	Vecteur& operator*=(double const a);
+	Vecteur& operator/=(double const& a);
+// Méthodes
 	void augmente(double valeur); // Ajoute une coordonnée au vecteur (ie une dimension) qui prend la valeur "valeur"
 	void set_coord(std::size_t position, double valeur); // permet de modifier la coordonnée à la position "position" et en lui inculcant la valeur "valeur". La première coordonnées est à la position 0.
 	void affiche() const; // affiche le vecteur sous forme x1 x2 x3 x4 .....
@@ -32,10 +37,15 @@ public:
 	double norme2() const; // renvoie la norme au carré et permet d'éviter le temps de calcul de la racine
 	Vecteur unitaire() const; // renvoie le vecteur unitaire (ie. même sens et même direction mais de norme 1)
 	
-//Attributs:
+// Attributs:
 private:
 	std::vector<double> coordonnees;
 	
 };
 
-
+// Opérateurs externes (prototypes)
+Vecteur operator+(Vecteur v, Vecteur const& w);
+Vecteur operator-(Vecteur v, Vecteur const& w);
+Vecteur operator*(Vecteur v, double a);
+Vecteur operator/(Vecteur v, double a);
+//A SUIVRE ////////////////////////////////////

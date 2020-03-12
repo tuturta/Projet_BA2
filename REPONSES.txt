@@ -1,4 +1,5 @@
 Réponse P1.1:
+
 Les vecteurs sont représentés par une classe.
 
 On a choisi de mettre en attribut seulement les composantes (x, y, z, …) du vecteur représentées dans un tableau dynamique (vector). Cela facilite la définition des méthodes qui effectuent des opérations sur les vecteurs et qui nécessitent très souvent des boucles sur les composantes du vecteurs.
@@ -21,7 +22,8 @@ Méthodes :
     unitaire()
 
 Attributs:
-    tableau de double de la forme (x1, x2, …, xn) noté coordonnees
+
+tableau de double de la forme (x1, x2, …, xn) noté coordonnees.
 
 
 Réponse P1.2:
@@ -35,4 +37,17 @@ Nous n'ajoutons pas de constructeur de copie, celui par défaut convient pour l'
 Réponse P4.2:
 
 a] On peut ajouter un constructeur par coordonnées sphériques sans que cela ne change quoi que ce soit aux attributs.
-b]  
+b] ///////////////PAS TROUVÉ\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Réponse P4.3:
+
+on ajoute comme opérateurs :
+    +=
+    -=
+    +
+    -
+    *= (avec un scalaire)
+    *
+    /= (avec un scalaire)
+    /
+    -->à suivre...
