@@ -8,17 +8,21 @@
             "type": "shell",
             "command": "/usr/bin/g++",
             "args": [
-                "-g", "${file}", "-o", "${fileDirname}/${fileBasenameNoExtension}"
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
             ],
             "options": {
                 "cwd": "/usr/bin"
             },
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
-            
         }
     ]
 }
