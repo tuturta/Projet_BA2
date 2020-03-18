@@ -17,28 +17,14 @@ void Vecteur::set_coord(size_t position, double valeur){
 	}
 }
 ostream& Vecteur::affiche(ostream& out) const {
-	out << "(";
+	out << "( ";
 	for(auto x : coordonnees) {
 		out << x << " ";
 	}
 	out << ")" << endl;
 	return out;
 }
-bool Vecteur::compare(Vecteur v2) const {
-	if(dim() != v2.dim()) {
-		Erreur Err = {"DIMENSIONS!", 1};
-		throw Err;
-	}
-	size_t i(0);
-	while(i < dim() and coordonnees[i]==v2.coordonnees[i]){
-		++i;
-	}
-	if(i == dim()) {
-		return true;
-	} else {
-		return false;
-	}
-}
+
 size_t Vecteur::dim() const {
 	return coordonnees.size();
 }
@@ -61,9 +47,7 @@ Vecteur Vecteur::oppose() const {
 	}
 	return opp;
 }
-Vecteur Vecteur::soustraction(Vecteur autre) const { // A FAIRE : Lance une exception probleme de dimension --> fait par addition
-	return addition(autre.oppose());
-}
+
 Vecteur Vecteur::mult(double a) const {
 	Vecteur C(0);
 	for (size_t i(0); i<dim(); ++i) {
@@ -75,13 +59,12 @@ double Vecteur::prod_scal(Vecteur autre) const {
 	if(dim()!=autre.dim()) {
 		Erreur Err= {"DIMENSIONS!",1};
 		throw Err;
-	} else {
-		double x;
-		for (size_t i(0); i<dim(); ++i) {
+	} 
+	double x;
+	for (size_t i(0); i<dim(); ++i) {
 		x+=coordonnees[i]*autre.coordonnees[i];	
-		}
-		return x;
 	}
+	return x;
  }	
 Vecteur Vecteur::prod_vect(Vecteur autre) const{
 	Vecteur C(0);
@@ -126,13 +109,36 @@ bool Vecteur::operator==(Vecteur const& autre) const{
 		throw Err;
 	}
 	for(size_t i(0) ; i < dim() ; ++i){
-		if(coordonnees[i] != autre.coordonnees[i]){
+		if(abs(coordonnees[i] - autre.coordonnees[i]) > 1e-8){
 			retour = false;
 		}
 	}
-
+	return retour;
 }
 
 ostream& operator<<(ostream& sortie, Vecteur const& vecteur) {
 	return vecteur.affiche(sortie);
+}
+
+Vecteur& Vecteur::operator-=(Vecteur const& autre){
+	if(dim() != autre.dim()) {
+		Erreur Err = {"DIMENSIONS!",1};
+		throw Err;
+	}
+	for(size_t i(0) ; i<dim() ; ++i){
+		coordonnees[i] -= autre.coordonnees[i];
+	}
+	return *this;
+}
+
+const Vecteur operator-(Vecteur v, Vecteur const& w){
+	v-= w;
+	return v;
+}
+
+Vecteur& Vecteur::operator-(){
+	for(auto& x : coordonnees){
+		if(x>1e-8){x = -x;}
+		}
+	return *this;
 }
