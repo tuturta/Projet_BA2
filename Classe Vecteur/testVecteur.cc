@@ -12,8 +12,8 @@ int main(){
 		Vecteur vect3(vect1);
 
 //SET COORDONNEES
-		cout << "Vect3 = ";
-		vect3.affiche(); //pour voir si le constructeur de copie par defaut convient
+		cout << "Vect3 = "; // test surcharge opera
+		cout << vect3 << endl; //pour voir si le constructeur de copie par defaut convient
 		vect1.set_coord(1, 1.0);
 		vect3 = vect1;
 //AFFICHE + test constr
@@ -82,7 +82,6 @@ int main(){
 	catch (Erreur& err) {
 		if(err.code==1) {
 			cerr << err.message << endl;
-			////comment faire pour que ca n'arrête pas le programme 'continue'
 		}
 	}
 	return 0;

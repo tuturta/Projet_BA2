@@ -16,12 +16,13 @@ void Vecteur::set_coord(size_t position, double valeur){
 		throw Err;
 	}
 }
-void Vecteur::affiche() const {
-	cout << "(";
+ostream& Vecteur::affiche(ostream& out) const {
+	out << "(";
 	for(auto x : coordonnees) {
-		cout << x << " ";
+		out << x << " ";
 	}
-	cout << ")" << endl;
+	out << ")" << endl;
+	return out;
 }
 bool Vecteur::compare(Vecteur v2) const {
 	if(dim() != v2.dim()) {
@@ -114,4 +115,24 @@ Vecteur Vecteur::unitaire() const{
 		C.augmente(a*x);
 	}
 	return C;
+}
+
+// DEFINITION DES OPERATEURS:
+
+bool Vecteur::operator==(Vecteur const& autre) const{
+	bool retour(true);
+	if(dim() != autre.dim()) {
+		Erreur Err = {"DIMENSIONS!", 1};
+		throw Err;
+	}
+	for(size_t i(0) ; i < dim() ; ++i){
+		if(coordonnees[i] != autre.coordonnees[i]){
+			retour = false;
+		}
+	}
+
+}
+
+ostream& operator<<(ostream& sortie, Vecteur const& vecteur) {
+	return vecteur.affiche(sortie);
 }
