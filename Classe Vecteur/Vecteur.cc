@@ -15,8 +15,7 @@ void Vecteur::set_coord(size_t position, double valeur){
 		Erreur Err = {"DIMENSIONS!",1}; //Erreur de dim, code 1, niveau 1, n'arrette pas le programme
 		throw Err;
 	}
-}
-void Vecteur::affiche() const {
+}void Vecteur::affiche() const {
 	cout << "(";
 	for(auto x : coordonnees) {
 		cout << x << " ";

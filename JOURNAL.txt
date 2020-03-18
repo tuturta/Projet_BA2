@@ -16,5 +16,7 @@ A faire : creer un fichier erreur.h avec une structure (ou classe?) erreur afin 
 (configurer un code unique,niveau,indication sur l'arret ou non du programme suite à l'erreur...)  
 
 SEMAINE 4 :
-[V] Constructeurs + ptototypes des opérateurs..............2h
+[V] Constructeurs + prototypes des opérateurs..............2h
 [V] Retour sur le fichier avec structure erreur............1h
+
+A faire :
