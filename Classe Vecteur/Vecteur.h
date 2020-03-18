@@ -16,15 +16,16 @@ public:
 		coordonnees.push_back(r*sin(theta)*sin(phi));
 		coordonnees.push_back(r*cos(theta));
 	}
-// Opérateurs insternes (ptototypes)
+// Opérateurs internes (prototypes)
 	Vecteur& operator+=(Vecteur const& v);
 	Vecteur& operator-=(Vecteur const& v);
 	Vecteur& operator*=(double const a);
 	Vecteur& operator/=(double const& a);
+	bool operator==(Vecteur const& autre) const;
 // Méthodes
 	void augmente(double valeur); // Ajoute une coordonnée au vecteur (ie une dimension) qui prend la valeur "valeur"
 	void set_coord(std::size_t position, double valeur); // permet de modifier la coordonnée à la position "position" et en lui inculcant la valeur "valeur". La première coordonnées est à la position 0.
-	void affiche() const; // affiche le vecteur sous forme x1 x2 x3 x4 .....
+	ostream& affiche(ostream& out) const; // affiche le vecteur sous forme x1 x2 x3 x4 .....
 	bool compare(Vecteur v2) const; //
 	std::size_t dim() const; // renvoie la dimension du vecteur
 	Vecteur oppose() const; // renvoie le vecteur unitaire
@@ -48,4 +49,4 @@ Vecteur operator+(Vecteur v, Vecteur const& w);
 Vecteur operator-(Vecteur v, Vecteur const& w);
 Vecteur operator*(Vecteur v, double a);
 Vecteur operator/(Vecteur v, double a);
-//A SUIVRE ////////////////////////////////////
+ostream& operator<<(ostream& sortie, Vecteur const& vecteur);
