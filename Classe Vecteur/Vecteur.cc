@@ -25,25 +25,8 @@ ostream& Vecteur::affiche(ostream& out) const {
 	out << ")";
 	return out;
 }
-
 size_t Vecteur::dim() const {
 	return coordonnees.size();
-}
-
-Vecteur Vecteur::prod_vect(Vecteur autre) const{
-	Vecteur C(0);
-	if(dim() != autre.dim()) {
-		Erreur Err = {"DIMENSIONS!",1};
-		throw Err;
-	} else if (dim()!=3) {
-		Erreur Err = {"Poduit vectoriel non défini entre ces vecturs!",1};
-		throw Err;
-	} else {
-		C.augmente(coordonnees[1]*autre.coordonnees[2]-coordonnees[2]*autre.coordonnees[1]);
-		C.augmente(coordonnees[2]*autre.coordonnees[0]-coordonnees[0]*autre.coordonnees[2]);
-		C.augmente(coordonnees[0]*autre.coordonnees[1]-coordonnees[1]*autre.coordonnees[0]);
-		return C;
-	}
 }
 double Vecteur::norme() const {
 	return sqrt(norme2());
@@ -55,35 +38,13 @@ double Vecteur::norme2() const{
 	}
 	return retour;
 }
-Vecteur Vecteur::unitaire() const{
-	Vecteur C(0);
-	double a(1/norme()); // Calcul l'inverse de la norme. Evite de le calculer à chaque itération.
-	for(auto x : coordonnees){
-		C.augmente(a*x);
-	}
-	return C;
-}
 
 // DÉFINITIONS DES OPERATEURS:
 // --> EXTERNES
-bool Vecteur::operator==(Vecteur const& autre) const{
-	bool retour(true);
-	if(dim() != autre.dim()) {
-		Erreur Err = {"DIMENSIONS!", 1};
-		throw Err;
-	}
-	for(size_t i(0) ; i < dim() ; ++i){
-		if(abs(coordonnees[i] - autre.coordonnees[i]) > 1e-8){
-			retour = false;
-		}
-	}
-	return retour;
-}
 
 ostream& operator<<(ostream& sortie, Vecteur const& vecteur) {
 	return vecteur.affiche(sortie);
 }
-
 const Vecteur operator+(Vecteur v1, Vecteur const& v2) {
 	v1+=v2;
 	return v1;
@@ -99,11 +60,15 @@ const Vecteur operator/(Vecteur v, double a) {
 	v/=a;
 	return v;
 }
-
 const Vecteur operator-(Vecteur v, Vecteur const& w){
 	v-= w;
 	return v;
 }
+const Vecteur operator^(Vecteur v, Vecteur const& w){
+	v ^= w;
+	return v;
+}
+
 // --> INTERNES
 Vecteur& Vecteur::operator+=(Vecteur const& autre){
 	if (dim()!=autre.dim()) {
@@ -150,12 +115,43 @@ Vecteur& Vecteur::operator-=(Vecteur const& autre){
 	}
 	return *this;
 }
-
-Vecteur& Vecteur::operator-(){
-	for(auto& x : coordonnees){
-		if(x>1e-8){x = -x;}
-		}
-	return *this;
+Vecteur& Vecteur::operator^=(Vecteur const& autre){
+	if(dim() != autre.dim() or dim() != 3) {
+		Erreur Err = {"DIMENSIONS!",1};
+		throw Err;
+	}
+	double temp0, temp1, temp2;
+		temp0 = coordonnees[1]*autre.coordonnees[2]-coordonnees[2]*autre.coordonnees[1];
+		temp1 = coordonnees[2]*autre.coordonnees[0]-coordonnees[0]*autre.coordonnees[2];
+		temp2 = coordonnees[0]*autre.coordonnees[1]-coordonnees[1]*autre.coordonnees[0];
+		coordonnees[0] = temp0;
+		coordonnees[1] = temp1;
+		coordonnees[2] = temp2;
+		
+		
+		return *this;
 }
-
+Vecteur Vecteur::operator~() const{
+	return (*this)/norme();
+}
+bool Vecteur::operator==(Vecteur const& autre) const{
+	bool retour(true);
+	if(dim() != autre.dim()) {
+		Erreur Err = {"DIMENSIONS!", 1};
+		throw Err;
+	}
+	for(size_t i(0) ; i < dim() ; ++i){
+		if(abs(coordonnees[i] - autre.coordonnees[i]) > 1e-8){
+			retour = false;
+		}
+	}
+	return retour;
+}
+Vecteur Vecteur::operator-() const{
+	Vecteur retour(dim());
+	for(size_t i(0) ; i < dim() ; ++i){
+		retour.coordonnees[i] = - coordonnees[i];
+	}
+	return retour;
+}
 

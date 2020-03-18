@@ -41,4 +41,5 @@ b] ///////////////PAS TROUVÉ\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 Réponse P4.3:
 
-    
+Pour affiche(), on introduit l'opérateur externe : std::ostream& operator<<(std::ostream& sortie, Vecteur const& vecteur);
+Pour compare(), on introduit l'opérateur interne : bool Vecteur::operator==(Vecteur const& autre) const; //test d'egalite
