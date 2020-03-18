@@ -40,13 +40,6 @@ Vecteur Vecteur::addition(Vecteur autre) const {
 		throw Err;
 	}
 }
-Vecteur Vecteur::oppose() const {
-	Vecteur opp(0);
-	for (auto i: coordonnees) {
-		opp.augmente(-i);
-	}
-	return opp;
-}
 
 Vecteur Vecteur::mult(double a) const {
 	Vecteur C(0);
@@ -66,21 +59,6 @@ double Vecteur::prod_scal(Vecteur autre) const {
 	}
 	return x;
  }	
-Vecteur Vecteur::prod_vect(Vecteur autre) const{
-	Vecteur C(0);
-	if(dim() != autre.dim()) {
-		Erreur Err = {"DIMENSIONS!",1};
-		throw Err;
-	} else if (dim()!=3) {
-		Erreur Err = {"Poduit vectoriel non défini entre ces vecturs!",1};
-		throw Err;
-	} else {
-		C.augmente(coordonnees[1]*autre.coordonnees[2]-coordonnees[2]*autre.coordonnees[1]);
-		C.augmente(coordonnees[2]*autre.coordonnees[0]-coordonnees[0]*autre.coordonnees[2]);
-		C.augmente(coordonnees[0]*autre.coordonnees[1]-coordonnees[1]*autre.coordonnees[0]);
-		return C;
-	}
-}
 double Vecteur::norme() const {
 	return sqrt(norme2());
 }
@@ -91,14 +69,7 @@ double Vecteur::norme2() const{
 	}
 	return retour;
 }
-Vecteur Vecteur::unitaire() const{
-	Vecteur C(0);
-	double a(1/norme()); // Calcul l'inverse de la norme. Evite de le calculer à chaque itération.
-	for(auto x : coordonnees){
-		C.augmente(a*x);
-	}
-	return C;
-}
+
 
 // DEFINITION DES OPERATEURS:
 
@@ -136,9 +107,36 @@ const Vecteur operator-(Vecteur v, Vecteur const& w){
 	return v;
 }
 
-Vecteur& Vecteur::operator-(){
-	for(auto& x : coordonnees){
-		if(x>1e-8){x = -x;}
+Vecteur Vecteur::operator-() const{
+	Vecteur retour(dim());
+	for(size_t i(0) ; i<dim() ; ++i){
+		if(coordonnees[i]>1e-8){retour.coordonnees[i] = -coordonnees[i];}
 		}
-	return *this;
+	return retour;
+}
+
+Vecteur& Vecteur::operator^=(Vecteur const& autre){
+	if(dim() != autre.dim() or dim() != 3) {
+		Erreur Err = {"DIMENSIONS!",1};
+		throw Err;
+	}
+	double temp0, temp1, temp2;
+		temp0 = coordonnees[1]*autre.coordonnees[2]-coordonnees[2]*autre.coordonnees[1];
+		temp1 = coordonnees[2]*autre.coordonnees[0]-coordonnees[0]*autre.coordonnees[2];
+		temp2 = coordonnees[0]*autre.coordonnees[1]-coordonnees[1]*autre.coordonnees[0];
+		coordonnees[0] = temp0;
+		coordonnees[1] = temp1;
+		coordonnees[2] = temp2;
+		
+		
+		return *this;
+}
+
+const Vecteur operator^(Vecteur v, Vecteur const& w){
+	v ^= w;
+	return v;
+}
+
+Vecteur Vecteur::operator~() const{
+	return (*this)/norme();
 }
