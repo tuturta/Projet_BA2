@@ -5,6 +5,7 @@ using namespace std;
 #include <cmath>
 #include <string>
 
+/// MÉTHODES
 void Vecteur::augmente(double valeur){
 	coordonnees.push_back(valeur);
 }
@@ -21,44 +22,12 @@ ostream& Vecteur::affiche(ostream& out) const {
 	for(auto x : coordonnees) {
 		out << x << " ";
 	}
-	out << ")" << endl;
+	out << ")";
 	return out;
 }
-
 size_t Vecteur::dim() const {
 	return coordonnees.size();
 }
-Vecteur Vecteur::addition(Vecteur autre) const {
-	Vecteur C(0);
-	if (dim()==autre.dim()) {
-		for (size_t i(0); i<dim();++i) {
-			C.augmente(coordonnees[i]+autre.coordonnees[i]);
-		}
-		return C;
-	} else { 
-		Erreur Err = {"DIMENSIONS!",1};
-		throw Err;
-	}
-}
-
-Vecteur Vecteur::mult(double a) const {
-	Vecteur C(0);
-	for (size_t i(0); i<dim(); ++i) {
-		C.augmente(coordonnees[i]*a);
-	}
-	return C;
-}
-double Vecteur::prod_scal(Vecteur autre) const { 
-	if(dim()!=autre.dim()) {
-		Erreur Err= {"DIMENSIONS!",1};
-		throw Err;
-	} 
-	double x;
-	for (size_t i(0); i<dim(); ++i) {
-		x+=coordonnees[i]*autre.coordonnees[i];	
-	}
-	return x;
- }	
 double Vecteur::norme() const {
 	return sqrt(norme2());
 }
@@ -70,27 +39,72 @@ double Vecteur::norme2() const{
 	return retour;
 }
 
-
-// DEFINITION DES OPERATEURS:
-
-bool Vecteur::operator==(Vecteur const& autre) const{
-	bool retour(true);
-	if(dim() != autre.dim()) {
-		Erreur Err = {"DIMENSIONS!", 1};
-		throw Err;
-	}
-	for(size_t i(0) ; i < dim() ; ++i){
-		if(abs(coordonnees[i] - autre.coordonnees[i]) > 1e-8){
-			retour = false;
-		}
-	}
-	return retour;
-}
+// DÉFINITIONS DES OPERATEURS:
+// --> EXTERNES
 
 ostream& operator<<(ostream& sortie, Vecteur const& vecteur) {
 	return vecteur.affiche(sortie);
 }
+const Vecteur operator+(Vecteur v1, Vecteur const& v2) {
+	v1+=v2;
+	return v1;
+}
+const Vecteur operator*(Vecteur v, double a){
+	v*=a;
+	return v;
+}
+const Vecteur operator*(double a, Vecteur const& v) {
+	return v*a;
+}
+const Vecteur operator/(Vecteur v, double a) {
+	v/=a;
+	return v;
+}
+const Vecteur operator-(Vecteur v, Vecteur const& w){
+	v-= w;
+	return v;
+}
+const Vecteur operator^(Vecteur v, Vecteur const& w){
+	v ^= w;
+	return v;
+}
 
+// --> INTERNES
+Vecteur& Vecteur::operator+=(Vecteur const& autre){
+	if (dim()!=autre.dim()) {
+		Erreur Err = {"DIMENSIONS!",1};
+		throw Err;
+	}
+	for (size_t i(0); i<dim(); ++i) {
+			coordonnees[i]+=autre.coordonnees[i];
+		}
+		return *this;
+}
+double Vecteur::operator*(Vecteur const& autre){
+	if(dim()!=autre.dim()) {
+		Erreur Err= {"DIMENSIONS!",1};
+		throw Err;
+	} else {
+		double x;
+		for (size_t i(0); i<dim(); ++i) {
+		x+=coordonnees[i]*autre.coordonnees[i];	
+		}
+		return x;
+	}
+}
+Vecteur& Vecteur::operator*=(double a) {
+	for (auto& i : coordonnees) {
+		i*=a;
+	}
+	return *this;
+}
+Vecteur& Vecteur::operator/=(double a) {
+	if ( a< 1e-8 ) {
+		Erreur err={"Division par 0", 1};
+		throw err;
+	}
+	return *this*=1/a;
+}
 Vecteur& Vecteur::operator-=(Vecteur const& autre){
 	if(dim() != autre.dim()) {
 		Erreur Err = {"DIMENSIONS!",1};
@@ -101,20 +115,6 @@ Vecteur& Vecteur::operator-=(Vecteur const& autre){
 	}
 	return *this;
 }
-
-const Vecteur operator-(Vecteur v, Vecteur const& w){
-	v-= w;
-	return v;
-}
-
-Vecteur Vecteur::operator-() const{
-	Vecteur retour(dim());
-	for(size_t i(0) ; i<dim() ; ++i){
-		if(coordonnees[i]>1e-8){retour.coordonnees[i] = -coordonnees[i];}
-		}
-	return retour;
-}
-
 Vecteur& Vecteur::operator^=(Vecteur const& autre){
 	if(dim() != autre.dim() or dim() != 3) {
 		Erreur Err = {"DIMENSIONS!",1};
@@ -131,12 +131,27 @@ Vecteur& Vecteur::operator^=(Vecteur const& autre){
 		
 		return *this;
 }
-
-const Vecteur operator^(Vecteur v, Vecteur const& w){
-	v ^= w;
-	return v;
-}
-
 Vecteur Vecteur::operator~() const{
 	return (*this)/norme();
 }
+bool Vecteur::operator==(Vecteur const& autre) const{
+	bool retour(true);
+	if(dim() != autre.dim()) {
+		Erreur Err = {"DIMENSIONS!", 1};
+		throw Err;
+	}
+	for(size_t i(0) ; i < dim() ; ++i){
+		if(abs(coordonnees[i] - autre.coordonnees[i]) > 1e-8){
+			retour = false;
+		}
+	}
+	return retour;
+}
+Vecteur Vecteur::operator-() const{
+	Vecteur retour(dim());
+	for(size_t i(0) ; i < dim() ; ++i){
+		retour.coordonnees[i] = - coordonnees[i];
+	}
+	return retour;
+}
+
