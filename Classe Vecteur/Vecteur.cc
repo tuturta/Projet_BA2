@@ -5,6 +5,7 @@ using namespace std;
 #include <cmath>
 #include <string>
 
+/// MÉTHODES
 void Vecteur::augmente(double valeur){
 	coordonnees.push_back(valeur);
 }
@@ -21,68 +22,14 @@ ostream& Vecteur::affiche(ostream& out) const {
 	for(auto x : coordonnees) {
 		out << x << " ";
 	}
-	out << ")" << endl;
+	out << ")";
 	return out;
 }
-bool Vecteur::compare(Vecteur v2) const {
-	if(dim() != v2.dim()) {
-		Erreur Err = {"DIMENSIONS!", 1};
-		throw Err;
-	}
-	size_t i(0);
-	while(i < dim() and coordonnees[i]==v2.coordonnees[i]){
-		++i;
-	}
-	if(i == dim()) {
-		return true;
-	} else {
-		return false;
-	}
-}
+
 size_t Vecteur::dim() const {
 	return coordonnees.size();
 }
-/*Vecteur Vecteur::addition(Vecteur autre) const {
-	Vecteur C(0);
-	if (dim()==autre.dim()) {
-		for (size_t i(0); i<dim();++i) {
-			C.augmente(coordonnees[i]+autre.coordonnees[i]);
-		}
-		return C;
-	} else { 
-		Erreur Err = {"DIMENSIONS!",1};
-		throw Err;
-	}
-}*/
-Vecteur Vecteur::oppose() const {
-	Vecteur opp(0);
-	for (auto i: coordonnees) {
-		opp.augmente(-i);
-	}
-	return opp;
-}
-/*Vecteur Vecteur::soustraction(Vecteur autre) const { // A FAIRE : Lance une exception probleme de dimension --> fait par addition
-	return addition(autre.oppose());
-}*/
-/*Vecteur Vecteur::mult(double a) const {
-	Vecteur C(0);
-	for (size_t i(0); i<dim(); ++i) {
-		C.augmente(coordonnees[i]*a);
-	}
-	return C;
-}*/
-/*double Vecteur::prod_scal(Vecteur autre) const { 
-	if(dim()!=autre.dim()) {
-		Erreur Err= {"DIMENSIONS!",1};
-		throw Err;
-	} else {
-		double x;
-		for (size_t i(0); i<dim(); ++i) {
-		x+=coordonnees[i]*autre.coordonnees[i];	
-		}
-		return x;
-	}
- }*/	
+
 Vecteur Vecteur::prod_vect(Vecteur autre) const{
 	Vecteur C(0);
 	if(dim() != autre.dim()) {
@@ -117,8 +64,8 @@ Vecteur Vecteur::unitaire() const{
 	return C;
 }
 
-// DEFINITION DES OPERATEURS:
-//EXTERNES
+// DÉFINITIONS DES OPERATEURS:
+// --> EXTERNES
 bool Vecteur::operator==(Vecteur const& autre) const{
 	bool retour(true);
 	if(dim() != autre.dim()) {
@@ -126,7 +73,7 @@ bool Vecteur::operator==(Vecteur const& autre) const{
 		throw Err;
 	}
 	for(size_t i(0) ; i < dim() ; ++i){
-		if(coordonnees[i] != autre.coordonnees[i]){
+		if(abs(coordonnees[i] - autre.coordonnees[i]) > 1e-8){
 			retour = false;
 		}
 	}
@@ -137,22 +84,27 @@ ostream& operator<<(ostream& sortie, Vecteur const& vecteur) {
 	return vecteur.affiche(sortie);
 }
 
-Vecteur operator+(Vecteur v1, Vecteur const& v2) {
+const Vecteur operator+(Vecteur v1, Vecteur const& v2) {
 	v1+=v2;
 	return v1;
 }
-Vecteur operator*(Vecteur v, double a){
+const Vecteur operator*(Vecteur v, double a){
 	v*=a;
 	return v;
 }
-Vecteur operator*(double a, Vecteur const& v) {
+const Vecteur operator*(double a, Vecteur const& v) {
 	return v*a;
 }
-Vecteur operator/(Vecteur v, double a) {
+const Vecteur operator/(Vecteur v, double a) {
 	v/=a;
 	return v;
 }
-//INTERNES
+
+const Vecteur operator-(Vecteur v, Vecteur const& w){
+	v-= w;
+	return v;
+}
+// --> INTERNES
 Vecteur& Vecteur::operator+=(Vecteur const& autre){
 	if (dim()!=autre.dim()) {
 		Erreur Err = {"DIMENSIONS!",1};
@@ -188,3 +140,22 @@ Vecteur& Vecteur::operator/=(double a) {
 	}
 	return *this*=1/a;
 }
+Vecteur& Vecteur::operator-=(Vecteur const& autre){
+	if(dim() != autre.dim()) {
+		Erreur Err = {"DIMENSIONS!",1};
+		throw Err;
+	}
+	for(size_t i(0) ; i<dim() ; ++i){
+		coordonnees[i] -= autre.coordonnees[i];
+	}
+	return *this;
+}
+
+Vecteur& Vecteur::operator-(){
+	for(auto& x : coordonnees){
+		if(x>1e-8){x = -x;}
+		}
+	return *this;
+}
+
+
