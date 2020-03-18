@@ -1,6 +1,7 @@
 #include <vector>
 #include <initializer_list>
 #include <cmath>
+#include <iostream>
 
 class Vecteur 
 {
@@ -19,20 +20,21 @@ public:
 // Opérateurs internes (prototypes)
 	Vecteur& operator+=(Vecteur const& v);
 	Vecteur& operator-=(Vecteur const& v);
-	Vecteur& operator*=(double const a);
-	Vecteur& operator/=(double const& a);
+	Vecteur& operator*=(double a); // mult par un scalaire
+	double operator*(Vecteur const& v); //produit scalaire
+	Vecteur& operator/=(double a);
 	bool operator==(Vecteur const& autre) const;
 // Méthodes
 	void augmente(double valeur); // Ajoute une coordonnée au vecteur (ie une dimension) qui prend la valeur "valeur"
 	void set_coord(std::size_t position, double valeur); // permet de modifier la coordonnée à la position "position" et en lui inculcant la valeur "valeur". La première coordonnées est à la position 0.
-	ostream& affiche(ostream& out) const; // affiche le vecteur sous forme x1 x2 x3 x4 .....
+	std::ostream& affiche(std::ostream& out) const; // affiche le vecteur sous forme x1 x2 x3 x4 .....
 	bool compare(Vecteur v2) const; //
 	std::size_t dim() const; // renvoie la dimension du vecteur
 	Vecteur oppose() const; // renvoie le vecteur unitaire
-	Vecteur addition(Vecteur autre) const; // additionne 2 vecteurs
+// avant : Vecteur addition(Vecteur autre) const; // additionne 2 vecteurs
 	Vecteur soustraction(Vecteur autre) const; // soustrait 2 vecteurs
 	Vecteur mult(double a) const; // multiplie par le scalaire "a" le vecteur
-	double prod_scal(Vecteur autre) const; // produit scalaire avec le vecteur "autre"
+// avant : double prod_scal(Vecteur autre) const; // produit scalaire avec le vecteur "autre"
 	Vecteur prod_vect(Vecteur autre) const; // produit vectorielle avec le vecteur "autre" 
 	double norme() const; // renvoie la norme
 	double norme2() const; // renvoie la norme au carré et permet d'éviter le temps de calcul de la racine
@@ -48,5 +50,6 @@ private:
 Vecteur operator+(Vecteur v, Vecteur const& w);
 Vecteur operator-(Vecteur v, Vecteur const& w);
 Vecteur operator*(Vecteur v, double a);
+Vecteur operator*(double a, Vecteur const& v);
 Vecteur operator/(Vecteur v, double a);
-ostream& operator<<(ostream& sortie, Vecteur const& vecteur);
+std::ostream& operator<<(std::ostream& sortie, Vecteur const& vecteur);

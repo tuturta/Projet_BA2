@@ -17,7 +17,7 @@ void Vecteur::set_coord(size_t position, double valeur){
 	}
 }
 ostream& Vecteur::affiche(ostream& out) const {
-	out << "(";
+	out << "( ";
 	for(auto x : coordonnees) {
 		out << x << " ";
 	}
@@ -42,7 +42,7 @@ bool Vecteur::compare(Vecteur v2) const {
 size_t Vecteur::dim() const {
 	return coordonnees.size();
 }
-Vecteur Vecteur::addition(Vecteur autre) const {
+/*Vecteur Vecteur::addition(Vecteur autre) const {
 	Vecteur C(0);
 	if (dim()==autre.dim()) {
 		for (size_t i(0); i<dim();++i) {
@@ -53,7 +53,7 @@ Vecteur Vecteur::addition(Vecteur autre) const {
 		Erreur Err = {"DIMENSIONS!",1};
 		throw Err;
 	}
-}
+}*/
 Vecteur Vecteur::oppose() const {
 	Vecteur opp(0);
 	for (auto i: coordonnees) {
@@ -61,17 +61,17 @@ Vecteur Vecteur::oppose() const {
 	}
 	return opp;
 }
-Vecteur Vecteur::soustraction(Vecteur autre) const { // A FAIRE : Lance une exception probleme de dimension --> fait par addition
+/*Vecteur Vecteur::soustraction(Vecteur autre) const { // A FAIRE : Lance une exception probleme de dimension --> fait par addition
 	return addition(autre.oppose());
-}
-Vecteur Vecteur::mult(double a) const {
+}*/
+/*Vecteur Vecteur::mult(double a) const {
 	Vecteur C(0);
 	for (size_t i(0); i<dim(); ++i) {
 		C.augmente(coordonnees[i]*a);
 	}
 	return C;
-}
-double Vecteur::prod_scal(Vecteur autre) const { 
+}*/
+/*double Vecteur::prod_scal(Vecteur autre) const { 
 	if(dim()!=autre.dim()) {
 		Erreur Err= {"DIMENSIONS!",1};
 		throw Err;
@@ -82,7 +82,7 @@ double Vecteur::prod_scal(Vecteur autre) const {
 		}
 		return x;
 	}
- }	
+ }*/	
 Vecteur Vecteur::prod_vect(Vecteur autre) const{
 	Vecteur C(0);
 	if(dim() != autre.dim()) {
@@ -118,7 +118,7 @@ Vecteur Vecteur::unitaire() const{
 }
 
 // DEFINITION DES OPERATEURS:
-
+//EXTERNES
 bool Vecteur::operator==(Vecteur const& autre) const{
 	bool retour(true);
 	if(dim() != autre.dim()) {
@@ -130,9 +130,61 @@ bool Vecteur::operator==(Vecteur const& autre) const{
 			retour = false;
 		}
 	}
-
+	return retour;
 }
 
 ostream& operator<<(ostream& sortie, Vecteur const& vecteur) {
 	return vecteur.affiche(sortie);
+}
+
+Vecteur operator+(Vecteur v1, Vecteur const& v2) {
+	v1+=v2;
+	return v1;
+}
+Vecteur operator*(Vecteur v, double a){
+	v*=a;
+	return v;
+}
+Vecteur operator*(double a, Vecteur const& v) {
+	return v*a;
+}
+Vecteur operator/(Vecteur v, double a) {
+	v/=a;
+	return v;
+}
+//INTERNES
+Vecteur& Vecteur::operator+=(Vecteur const& autre){
+	if (dim()!=autre.dim()) {
+		Erreur Err = {"DIMENSIONS!",1};
+		throw Err;
+	}
+	for (size_t i(0); i<dim(); ++i) {
+			coordonnees[i]+=autre.coordonnees[i];
+		}
+		return *this;
+}
+double Vecteur::operator*(Vecteur const& autre){
+	if(dim()!=autre.dim()) {
+		Erreur Err= {"DIMENSIONS!",1};
+		throw Err;
+	} else {
+		double x;
+		for (size_t i(0); i<dim(); ++i) {
+		x+=coordonnees[i]*autre.coordonnees[i];	
+		}
+		return x;
+	}
+}
+Vecteur& Vecteur::operator*=(double a) {
+	for (auto& i : coordonnees) {
+		i*=a;
+	}
+	return *this;
+}
+Vecteur& Vecteur::operator/=(double a) {
+	if ( a< 1e-8 ) {
+		Erreur err={"Division par 0", 1};
+		throw err;
+	}
+	return *this*=1/a;
 }
