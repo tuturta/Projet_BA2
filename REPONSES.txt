@@ -41,13 +41,4 @@ b] ///////////////PAS TROUVÉ\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 Réponse P4.3:
 
-on ajoute comme opérateurs :
-    +=
-    -=
-    +
-    -
-    *= (avec un scalaire)
-    *
-    /= (avec un scalaire)
-    /
-    -->à suivre...
+    

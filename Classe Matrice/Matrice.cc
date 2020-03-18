@@ -24,8 +24,12 @@ Matrice& Matrice::operator-=(Matrice const& autre){
     return *this;
 } 
 Matrice& Matrice::operator*=(Matrice const& autre){
-    
+    /*A MEDITER
+    ************
+    ************
+    */
 }
+
 // EXTERNES
 const Matrice operator+(Matrice M1, Matrice const& M2) {
     M1+=M2;
