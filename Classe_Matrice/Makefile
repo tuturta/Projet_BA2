@@ -1,6 +1,6 @@
 CXX = g++
 CC = $(CXX)
-CXXFLAGS = -std=c++11 -Wall -IClasse
+CXXFLAGS = -std=c++11 -Wall -IClasse_Vecteur
 CFLAGS = -c -Wall 
 
 
