@@ -18,13 +18,14 @@ public :
     Matrice& operator+=(Matrice const& autre);
     Matrice& operator-=(Matrice const& autre);
     Matrice& operator*=(Matrice const& autre);
-    Matrice& operator*=(double const& a);
+    Matrice& operator*=(double a);
+    Vecteur operator*=(Vecteur const& v);
     
 };
 // Opérateurs externes
 std::ostream& operator<<(std::ostream& out, Matrice const& matrice);
 const Matrice operator+(Matrice M1, Matrice const& M2);
 const Matrice operator-(Matrice M1, Matrice const& M2);
-const Matrice operator*(Matrice M1, Matrice const& M2); //Produit matriciel
-const Matrice operator*(Matrice M, double a); //Produit par un scalaire
-
+const Matrice operator*(Matrice M1, Matrice const& M2);
+const Matrice operator*(double a, Matrice M);
+const Matrice operator*(Matrice M, Vecteur const& v);
