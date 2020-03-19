@@ -7,15 +7,15 @@ class Vecteur
 {
 public:
 // Constructeurs
-	Vecteur(double x, double y, double z): coordonnees({x,y,z}) {} //vecteur 3D
-	Vecteur(size_t dim) : coordonnees(dim,0.0) {} //Vecteur nul de la dimension voulue
+	Vecteur(double x, double y, double z): coeff({x,y,z}) {} //vecteur 3D
+	Vecteur(size_t dim) : coeff(dim,0.0) {} //Vecteur nul de la dimension voulue
 	Vecteur (std::initializer_list<double> const& list) {  //Permet d'initialiser la matrice avec des valeurs
-		for (auto i : list) { coordonnees.push_back(i);} 
+		for (auto i : list) { coeff.push_back(i);} 
 	}
 	Vecteur (double r, double theta, double phi, bool sph) { //TEST COORD SPHERIQUES (A SUPPRIMER) POURQUOI POSERAIT-IL PROBLEME? 
-		coordonnees.push_back(r*sin(theta)*cos(phi));
-		coordonnees.push_back(r*sin(theta)*sin(phi));
-		coordonnees.push_back(r*cos(theta));
+		coeff.push_back(r*sin(theta)*cos(phi));
+		coeff.push_back(r*sin(theta)*sin(phi));
+		coeff.push_back(r*cos(theta));
 	}
 // Opérateurs internes (prototypes)
 	Vecteur& operator+=(Vecteur const& v); // addition de deux vecteurs
@@ -35,9 +35,10 @@ public:
 	std::size_t dim() const; // renvoie la dimension du vecteur
 	double norme() const; // renvoie la norme
 	double norme2() const; // renvoie la norme au carré et permet d'éviter le temps de calcul de la racine
+	double coeff(size_t x) const;
 // Attributs:
 private:
-	std::vector<double> coordonnees;
+	std::vector<double> coeff;
 	
 };
 

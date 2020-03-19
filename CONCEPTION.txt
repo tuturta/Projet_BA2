@@ -1,1 +1,9 @@
-classe Vecteur 
+classe Vecteur :
+
+-Choix de renvoyer créer une nouvelle instance de classe vecteur pour l'opposé car plus intuitif a utiliser: modifier le vecteur initial
+-Choix de mettre un ^= meme si on ne sait pas encore si on va l'utiliser pour conserver l'encapsulation de ^
+
+CLasse matrice:
+
+-Choix de mettre des vecteurs lignes dans un tableau plutot que des vecteurs colonnes car plus naturel à manipuler (habitude mathématique)
+-Choix 

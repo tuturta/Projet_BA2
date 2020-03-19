@@ -7,11 +7,11 @@ using namespace std;
 
 /// MÉTHODES
 void Vecteur::augmente(double valeur){
-	coordonnees.push_back(valeur);
+	coeff.push_back(valeur);
 }
 void Vecteur::set_coord(size_t position, double valeur){ 
 	if (position<=dim()) {
-		coordonnees[position-1]=valeur; ///Position 1=x,position 2=y, position 3=z
+		coeff[position-1]=valeur; ///Position 1=x,position 2=y, position 3=z
 	}else{
 		Erreur Err = {"DIMENSIONS!",1}; //Erreur de dim, code 1, niveau 1, n'arrette pas le programme
 		throw Err;
@@ -19,25 +19,26 @@ void Vecteur::set_coord(size_t position, double valeur){
 }
 ostream& Vecteur::affiche(ostream& out) const {
 	out << "( ";
-	for(auto x : coordonnees) {
+	for(auto x : coeff) {
 		out << x << " ";
 	}
 	out << ")";
 	return out;
 }
 size_t Vecteur::dim() const {
-	return coordonnees.size();
+	return coeff.size();
 }
 double Vecteur::norme() const {
 	return sqrt(norme2());
 }
 double Vecteur::norme2() const{
 	double retour;
-	for(auto x : coordonnees) {
+	for(auto x : coeff) {
 		retour += x*x;
 	}
 	return retour;
 }
+double Vecteur::coeff(size_t x) const {return coeff[x];}
 
 // DÉFINITIONS DES OPERATEURS:
 // --> EXTERNES
@@ -76,7 +77,7 @@ Vecteur& Vecteur::operator+=(Vecteur const& autre){
 		throw Err;
 	}
 	for (size_t i(0); i<dim(); ++i) {
-			coordonnees[i]+=autre.coordonnees[i];
+			coeff[i]+=autre.coeff[i];
 		}
 		return *this;
 }
@@ -87,13 +88,13 @@ double Vecteur::operator*(Vecteur const& autre){
 	} else {
 		double x;
 		for (size_t i(0); i<dim(); ++i) {
-		x+=coordonnees[i]*autre.coordonnees[i];	
+		x+=coeff[i]*autre.coeff[i];	
 		}
 		return x;
 	}
 }
 Vecteur& Vecteur::operator*=(double a) {
-	for (auto& i : coordonnees) {
+	for (auto& i : coeff) {
 		i*=a;
 	}
 	return *this;
@@ -111,7 +112,7 @@ Vecteur& Vecteur::operator-=(Vecteur const& autre){
 		throw Err;
 	}
 	for(size_t i(0) ; i<dim() ; ++i){
-		coordonnees[i] -= autre.coordonnees[i];
+		coeff[i] -= autre.coeff[i];
 	}
 	return *this;
 }
@@ -121,12 +122,12 @@ Vecteur& Vecteur::operator^=(Vecteur const& autre){
 		throw Err;
 	}
 	double temp0, temp1, temp2;
-		temp0 = coordonnees[1]*autre.coordonnees[2]-coordonnees[2]*autre.coordonnees[1];
-		temp1 = coordonnees[2]*autre.coordonnees[0]-coordonnees[0]*autre.coordonnees[2];
-		temp2 = coordonnees[0]*autre.coordonnees[1]-coordonnees[1]*autre.coordonnees[0];
-		coordonnees[0] = temp0;
-		coordonnees[1] = temp1;
-		coordonnees[2] = temp2;
+		temp0 = coeff[1]*autre.coeff[2]-coeff[2]*autre.coeff[1];
+		temp1 = coeff[2]*autre.coeff[0]-coeff[0]*autre.coeff[2];
+		temp2 = coeff[0]*autre.coeff[1]-coeff[1]*autre.coeff[0];
+		coeff[0] = temp0;
+		coeff[1] = temp1;
+		coeff[2] = temp2;
 		
 		
 		return *this;
@@ -141,7 +142,7 @@ bool Vecteur::operator==(Vecteur const& autre) const{
 		throw Err;
 	}
 	for(size_t i(0) ; i < dim() ; ++i){
-		if(abs(coordonnees[i] - autre.coordonnees[i]) > 1e-8){
+		if(abs(coeff[i] - autre.coeff[i]) > 1e-8){
 			retour = false;
 		}
 	}
@@ -150,7 +151,7 @@ bool Vecteur::operator==(Vecteur const& autre) const{
 Vecteur Vecteur::operator-() const{
 	Vecteur retour(dim());
 	for(size_t i(0) ; i < dim() ; ++i){
-		retour.coordonnees[i] = - coordonnees[i];
+		retour.coeff[i] = - coeff[i];
 	}
 	return retour;
 }
