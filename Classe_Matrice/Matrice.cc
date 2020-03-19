@@ -1,22 +1,28 @@
 #include <iostream>
+#include "C:\Users\arthu\Desktop\Programmation\Projet_BA2\Classe_Vecteur\Vecteur.h"
 #include "Matrice.h"
-#include "erreurs.h"
 using namespace std;
 
 // DÉFINITIONS MÉTHODES
 
 ostream& Matrice::affiche(ostream& sortie) const {
    for(auto vecteur : lignes){
-       cout << vecteur << endl;
+       sortie << vecteur << endl;
    }
+   return sortie;
 }
 
-void Matrice::transp() {
+Matrice Matrice::transp() const{
+    Matrice retour(*this);
     for(size_t i(0) ; i<3; ++i) {
-        for(size_t j(0); j>i and j <3 ; ++j){
-            lignes[i].set_coord(j, lignes[j].coeff(j));
+        for(size_t j(0); j <3 ; ++j){
+            if(j>i){
+                retour.lignes[i].set_coord(j+1, lignes[j].coeff(i));
+                retour.lignes[j].set_coord(i+1, lignes[i].coeff(j));
+            }
         }
     }
+    return retour;
 }
 
 // DÉFINITONS OPÉRATEURS
