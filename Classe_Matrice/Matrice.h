@@ -14,6 +14,8 @@ public :
     // Méthodes
     std::ostream& affiche(std::ostream& sortie) const;
     Matrice transp() const; // renvoie la transposée de la matrice
+    double det() const; 
+    Matrice inv() const;
     // Opérateurs internes
     Matrice& operator+=(Matrice const& autre);
     Matrice& operator-=(Matrice const& autre);
@@ -24,8 +26,8 @@ public :
 };
 // Opérateurs externes
 std::ostream& operator<<(std::ostream& out, Matrice const& matrice);
-const Matrice operator+(Matrice M1, Matrice const& M2);
-const Matrice operator-(Matrice M1, Matrice const& M2);
-const Matrice operator*(Matrice M1, Matrice const& M2);
-const Matrice operator*(double a, Matrice M);
-const Matrice operator*(Matrice M, Vecteur const& v);
+const Matrice operator+(Matrice M1, Matrice const& M2); //addition de deux matrices
+const Matrice operator-(Matrice M1, Matrice const& M2); //soustraction de deux matrices
+const Matrice operator*(Matrice M1, Matrice const& M2); //produit matriciel
+const Matrice operator*(double a, Matrice M); //produit par un scalaire
+const Matrice operator*(Matrice M, Vecteur const& v); //produit par un vecteur

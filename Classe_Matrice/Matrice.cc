@@ -3,6 +3,7 @@
 #include "Matrice.h"
 using namespace std;
 
+
 // DÉFINITIONS MÉTHODES
 
 ostream& Matrice::affiche(ostream& sortie) const {
@@ -22,6 +23,30 @@ Matrice Matrice::transp() const{
             }
         }
     }
+    return retour;
+}
+
+double Matrice::det() const {
+    return (lignes[0].coeff(0)*(lignes[1].coeff(1)*lignes[2].coeff(2) - lignes[1].coeff(2)*lignes[2].coeff(1))
+    -lignes[0].coeff(1)*(lignes[1].coeff(0)*lignes[2].coeff(2)-lignes[1].coeff(2)*lignes[2].coeff(0))
+    +lignes[0].coeff(2)*(lignes[1].coeff(0)*lignes[2].coeff(1)-lignes[1].coeff(1)*lignes[2].coeff(0)));
+}
+
+Matrice Matrice::inv() const{
+    Matrice retour(0,0,0);
+    if(det() > 1e-5){ //Determinant différent de 0 ie matrice inversible
+        retour.lignes[0].set_coord(1,lignes[1].coeff(1)*lignes[2].coeff(2) - lignes[1].coeff(2)*lignes[2].coeff(1));
+        retour.lignes[0].set_coord(2,lignes[0].coeff(2)*lignes[2].coeff(1) - lignes[0].coeff(1)*lignes[2].coeff(2));
+        retour.lignes[0].set_coord(3,lignes[0].coeff(1)*lignes[1].coeff(2) - lignes[0].coeff(2)*lignes[1].coeff(1));
+        retour.lignes[1].set_coord(1,lignes[1].coeff(2)*lignes[2].coeff(0) - lignes[1].coeff(0)*lignes[2].coeff(2));
+        retour.lignes[1].set_coord(2,lignes[0].coeff(0)*lignes[2].coeff(2) - lignes[0].coeff(2)*lignes[2].coeff(0));
+        retour.lignes[1].set_coord(3,lignes[0].coeff(2)*lignes[1].coeff(0) - lignes[0].coeff(0)*lignes[1].coeff(2));
+        retour.lignes[2].set_coord(1,lignes[1].coeff(0)*lignes[2].coeff(1) - lignes[1].coeff(1)*lignes[2].coeff(0));
+        retour.lignes[2].set_coord(2,lignes[0].coeff(1)*lignes[2].coeff(0) - lignes[0].coeff(0)*lignes[2].coeff(1));
+        retour.lignes[2].set_coord(3,lignes[0].coeff(0)*lignes[1].coeff(1) - lignes[0].coeff(1)*lignes[1].coeff(0));
+        retour *= 1/det();
+    }
+
     return retour;
 }
 
