@@ -12,6 +12,5 @@ int main(){
     cout << mat1 <<endl;
     mat1.transp();
     cout << mat1 << endl;
-
     return 0;
 }

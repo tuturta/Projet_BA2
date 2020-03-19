@@ -1,6 +1,6 @@
 SEMAINE 1 :
 [V] Faire le journal.......................................2min 
-[V] Créer/configurer le repository sur github etc..........5h    
+[V] Créer/configurer le repository  git/github etc.........5h    
 [V] lire le projet.........................................30min
 
 SEMAINE 2 :
@@ -20,7 +20,8 @@ SEMAINE 4 :
 [V] Retour sur le fichier avec structure erreur............1h
 [V] Définition des opérateurs/Réagencement classe vecteur..3h
 [ ] Répondre aux questions.................................??
-[ ] Création de la classe matrice..........................??
+[V] Création de la classe matrice et ses opérateurs........3h
+
 
 
 

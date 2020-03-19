@@ -37,7 +37,7 @@ Nous n'ajoutons pas de constructeur de copie, celui par défaut convient pour l'
 Réponse P4.2:
 
 a] On peut ajouter un constructeur par coordonnées sphériques sans que cela ne change quoi que ce soit aux attributs.
-b] ///////////////PAS TROUVÉ\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+b] ****aucune idée : des formules de conversion existent pour passer des coordonnées sphériques aux cartésiennes (pour garder des coordonnees cartesiennes en attributs). Cela implquerait seulement de rajouter un paramètre dans le constructeur, pour ne pas avoir deux constructeurs qui prennent comme arguments 3 'double'.
 
 Réponse P4.3:
 
