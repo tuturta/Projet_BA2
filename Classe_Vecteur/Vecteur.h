@@ -13,11 +13,6 @@ public:
 	Vecteur (std::initializer_list<double> const& list) {  //Permet d'initialiser la matrice avec des valeurs
 		for (auto i : list) { coeff_.push_back(i);} 
 	}
-	Vecteur (double r, double theta, double phi, bool sph) { //TEST COORD SPHERIQUES (A SUPPRIMER) POURQUOI POSERAIT-IL PROBLEME? 
-		coeff_.push_back(r*sin(theta)*cos(phi));
-		coeff_.push_back(r*sin(theta)*sin(phi));
-		coeff_.push_back(r*cos(theta));
-	}
 // Opérateurs internes (prototypes)
 	Vecteur& operator+=(Vecteur const& v); // addition de deux vecteurs
 	Vecteur& operator-=(Vecteur const& v); // soustraction de deux vecteurs
