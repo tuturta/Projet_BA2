@@ -7,6 +7,7 @@ using namespace std;
 // DÉFINITIONS MÉTHODES
 
 ostream& Matrice::affiche(ostream& sortie) const {
+   sortie << endl;
    for(auto vecteur : lignes){
        sortie << vecteur << endl;
    }
@@ -18,8 +19,8 @@ Matrice Matrice::transp() const{
     for(size_t i(0) ; i<3; ++i) {
         for(size_t j(0); j <3 ; ++j){
             if(j>i){
-                retour.lignes[i].set_coord(j+1, lignes[j].coeff(i));
-                retour.lignes[j].set_coord(i+1, lignes[i].coeff(j));
+                retour.lignes[i].set_coord(j, lignes[j].coeff(i));
+                retour.lignes[j].set_coord(i, lignes[i].coeff(j));
             }
         }
     }
@@ -35,15 +36,15 @@ double Matrice::det() const {
 Matrice Matrice::inv() const{
     Matrice retour(0,0,0);
     if(det() > 1e-5){ //Determinant différent de 0 ie matrice inversible
-        retour.lignes[0].set_coord(1,lignes[1].coeff(1)*lignes[2].coeff(2) - lignes[1].coeff(2)*lignes[2].coeff(1));
-        retour.lignes[0].set_coord(2,lignes[0].coeff(2)*lignes[2].coeff(1) - lignes[0].coeff(1)*lignes[2].coeff(2));
-        retour.lignes[0].set_coord(3,lignes[0].coeff(1)*lignes[1].coeff(2) - lignes[0].coeff(2)*lignes[1].coeff(1));
-        retour.lignes[1].set_coord(1,lignes[1].coeff(2)*lignes[2].coeff(0) - lignes[1].coeff(0)*lignes[2].coeff(2));
-        retour.lignes[1].set_coord(2,lignes[0].coeff(0)*lignes[2].coeff(2) - lignes[0].coeff(2)*lignes[2].coeff(0));
-        retour.lignes[1].set_coord(3,lignes[0].coeff(2)*lignes[1].coeff(0) - lignes[0].coeff(0)*lignes[1].coeff(2));
-        retour.lignes[2].set_coord(1,lignes[1].coeff(0)*lignes[2].coeff(1) - lignes[1].coeff(1)*lignes[2].coeff(0));
-        retour.lignes[2].set_coord(2,lignes[0].coeff(1)*lignes[2].coeff(0) - lignes[0].coeff(0)*lignes[2].coeff(1));
-        retour.lignes[2].set_coord(3,lignes[0].coeff(0)*lignes[1].coeff(1) - lignes[0].coeff(1)*lignes[1].coeff(0));
+        retour.lignes[0].set_coord(0,lignes[1].coeff(1)*lignes[2].coeff(2) - lignes[1].coeff(2)*lignes[2].coeff(1));
+        retour.lignes[0].set_coord(1,lignes[0].coeff(2)*lignes[2].coeff(1) - lignes[0].coeff(1)*lignes[2].coeff(2));
+        retour.lignes[0].set_coord(2,lignes[0].coeff(1)*lignes[1].coeff(2) - lignes[0].coeff(2)*lignes[1].coeff(1));
+        retour.lignes[1].set_coord(0,lignes[1].coeff(2)*lignes[2].coeff(0) - lignes[1].coeff(0)*lignes[2].coeff(2));
+        retour.lignes[1].set_coord(1,lignes[0].coeff(0)*lignes[2].coeff(2) - lignes[0].coeff(2)*lignes[2].coeff(0));
+        retour.lignes[1].set_coord(2,lignes[0].coeff(2)*lignes[1].coeff(0) - lignes[0].coeff(0)*lignes[1].coeff(2));
+        retour.lignes[2].set_coord(0,lignes[1].coeff(0)*lignes[2].coeff(1) - lignes[1].coeff(1)*lignes[2].coeff(0));
+        retour.lignes[2].set_coord(1,lignes[0].coeff(1)*lignes[2].coeff(0) - lignes[0].coeff(0)*lignes[2].coeff(1));
+        retour.lignes[2].set_coord(2,lignes[0].coeff(0)*lignes[1].coeff(1) - lignes[0].coeff(1)*lignes[1].coeff(0));
         retour *= 1/det();
     }
 
