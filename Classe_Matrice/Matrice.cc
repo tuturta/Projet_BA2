@@ -9,13 +9,8 @@ ostream& Matrice::affiche(ostream& sortie) const {
     sortie << "[ "; //continuer après avoir defini la transposee
 }
 
-Matrice Matrice::transp() const{
-    for(size_t i(0) ; i<3; ++i) {
-        for(size_t j(0); j>i and j <3 ; ++j){
-            lignes[i].coeff[j] = lignes[j][i];
-        }
-    }
-}
+
+
 
 // DÉFINITONS OPÉRATEURS
 // INTERNES
