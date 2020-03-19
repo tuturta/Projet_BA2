@@ -1,4 +1,5 @@
-#include "Vecteur.h"
+#pragma once
+#include <Vecteur.h>
 #include <array>
 #include <iostream>
 
@@ -12,7 +13,7 @@ public :
     // Accesseurs/Modificateurs si besoin 
     // Méthodes
     std::ostream& affiche(std::ostream& sortie) const;
-    Matrice transp() const; // renvoie la transposée de la matrice
+    void transp(); // renvoie la transposée de la matrice
     // Opérateurs internes
     Matrice& operator+=(Matrice const& autre);
     Matrice& operator-=(Matrice const& autre);
