@@ -1,12 +1,11 @@
 CXX = g++
 CC = $(CXX)
-CXXFLAGS = -std=c++11 -Wall -IClasse_Vecteur
-CFLAGS = -c -Wall 
-
-
+ADRESS =  C:/Users/arthu/Desktop/Programmation/Projet_BA2/Classe_Vecteur/
+CXXFLAGS = -std=c++11 -Wall
 
 all: testMatrice
 
-testMatrice : Matrice.o testMatrice.o
-testMatrice.o: testMatrice.cc Matrice.h
-Matrice.o: Matrice.cc Matrice.h
+testMatrice : Matrice.o testMatrice.o $(ADRESS)Vecteur.o
+testMatrice.o: testMatrice.cc Matrice.h $(ADRESS)Vecteur.h $(ADRESS)erreurs.h
+Matrice.o: testMatrice.cc Matrice.h $(ADRESS)Vecteur.h 
+Vecteur.o : $(ADRESS)Vecteur.cc $(ADRESS)Vecteur.h 

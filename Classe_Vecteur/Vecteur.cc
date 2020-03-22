@@ -11,7 +11,7 @@ void Vecteur::augmente(double valeur){
 }
 void Vecteur::set_coord(size_t position, double valeur){ 
 	if (position<=dim()) {
-		coeff_[position-1]=valeur; ///Position 1=x,position 2=y, position 3=z
+		coeff_[position]=valeur; ///Position 0=x,position 1=y, position 2=z
 	}else{
 		Erreur Err = {"DIMENSIONS!",1}; //Erreur de dim, code 1, niveau 1, n'arrette pas le programme
 		throw Err;
