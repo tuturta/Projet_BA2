@@ -1,6 +1,6 @@
 CXX = g++
 CC = $(CXX)
-ADRESS =  C:/Users/arthu/Desktop/Programmation/Projet_BA2/Classe_Vecteur/
+ADRESS =  ../Classe_Vecteur/
 CXXFLAGS = -std=c++11 -Wall
 
 all: testMatrice
