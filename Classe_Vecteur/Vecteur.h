@@ -3,13 +3,14 @@
 #include <initializer_list>
 #include <cmath>
 #include <iostream>
+#include "../erreurs.h"
 
 class Vecteur 
 {
 public:
 // Constructeurs
 	Vecteur(double x, double y, double z): coeff_({x,y,z}) {} //vecteur 3D
-	Vecteur(size_t dim) : coeff_(dim,0.0) {} //Vecteur nul de la dimension voulue
+	Vecteur(size_t dim) : coeff_(dim,0.0) {}//Vecteur nul de la dimension voulue
 	Vecteur (std::initializer_list<double> const& list) {  //Permet d'initialiser la matrice avec des valeurs
 		for (auto i : list) { coeff_.push_back(i);} 
 	}

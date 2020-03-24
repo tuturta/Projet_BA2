@@ -1,5 +1,5 @@
 #include "Vecteur.h"
-#include "erreurs.h"
+#include "../erreurs.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -27,6 +27,8 @@ int main(){
 		cout << "Cense renvoyer ( 0 0 0 ) : " << (vect1 ^= vect1) << endl; // test le produit vectoriel de vecteurs nulles
 		cout << "Cense renvoyer ( -2 -5 4 ) : " << (vect3 ^ vect4) << endl;  // test 
 		cout << "Censer renvoyer ( 0.267261 0.534522 0.801784 ) " << ~vect4 << endl; // test le vecteur unitaire de v3
+		Vecteur vect_imp(-1);
+		cout << vect_imp;
 	}
 	catch (Erreur& err) {
 		if(err.code==1) {

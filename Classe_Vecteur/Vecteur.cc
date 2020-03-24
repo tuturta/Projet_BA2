@@ -1,6 +1,6 @@
 using namespace std;
 #include <iostream>
-#include "erreurs.h"
+#include "../erreurs.h"
 #include "Vecteur.h"
 #include <cmath>
 #include <string>

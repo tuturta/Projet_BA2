@@ -1,11 +1,16 @@
-#include "../Classe_Vecteur/Vecteur.h"
+#include "../Classe_Toupie/Toupie.h"
+
 
 class Integrateur{
-   protected:
-    double pas_de_temps;
-    Vecteur P;
-    Vecteur P_point;
    public: 
-    void evolue()
+    void evolue(Toupie& T, double dt) const;
+    void evolue_nfois(Toupie& T, double dt) const;
 
-}
+};
+
+class IntegrateurEulerCromer : public Integrateur {
+    public :
+    void evolue(Toupie& T, double dt) const;
+    void evolue_nfois(Toupie& T, double dt, unsigned int n) const;
+
+};
