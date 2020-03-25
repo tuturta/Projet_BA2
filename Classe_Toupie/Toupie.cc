@@ -1,20 +1,32 @@
-#include <iostream>
 #include "Toupie.h"
-#include "../Classe_Vecteur/Vecteur.h"
+#include <iostream>
+//#include "../Classe_Vecteur/Vecteur.h"
 #include <cmath>
-#include "../Classe_Matrice/Matrice.h"
+//#include "../Classe_Matrice/Matrice.h"
 using namespace std;
 
 //=============================CLASSE TOUPIE===================================//
 
 // METHODES
-Vecteur Toupie::fonction_f() {
+Vecteur Toupie::fonction_f() const {
     return -P;
 } 
 ostream& Toupie::affiche(ostream& sortie) const {
     sortie << P << " # paramètres" << endl;
     sortie << P_point << " # vitesse" << endl;
     return sortie;
+}
+Vecteur Toupie::getP() const {
+    return P;
+}
+Vecteur Toupie::getP_point() const {
+    return P_point;
+}
+void Toupie::setP(Vecteur const& v) {
+    P=v;
+}
+void Toupie::setP_point(Vecteur const& v){
+    P_point=v;
 }
 // SURCHARGES D'OPÉRATEURS 
 ostream& operator<<(std::ostream& sortie, Toupie const& toupie) {
@@ -35,3 +47,8 @@ Matrice ConeSimple::matrice_inertie() const { // Matrice d'inertie calculé grac
     I3 = (3/10)*masse()*pow(rayon,2);
     return Matrice(I1, I1, I3);
 }
+
+
+Vecteur Objet_en_chute_libre::fonction_f() const {
+        return {0,-9.81};
+    }

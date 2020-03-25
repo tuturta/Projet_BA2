@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../Classe_Vecteur/Vecteur.h"
+//#include "../Classe_Vecteur/Vecteur.h"
 #include "Matrice.h"
 using namespace std;
 

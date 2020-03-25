@@ -1,26 +1,25 @@
 #pragma once
-#include "../Classe_Vecteur/Vecteur.h"
+//#include "../Classe_Vecteur/Vecteur.h"
 #include "../Classe_Matrice/Matrice.h"
-
-#include <iostream>
+//#include "../Classe_Integrateur/Integrateur.h"
+//#include <iostream>
 
 class Toupie {
 
    protected : 
-    double masse_volumique; //Pour le moment, on le met dans la classe toupie car on ne connait pas la suite
     Vecteur P; // Vecteur de paramètres
     Vecteur P_point; // Dérivée temporelle des degrés de liberté
+    double masse_volumique; //Pour le moment, on le met dans la classe toupie car on ne connait pas la suite
    
    public :
     Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique) 
     : P(P), P_point(P_point), masse_volumique(masse_volumique) {} // Voir plus tard pour le corps : valeurs par défaut ? Message ?
-    Vecteur fonction_f(); //Equation différentielles du mvt
+    Vecteur fonction_f() const; //Equation différentielles du mvt
     std::ostream& affiche(std::ostream& sortie) const;
     Vecteur getP() const;
     Vecteur getP_point() const;
-    void setP(Vecteur const& P);
-    void setP_point();
-
+    void setP(Vecteur const& autre);
+    void setP_point(Vecteur const& autre);
 };
 std::ostream& operator<<(std::ostream& sortie,Toupie const& toupie);
 
@@ -45,8 +44,5 @@ class ConeSimple : public Toupie{
 class Objet_en_chute_libre : public Toupie {
    public:
     using Toupie::Toupie;
-    Vecteur fonction_f() {
-        return {0,-9.81};
-    }
-
+    Vecteur fonction_f() const;
 };

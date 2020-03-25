@@ -1,3 +1,4 @@
+#pragma once
 #include "../Classe_Toupie/Toupie.h"
 
 
