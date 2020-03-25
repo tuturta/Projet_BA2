@@ -1,6 +1,5 @@
 export CXX = g++
-export CXXFLAGS = -Wall -std=c++17 -g -fsanitize=address
-export LDFLAGS =  -fsanitize=address
+export CXXFLAGS = -Wall -std=c++17 -g
 
 
 #############A MODIFIER################

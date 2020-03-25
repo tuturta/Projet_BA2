@@ -1,7 +1,9 @@
+#define _USE_MATH_DEFINES //Pour régler le problème de M_PI non reconnu par le compilateur sur windows
+#include <cmath>    
+
 #include "Toupie.h"
 #include <iostream>
 //#include "../Classe_Vecteur/Vecteur.h"
-#include <cmath>
 //#include "../Classe_Matrice/Matrice.h"
 using namespace std;
 
@@ -9,10 +11,10 @@ using namespace std;
 
 // METHODES
 Vecteur Toupie::fonction_f() const {
-    return -P;
+    return {0,-9.81};
 } 
 ostream& Toupie::affiche(ostream& sortie) const {
-    sortie << P << " # paramètres" << endl;
+    sortie << P << " # parametres" << endl;
     sortie << P_point << " # vitesse" << endl;
     return sortie;
 }
