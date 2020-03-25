@@ -9,7 +9,7 @@ using namespace std;
 ostream& Matrice::affiche(ostream& sortie) const {
    sortie << endl;
    for(auto vecteur : lignes){
-       sortie << vecteur << endl;
+       sortie << "( " <<  vecteur << ")" << endl;
    }
    return sortie;
 }
