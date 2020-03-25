@@ -50,7 +50,7 @@ Matrice ConeSimple::matrice_inertie() const { // Matrice d'inertie calculé grac
     return Matrice(I1, I1, I3);
 }
 
-
+//============================CLASSE OBJ CHUTE LIBRE==================
 Vecteur Objet_en_chute_libre::fonction_f() const {
         return {0,-9.81};
     }
