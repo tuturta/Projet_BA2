@@ -18,11 +18,9 @@ void Vecteur::set_coord(size_t position, double valeur){
 	}
 }
 ostream& Vecteur::affiche(ostream& out) const {
-	//out << "( ";
 	for(auto x : coeff_) {
 		out << x << " ";
 	}
-	//out << ")";
 	return out;
 }
 size_t Vecteur::dim() const {

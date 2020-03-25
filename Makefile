@@ -4,7 +4,7 @@ export CXXFLAGS = -Wall -std=c++17 -g
 
 #############A MODIFIER################
 
-CLASSNAME = Vecteur
+CLASSNAME = Integrateur
 
 #############PAS TOUCHE##################
 
