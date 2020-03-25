@@ -1,6 +1,5 @@
 #pragma once
 #include "../Classe_Vecteur/Vecteur.h"
-#include "../Classe_Integrateur/Integrateur.h"
 #include "../Classe_Matrice/Matrice.h"
 
 #include <iostream>
@@ -17,7 +16,10 @@ class Toupie {
     : P(P), P_point(P_point), masse_volumique(masse_volumique) {} // Voir plus tard pour le corps : valeurs par défaut ? Message ?
     Vecteur fonction_f(); //Equation différentielles du mvt
     std::ostream& affiche(std::ostream& sortie) const;
-    friend void Integrateur::evolue(Toupie& T, double dt) const;
+    Vecteur getP() const;
+    Vecteur getP_point() const;
+    void setP(Vecteur const& P);
+    void setP_point();
 
 };
 std::ostream& operator<<(std::ostream& sortie,Toupie const& toupie);

@@ -3,7 +3,6 @@
 #include <initializer_list>
 #include <cmath>
 #include <iostream>
-#include "../erreurs.h"
 
 class Vecteur 
 {
