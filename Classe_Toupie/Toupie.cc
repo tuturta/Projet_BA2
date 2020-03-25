@@ -11,7 +11,7 @@ using namespace std;
 
 // METHODES
 Vecteur Toupie::fonction_f() const {
-    return -P;
+    return {0,-9.81};
 } 
 ostream& Toupie::affiche(ostream& sortie) const {
     sortie << P << " # parametres" << endl;
