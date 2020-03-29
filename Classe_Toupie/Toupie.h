@@ -2,7 +2,7 @@
 //#include "../Classe_Vecteur/Vecteur.h"
 #include "../Classe_Matrice/Matrice.h"
 //#include "../Classe_Integrateur/Integrateur.h"
-//#include <iostream>
+#include <iostream>
 
 class Toupie {
 
