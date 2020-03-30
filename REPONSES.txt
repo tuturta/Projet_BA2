@@ -50,5 +50,5 @@ Réponse P6.1:
 Une toupie en cone simple EST UNE toupie, donc la classe ConeSimple est une classe-enfant de la classe Toupie. Elle hérite ainsi de tous les attributs et méthodes de la classe-parente Toupie.
 
 Réponse P8.1: 
-On souhaite que la methode dessine() ait un comportement polymorphique : dans notre cas, qu'elle s'adapte en fonction du support à dessin. En revanche, on ne peut pas écrire une méthode dessine() commune à tous les dessinables.
+On souhaite que la methode dessine() ait un comportement polymorphique : dans notre cas, qu'elle s'adapte en fonction du support à dessin. On ne peut pas écrire une méthode dessine() commune à tous les dessinables.
 Pour cela, dessine doit être une methode virtuelle pure.
