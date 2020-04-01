@@ -10,12 +10,11 @@ class SupportADessin {
    public :
     virtual ~SupportADessin() {}
     virtual void dessine(Contenu const& a_dessiner) =0;
-    /* Mettre ici toutes les méthodes pour dessiner tous les objets que l'on veut dessiner par exemple:
-    *   virtual void dessine(Nounours const& a_dessiner) = 0;
-    *   virtual void dessine(Voiture consz& a_dessiner) = 0;
+    /* Mettre ici toutes les méthodes pour dessiner tous les objets que l'on veut dessiner
     */
    virtual void dessine(ConeSimple const&) =0;
-   virtual void dessine(Systeme const&) = 0;
+   virtual void dessine(Objet_en_chute_libre const&) =0;
+   virtual void dessine(Systeme const&) =0;
    //....
 };
 

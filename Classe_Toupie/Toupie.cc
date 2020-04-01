@@ -1,8 +1,8 @@
 #define _USE_MATH_DEFINES //Pour régler le problème de M_PI non reconnu par le compilateur sur windows
 #include <cmath>    
-
 #include "Toupie.h"
 #include <iostream>
+#include "../Open_GL/Classe_Dessinable/general/support_a_dessin.h"
 //#include "../Classe_Vecteur/Vecteur.h"
 //#include "../Classe_Matrice/Matrice.h"
 using namespace std;
@@ -18,7 +18,7 @@ ostream& Toupie::affiche(ostream& sortie) const {
 
 ostream& Toupie::affiche_parametres(ostream& out) const {
     out << "Paramètre : " << P << endl;
-    out << "Dérivée : " << P_Point << endl;
+    out << "Dérivée : " << P_point << endl;
     out << "Masse volumique (kg m-3) :" << masse_volumique << endl;
     return out;
 }
@@ -34,10 +34,7 @@ void Toupie::setP(Vecteur const& v) {
 void Toupie::setP_point(Vecteur const& v){
     P_point=v;
 }
-// Méthode virtuelle dessine :
-void Toupie::dessine() {
-    support->dessine(*this);
-}
+
 // SURCHARGES D'OPÉRATEURS 
 ostream& operator<<(std::ostream& sortie, Toupie const& toupie) {
     return toupie.affiche(sortie);
@@ -46,9 +43,14 @@ ostream& operator<<(std::ostream& sortie, Toupie const& toupie) {
 
 //=============================CLASSE CONE SIMPLE===================================//
 
-//METHODE:
+//METHODES:
 
-///REPRENDRE ICI AVEC VIRTUAL AFFICHE PARAM //////////////////////////////////////////////////////////////
+ostream& ConeSimple::affiche_parametres(ostream& out) const {
+    Toupie::affiche_parametres(out);
+    out << "Hauteur (m) : " << hauteur << endl;
+    out << "Rayon (m) : " << rayon << endl;
+    out << "Origine (A) : " << origine << endl;
+}
 
 double ConeSimple::masse() const{ //masse calculé grace a la formule p8
     return (1/3)*M_PI*masse_volumique*pow(rayon,2)*hauteur;

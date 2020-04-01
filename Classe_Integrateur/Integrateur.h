@@ -5,7 +5,7 @@
 
 class Integrateur{
    public: 
-    virtual void evolue(unique_ptr<Toupie> const& T, const double dt) const = 0;
+    virtual void evolue(unique_ptr<Toupie> const& T, const double dt) const =0;
 };
 
 class IntegrateurEulerCromer : public Integrateur {
