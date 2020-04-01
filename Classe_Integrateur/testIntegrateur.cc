@@ -5,7 +5,7 @@
 using namespace std;
 
 int main () {
-    unsigned int n(10);
+    unsigned int n(200);
     const double dt(0.01);
     double t(0);
     Objet_en_chute_libre toupie({0,1},{1.0,2.0},2.1);

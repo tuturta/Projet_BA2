@@ -6,7 +6,7 @@ SEMAINE 1 :
 SEMAINE 2 :
 [V] Créer la classe vecteur................................3h
 [V] Créer le fichier réponse...............................30min
-[ ] Lire introduction OpenGL...............................?
+[V] Introduction OpenGL....................................3h
 [V] Séparer les fichiers...................................30min
 
 SEMAINE 3 :
@@ -20,8 +20,18 @@ SEMAINE 4 :
 [V] Retour sur le fichier avec structure erreur............1h
 [V] Définition des opérateurs/Réagencement classe vecteur..3h
 [ ] Répondre aux questions.................................??
-[V] Création de la classe matrice et ses opérateurs........3h
+[V] Création de la classe matrice et ses opérateurs........5h
 
+SEMAINE 5 :
+
+[V] Ajout de la classe Toupie..............................3h
+[V] Ajout de la classe Integrateur + test GNU plot.........3h
+[V] Ecriture du Makefile et correction des erreurs.........8h
+
+SEMAINE 6 :
+
+[] Ajout du polymorphisme dans la classe toupie/integrateur??
+[] Mise en place de l'espace de travail (Qt/OpenGl)........??
 
 
 
