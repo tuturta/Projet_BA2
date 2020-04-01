@@ -2,7 +2,7 @@
 #define TEXT_VIEWER_H
 
 #include <iostream>
-#include "support_a_dessin.h"
+#include "general/support_a_dessin.h"
 
 class TextViewer : public SupportADessin {
  public:
@@ -11,7 +11,10 @@ class TextViewer : public SupportADessin {
   {}
   virtual ~TextViewer() {}
 
-  virtual void dessine(Contenu const& a_dessiner) override;
+  virtual void dessine(ConeSimple const&) override;
+  virtual void dessine(Objet_en_chute_libre const&) override;
+  virtual void dessine(Systeme const&) override;
+
 
  private:
   std::ostream& flot;

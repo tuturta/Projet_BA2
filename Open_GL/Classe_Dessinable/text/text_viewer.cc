@@ -1,8 +1,13 @@
 #include <iostream> // pour endl
 #include "text_viewer.h"
-#include "contenu.h"
 
-void TextViewer::dessine(Contenu const& a_dessiner)
-{
-  flot << a_dessiner.infos() << std::endl;
-}
+   void TextViewer::dessine(ConeSimple const& objet){
+     objet.affiche(flot);
+   }
+   void TextViewer::dessine(Objet_en_chute_libre const& objet){
+     objet.affiche(flot);
+   }
+   void TextViewer::dessine(Systeme const& objet){
+     objet.affiche(flot);
+   }
+
