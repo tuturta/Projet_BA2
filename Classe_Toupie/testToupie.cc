@@ -1,12 +1,12 @@
 #include "Toupie.h"
 #include "../erreurs.h"
-#include "Open_GL/Classe_Dessinable/text/text_viewer.h"
+#include "../Open_GL/Classe_Dessinable/text/text_viewer.h"
 using namespace std;
 
 int main() {
     try{
-        TextViewer support(/*blabla*/);
-        ConeSimple cone1(,{0.0,0.0,0.0},{1.0,1.0,1.0},3.0,5.0,2.0);
+        TextViewer 
+        ConeSimple cone1({0.0,0.0,0.0},{1.0,1.0,1.0},3.0,5.0,2.0);
         cout << cone1;
         Objet_en_chute_libre obj1(, {0.0,0.0,0.0},{1.0,1.0,1.0},3.0);
         cout << obj1;

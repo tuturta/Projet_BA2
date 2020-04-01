@@ -1,5 +1,7 @@
 #include "Integrateur.h"
 #include <memory>
+#include "../Open_GL/Classe_Dessinable/text/text_viewer.h"
+#include <fstream>
 //#include "../Classe_Toupie/Toupie.h"
 
 using namespace std;
@@ -8,10 +10,15 @@ int main () {
     const unsigned int n(20);
     const double dt(0.01);
     double t(0);
-    Objet_en_chute_libre toupie({0,1},{1.0,2.0},2.1);
+    ofstream out;
+    out.open("test.txt");
+    TextViewer text(out);
+    unique_ptr<SupportADessin> support_ptr(new TextViewer(text));
+    Objet_en_chute_libre toupie(support_ptr,{0,1},{1.0,2.0},2.1);
     IntegrateurEulerCromer integrateur;
     Toupie* toupie_ptr(&toupie);
-    Integrateur* int_ptr(&integrateur);
+    unique_ptr<Toupie> toupie_ptr(new Objet_en_chute_libre(toupie));
+    unique_ptr<IntegrateurEulerCromer> int_ptr(new IntegrateurEulerCromer(integrateur));
     
     cout << " vitesse initiale "<< toupie.getP_point() <<endl;
     cout << " position initiale "<< toupie.getP() << endl;

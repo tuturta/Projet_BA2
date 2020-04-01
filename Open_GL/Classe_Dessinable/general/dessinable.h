@@ -9,7 +9,7 @@ class Dessinable {
   Dessinable(unique_ptr<SupportADessin>&& support): support(move(support)) {}
   virtual ~Dessinable() {}
   virtual void dessine() = 0;
-
+  virtual ostream& affiche(ostream& out) const = 0;
  protected:
   unique_ptr<SupportADessin> support;
 };

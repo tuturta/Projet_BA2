@@ -55,7 +55,9 @@ class ConeSimple : public Toupie{
 //================================================================================
 class Objet_en_chute_libre : public Toupie {
    public:
-    using Toupie::Toupie;
+    Objet_en_chute_libre(unique_ptr<SupportADessin>&& support, Vecteur const& P, Vecteur const& P_point, double masse_volumique) 
+    : Toupie(move(support), P, P_point, masse_volumique) {}
+    
     virtual Vecteur fonction_f() const override;
 
     virtual void dessine() override;
