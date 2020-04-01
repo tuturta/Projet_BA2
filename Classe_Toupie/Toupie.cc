@@ -46,6 +46,7 @@ ostream& operator<<(std::ostream& sortie, Toupie const& toupie) {
 //METHODES:
 
 ostream& ConeSimple::affiche_parametres(ostream& out) const {
+    out << "CONE SIMPLE " << endl;
     Toupie::affiche_parametres(out);
     out << "Hauteur (m) : " << hauteur << endl;
     out << "Rayon (m) : " << rayon << endl;

@@ -5,9 +5,11 @@
 using namespace std;
 
 ostream& Systeme::affiche(ostream& out) const {
+    out << "Le sytème est constitué de  :" << endl;
     for (auto const& ptr_toupie : objets) {
         if(ptr_toupie!=nullptr) {
             (*ptr_toupie).affiche_parametres(out);
+            out << endl;
         }
     }
     return out;

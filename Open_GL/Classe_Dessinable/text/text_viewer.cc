@@ -1,6 +1,6 @@
 #include <iostream> // pour endl
 #include "text_viewer.h"
-#include "contenu.h"
+#include "../general/contenu.h"
 
 void TextViewer::dessine(Contenu const& a_dessiner)
 {
