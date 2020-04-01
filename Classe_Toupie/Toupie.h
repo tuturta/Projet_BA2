@@ -23,7 +23,7 @@ class Toupie : public Dessinable {
     
     std::ostream& affiche(std::ostream& sortie) const;
     
-    virtual std::ostream& affiche_parametres(ostream& out) const;
+    virtual std::ostream& affiche_parametres(std::ostream& out) const;
 
     Vecteur getP() const;
     Vecteur getP_point() const;
