@@ -6,7 +6,7 @@ class SupportADessin;
 
 class Dessinable {
  public:
-  /*Dessinable(unique_ptr<SupportADessin>&& support): support(move(support)) {}*/
+  Dessinable(unique_ptr<SupportADessin>&& support): support(move(support)) {}
   virtual ~Dessinable() {}
   virtual void dessine() = 0;
 
