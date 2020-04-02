@@ -14,10 +14,10 @@ int main () {
     out.open("test.txt");
     TextViewer text(out);
     unique_ptr<SupportADessin> support_ptr(new TextViewer(text));
-    Objet_en_chute_libre toupie(support_ptr,{0,1},{1.0,2.0},2.1);
+    Objet_en_chute_libre toupie(move(support_ptr),{0,1},{1.0,2.0},2.1);
     IntegrateurEulerCromer integrateur;
     Toupie* toupie_ptr(&toupie);
-    unique_ptr<Toupie> toupie_ptr(new Objet_en_chute_libre(toupie));
+    unique_ptr<Toupie> toupie_ptr(new Objet_en_chute_libre(toupie)); //PB constructeur de copie
     unique_ptr<IntegrateurEulerCromer> int_ptr(new IntegrateurEulerCromer(integrateur));
     
     cout << " vitesse initiale "<< toupie.getP_point() <<endl;

@@ -14,4 +14,4 @@ class Dessinable {
   unique_ptr<SupportADessin> support;
 };
 
-#endif;
+#endif

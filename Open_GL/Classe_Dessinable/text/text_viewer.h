@@ -11,9 +11,9 @@ class TextViewer : public SupportADessin {
   {}
   virtual ~TextViewer() {}
 
-  virtual void dessine(ConeSimple const&) override;
-  virtual void dessine(Objet_en_chute_libre const&) override;
-  virtual void dessine(Systeme const&) override;
+  virtual void dessine(ConeSimple const& objet) override;
+  virtual void dessine(Objet_en_chute_libre const& objet) override;
+  virtual void dessine(Systeme const& objet) override;
 
 
  private:
