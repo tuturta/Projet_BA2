@@ -1,17 +1,17 @@
 #ifndef DESSINABLE_H
 #define DESSINABLE_H
-#include <memory>
-
+#include "../text/text_viewer.h"
+#include <iostream>
 class SupportADessin;
 
 class Dessinable {
  public:
-  Dessinable(unique_ptr<SupportADessin>&& support): support(move(support)) {}
+  Dessinable(): support(new TextViewer(TextViewer(cout))) {}
+  Dessinable(SupportADessin* support): support(support) {}
   virtual ~Dessinable() {}
   virtual void dessine() = 0;
-  virtual ostream& affiche(ostream& out) const = 0;
  protected:
-  unique_ptr<SupportADessin> support;
+  SupportADessin* support;
 };
 
 #endif

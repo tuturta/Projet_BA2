@@ -1,8 +1,9 @@
 #ifndef SUPPORT_A_DESSIN_H
 #define SUPPORT_A_DESSIN_H
-#include "../../../Classe_Toupie/Toupie.h"
+#include "../../../Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../../../Classe_Systeme/Systeme.h"
 
+class Dessinable;
 
 class SupportADessin {
    public :
@@ -15,4 +16,4 @@ class SupportADessin {
    //....
 };
 
-#endif;
+#endif
