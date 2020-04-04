@@ -2,9 +2,6 @@
 #include <cmath>    
 #include "Toupie.h"
 #include <iostream>
-#include "../Open_GL/Classe_Dessinable/general/support_a_dessin.h"
-//#include "../Classe_Vecteur/Vecteur.h"
-//#include "../Classe_Matrice/Matrice.h"
 using namespace std;
 
 //=============================CLASSE TOUPIE===================================//
@@ -22,18 +19,8 @@ ostream& Toupie::affiche_parametres(ostream& out) const {
     out << "Masse volumique (kg m-3) :" << masse_volumique << endl;
     return out;
 }
-Vecteur Toupie::getP() const {
-    return P;
-}
-Vecteur Toupie::getP_point() const {
-    return P_point;
-}
-void Toupie::setP(Vecteur const& v) {
-    P=v;
-}
-void Toupie::setP_point(Vecteur const& v){
-    P_point=v;
-}
+
+
 
 // SURCHARGES D'OPÉRATEURS 
 ostream& operator<<(std::ostream& sortie, Toupie const& toupie) {
@@ -60,6 +47,13 @@ Matrice ConeSimple::matrice_inertie() const { // Matrice d'inertie calculé grac
     I1 = masse()*((3/20)*pow(rayon,2) + (3/5)*pow(hauteur,2));
     I3 = (3/10)*masse()*pow(rayon,2);
     return Matrice(I1, I1, I3);
+}
+
+unique_ptr<ConeSimple> ConeSimple::clone() const{
+    return unique_ptr<ConeSimple>(new ConeSimple(*this));
+}
+unique_ptr<Integrable> ConeSimple::copie() const{
+    return clone();
 }
 
 // Méthode virtuelle dessinable

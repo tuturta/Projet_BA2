@@ -1,4 +1,5 @@
 #pragma once
+#include "../Classe_Integrable/Classe_Toupie/Toupie.h"
 
 
 class Integrateur{

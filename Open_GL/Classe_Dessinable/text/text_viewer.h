@@ -2,7 +2,7 @@
 #define TEXT_VIEWER_H
 
 #include <iostream>
-#include "general/support_a_dessin.h"
+#include "../general/support_a_dessin.h"
 
 class TextViewer : public SupportADessin {
  public:

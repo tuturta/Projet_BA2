@@ -1,6 +1,5 @@
+#include "../Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "Systeme.h"
-#include "../Classe_Toupie/Toupie.h"
-#include "../Open_GL/Classe_Dessinable/general/dessinable.h"
 
 using namespace std;
 
@@ -20,7 +19,7 @@ ostream& operator<<(ostream& out, Systeme const& S) {
 void Systeme::evolue(){
     for(auto const& ptr_toupie : objets){
         if(ptr_toupie != nullptr){
-            integrateur.evolue(ptr_toupie, 0.1);
+            integrateur.evolue(*ptr_toupie, 0.1);
         }
     }
 }

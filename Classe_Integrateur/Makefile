@@ -1,12 +1,19 @@
 CXX = g++
 CXXFLAGS = -Wall -std=c++17 -g
 
-SRC = Integrateur.cc testIntegrateur.cc ../Classe_Toupie/Toupie.cc ../Classe_Vecteur/Vecteur.cc
-OBJ = $(SRC:.cc=.o)
-EXEC = testIntegrateur
+#SRC = Integrateur.cc testIntegrateur.cc ../Open_GL/Classe_Dessinable/text/text_viewer.cc 
+#OBJ = $(SRC:.cc=.o)
+#EXEC = testIntegrateur
 
-all: $(EXEC)
+#all: $(EXEC)
 
-$(EXEC): $(OBJ)
-	$(CXX) -o $@ $(OBJ) $(LBLIBS)
+#$(EXEC): $(OBJ)
+#	$(CXX) -o $@ $(OBJ) $(LBLIBS)
 
+
+all : testIntegrateur
+
+testIntegrateur : Integrateur.o testToupie.o ../Open_GL/Classe_Dessinable/text/text_viewer.o
+Integrateur.o : Integrateur.cc Integrateur.h
+testToupie.o : testIntegrateur.cc Integrateur.h ../Open_GL/Classe_Dessinable/text/text_viewer.h
+text_viewer.o : text_viewer.cc text_viewer.h

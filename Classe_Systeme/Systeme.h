@@ -1,11 +1,10 @@
-#pragma once
-#include "../Open_GL/Classe_Dessinable/general/dessinable.h"
-#include "../Classe_Toupie/Toupie.h"
-#include "../Classe_Integrateur/Integrateur.h"
 #include <vector>
 #include <memory>
+#include "../Classe_Integrable/Classe_Toupie/Toupie.h"
+#include "../Classe_Integrateur/Integrateur.h"
 
-class Systeme : public Dessinable {
+
+class Systeme : public Dessinable{
    protected :
     std::vector<std::unique_ptr<Toupie>> objets; //classe hétérogène de Toupie
     IntegrateurEulerCromer integrateur; // Integrateur propre au système
