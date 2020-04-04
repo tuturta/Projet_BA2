@@ -3,8 +3,8 @@
 #include <iostream>
 #include <memory>
 //#include "../Classe_Vecteur/Vecteur.h"
-#include "../Classe_Matrice/Matrice.h"
-#include "../Open_GL/Classe_Dessinable/general/dessinable.h"
+//#include "../Classe_Matrice/Matrice.h"
+//#include "../Open_GL/Classe_Dessinable/general/dessinable.h"
 //#include "../Classe_Integrateur/Integrateur.h"
 
 
@@ -16,7 +16,7 @@ class Toupie : public Dessinable {
     double masse_volumique; //Pour le moment, on le met dans la classe toupie car on ne connait pas la suite
     Vecteur origine; //*****pour l'instant aucune autre info dessus...******
    public :
-    Toupie (unique_ptr<SupportADessin>&& support, Vecteur const& P, Vecteur const& P_point, double masse_volumique) 
+    Toupie (unique_ptr<SupportADessin> support, Vecteur const& P, Vecteur const& P_point, double masse_volumique) 
     : Dessinable(move(support)), P(P), P_point(P_point), masse_volumique(masse_volumique), origine(P) {} // Voir plus tard pour le corps : valeurs par défaut ? Message ?
     /*si on doit bien initialiser origine avec la pos d'origine */
     virtual Vecteur fonction_f() const = 0; //Equation différentielles du mvt
@@ -55,8 +55,7 @@ class ConeSimple : public Toupie{
 //================================================================================
 class Objet_en_chute_libre : public Toupie {
    public:
-    Objet_en_chute_libre(unique_ptr<SupportADessin>&& support, Vecteur const& P, Vecteur const& P_point, double masse_volumique) 
-    : Toupie(move(support), P, P_point, masse_volumique) {}
+    using Toupie::Toupie;
     
     virtual Vecteur fonction_f() const override;
 

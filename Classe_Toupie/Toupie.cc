@@ -4,7 +4,7 @@
 #include <iostream>
 #include "../Open_GL/Classe_Dessinable/general/support_a_dessin.h"
 //#include "../Classe_Vecteur/Vecteur.h"
-//#include "../Classe_Matrice/Matrice.h"
+#include "../Classe_Matrice/Matrice.h"
 using namespace std;
 
 //=============================CLASSE TOUPIE===================================//
