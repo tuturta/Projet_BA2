@@ -56,7 +56,6 @@ class ConeSimple : public Toupie{
 class Objet_en_chute_libre : public Toupie {
    public:
     using Toupie::Toupie;
-    
     virtual Vecteur fonction_f() const override;
 
     virtual void dessine() override;
