@@ -5,3 +5,6 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp
+
+DISTFILES += \
+    ../build-Open_GL-Desktop_Qt_5_14_1_MinGW_64_bit-Debug/Makefile

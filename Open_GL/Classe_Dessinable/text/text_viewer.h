@@ -1,3 +1,4 @@
+#pragma once
 #ifndef TEXT_VIEWER_H
 #define TEXT_VIEWER_H
 
@@ -10,11 +11,11 @@ class TextViewer : public SupportADessin {
     : flot(flot)
   {}
   virtual ~TextViewer() {}
-
+  //Les methodes sont à modifier histoire que leurs sorties puissent être lu par gnu plot
   virtual void dessine(ConeSimple const& objet) override;
   virtual void dessine(Objet_en_chute_libre const& objet) override;
+  virtual void dessine(Toupie const& objet) override;
   virtual void dessine(Systeme const& objet) override;
-
 
  private:
   std::ostream& flot;

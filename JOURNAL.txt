@@ -32,6 +32,14 @@ SEMAINE 6 :
 
 [] Ajout du polymorphisme dans la classe toupie/integrateur??
 [] Mise en place de l'espace de travail (Qt/OpenGl)........??
+[] Exercice P8.............................................??
+
+SEMAINE 7 :
+
+[] Modification de la conception globale(ajout classe Integrable)
+[] Correction des erreurs dû aux polymorphismes
+[] Correction du Makefile
+[] Exercice P9
 
 
 

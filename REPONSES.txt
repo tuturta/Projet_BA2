@@ -52,3 +52,20 @@ Une toupie en cone simple EST UNE toupie, donc la classe ConeSimple est une clas
 Réponse P8.1: 
 On souhaite que la methode dessine() ait un comportement polymorphique : dans notre cas, qu'elle s'adapte en fonction du support à dessin. On ne peut pas écrire une méthode dessine() commune à tous les dessinables.
 Pour cela, dessine doit être une methode virtuelle pure.
+
+Réponse P8.2: 
+La bonne façon de faire une collection hétérogène est de représenter les données dans un tableaux de pointeurs. 
+Ceci permettra d'avoir un comportement polymorphique pour chaque élèment du tableau.
+Dans notre cas, l'avantage d'utiliser un tableaux de pointeurs de Toupie pour représenter un système est d'avoir, notamment, la bonne equation du mouvent pour chacune des toupies (car l'équation du mouvement est propre à chaque toupie car dépendant de la taille, masse, etc..)
+
+Réponse P8.3: 
+
+Les classes contenant des pointeurs vont devoir allouer de l'espace dynamiquement. Il faut donc faire attention à bien gérer cette mémoire dynamique (surtout la désallocation et la durée de vie de chaque pointeurs/objets pointés).
+Pour cela, on peut redéfinir le destructeur de la classe. En revanche, on devra, très certainement, également redéfinir les constructeurs de copie et l'opérateur d'affcetion "=".
+Pour éviter la problème de la gestion de mémoire, on peut aussi opter pour des unique_ptr (notre choix) qui désallouent automatiquement la mémoire et qui empêchent les problèmes liés au fait que plusieurs pointeurs pointent la même variable.
+
+
+Réponse P8.4: 
+
+Pour le moment : 
+ATTRIBUTS: tableaux de unique_ptr<Intégrable> (raisons expliquées ci-dessus) //On choisit de prendre tous les intégrables afin d'élargir les possibilités et d'étendre le problème
