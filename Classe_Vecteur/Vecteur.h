@@ -31,7 +31,7 @@ public:
 	std::size_t dim() const; // renvoie la dimension du vecteur
 	double norme() const; // renvoie la norme
 	double norme2() const; // renvoie la norme au carré et permet d'éviter le temps de calcul de la racine
-	double coeff(size_t x) const;
+	double coeff(size_t x) const; // renvoie la coordonnée à la position x sachant que la première coordonnée est à la position x = 0
 // Attributs:
 private:
 	std::vector<double> coeff_;

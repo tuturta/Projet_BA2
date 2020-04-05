@@ -27,7 +27,6 @@ int main () {
     
         Objet_en_chute_libre toupie({0,1},{1.0,2.0},2.1, &ecran);
         IntegrateurEulerCromer integrateur;
-        unique_ptr<IntegrateurEulerCromer> int_ptr(new IntegrateurEulerCromer(integrateur)); //Pour utiliser le evolue() de facon polymorphique lorsqu'on aura plusieurs pointeurs
     
       //Verification des donnees initiales
         cout << " vitesse initiale "<< toupie.getP_point() <<endl;
@@ -39,7 +38,7 @@ int main () {
         t+=dt;
         cout << endl << "=========TOUR " << i << "=========" << endl << endl;
         cout << "Temps : " << t << "s" <<endl;
-        int_ptr->evolue(toupie, dt);
+        integrateur.evolue(toupie, dt);
         toupie.dessine(); 
         }  
     } 
