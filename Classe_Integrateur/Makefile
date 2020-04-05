@@ -1,19 +1,20 @@
 CXX = g++
-CXXFLAGS = -Wall -std=c++17 -g
-
-#SRC = Integrateur.cc testIntegrateur.cc ../Open_GL/Classe_Dessinable/text/text_viewer.cc 
-#OBJ = $(SRC:.cc=.o)
-#EXEC = testIntegrateur
-
-#all: $(EXEC)
-
-#$(EXEC): $(OBJ)
-#	$(CXX) -o $@ $(OBJ) $(LBLIBS)
+CXXFLAGS = -Wall -std=c++11 -pedantic -Wall
+SRC =  testIntegrateur.cc Integrateur.cc ../Classe_Integrable/Integrable.cc ../Classe_Integrable/Classe_Toupie/Toupie.cc   ../Classe_Vecteur/Vecteur.cc ../Open_GL/Classe_Dessinable/text/text_viewer.cc ../Classe_Systeme/Systeme.cc
 
 
-all : testIntegrateur
+OBJ = $(SRC:.cc=.o)
+EXEC = testIntegrateur
 
-testIntegrateur : Integrateur.o testToupie.o ../Open_GL/Classe_Dessinable/text/text_viewer.o
-Integrateur.o : Integrateur.cc Integrateur.h
-testToupie.o : testIntegrateur.cc Integrateur.h ../Open_GL/Classe_Dessinable/text/text_viewer.h
-text_viewer.o : text_viewer.cc text_viewer.h
+all: $(EXEC)
+
+$(EXEC): $(OBJ)
+	$(CXX) -o $@ $(OBJ) $(LBLIBS)
+
+
+#all : testIntegrateur
+
+#testIntegrateur : Integrateur.o testIntegrateur.o 
+#Integrateur.o : Integrateur.cc Integrateur.h
+#testIntegrateur.o : testIntegrateur.cc Integrateur.h ../Open_GL/Classe_Dessinable/text/text_viewer.h
+#text_viewer.o : ../Open_GL/Classe_Dessinable/text/text_viewer.cc ../Open_GL/Classe_Dessinable/text/text_viewer.h

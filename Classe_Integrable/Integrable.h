@@ -1,6 +1,9 @@
-#pragma once
-#include "../Classe_Vecteur/Vecteur.h"
+#ifndef INTEGRABLE_H
+#define INTEGRABLE_H
+
 #include "../Open_GL/Classe_Dessinable/general/dessinable.h"
+#include "../Classe_Vecteur/Vecteur.h"
+#include "../Open_GL/Classe_Dessinable/general/support_a_dessin.h"
 
 class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a ses paramètres à chaque pas de temps)
    protected : 
@@ -10,13 +13,15 @@ class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a s
 
    public:
     //METHODES:
-    Integrable(Vecteur P, Vecteur P_point, Vecteur origine = {0,0,0})
-    : Dessinable(), P(P), P_point(P_point), origine(origine) {} //CONSTRUCTEUR PAR DEFAUT POUR LE SUPPORT
+    Integrable(Vecteur P, Vecteur P_point, SupportADessin* support, Vecteur origine = {0,0,0})
+    : Dessinable(support), P(P), P_point(P_point), origine(origine)  {} //CONSTRUCTEUR PAR DEFAUT POUR LE SUPPORT
     
     virtual Vecteur fonction_f() const = 0; //Equation du mouvement
-
     Vecteur getP() const;
     Vecteur getP_point() const;
     void setP(Vecteur const& autre);
     void setP_point(Vecteur const& autre);
+
 };
+
+#endif

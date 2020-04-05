@@ -1,7 +1,11 @@
 #define _USE_MATH_DEFINES //Pour régler le problème de M_PI non reconnu par le compilateur sur windows
 #include <cmath>    
-#include "Toupie.h"
 #include <iostream>
+#include "Toupie.h"
+#include "../Integrable.h"
+#include "../../Classe_Vecteur/Vecteur.h"
+#include "../../Classe_Matrice/Matrice.h"
+#include "../../Open_GL/Classe_Dessinable/general/support_a_dessin.h"
 using namespace std;
 
 //=============================CLASSE TOUPIE===================================//
@@ -20,13 +24,24 @@ ostream& Toupie::affiche_parametres(ostream& out) const {
     return out;
 }
 
-
+Vecteur Toupie::fonction_f() const{
+        return 2*P;
+}
 
 // SURCHARGES D'OPÉRATEURS 
 ostream& operator<<(std::ostream& sortie, Toupie const& toupie) {
     return toupie.affiche(sortie);
 }
 
+unique_ptr<Toupie> Toupie::clone() const{
+    return unique_ptr<Toupie>(new Toupie(*this));
+}
+unique_ptr<Integrable> Toupie::copie() const{
+    return clone();
+}
+void Toupie::dessine() {
+    support->dessine(*this);
+} 
 
 //=============================CLASSE CONE SIMPLE===================================//
 
@@ -38,6 +53,7 @@ ostream& ConeSimple::affiche_parametres(ostream& out) const {
     out << "Hauteur (m) : " << hauteur << endl;
     out << "Rayon (m) : " << rayon << endl;
     out << "Origine (A) : " << origine << endl;
+    return out;
 }
 
 double ConeSimple::masse() const{ //masse calculé grace a la formule p8
@@ -57,6 +73,10 @@ unique_ptr<Integrable> ConeSimple::copie() const{
     return clone();
 }
 
+Vecteur ConeSimple::fonction_f() const{
+        return -P;
+}
+
 // Méthode virtuelle dessinable
 
 void ConeSimple::dessine() {
@@ -71,4 +91,11 @@ void Objet_en_chute_libre::dessine() {
 
 Vecteur Objet_en_chute_libre::fonction_f() const{
         return {0,-9.81};
+}
+
+unique_ptr<Objet_en_chute_libre> Objet_en_chute_libre::clone() const{
+    return unique_ptr<Objet_en_chute_libre>(new Objet_en_chute_libre(*this));
+}
+unique_ptr<Integrable> Objet_en_chute_libre::copie() const{
+    return clone();
 }
