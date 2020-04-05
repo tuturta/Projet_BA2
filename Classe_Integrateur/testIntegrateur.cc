@@ -19,7 +19,7 @@ int main () {
     if(fichier.fail()) {
         //Gestion de l'erreur d'ouverture du fichier "test.txt"
     }else{
-        TextViewer ecran(fichier);
+        TextViewer ecran(cout);
         Objet_en_chute_libre toupie({0,1},{1.0,2.0},2.1, &ecran);
         IntegrateurEulerCromer integrateur;
         unique_ptr<IntegrateurEulerCromer> int_ptr(new IntegrateurEulerCromer(integrateur)); //Pour utiliser le evolue() de facon polymorphique lorsqu'on aura plusieurs pointeurs
