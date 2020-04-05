@@ -21,7 +21,7 @@ int main () {
     if(fichier.fail()) {
         //Gestion de l'erreur d'ouverture du fichier "test.txt"
     }else{
-        TextViewer ecran(cout);
+        TextViewer ecran(cout); // Mettre fichier si l'on veut ecrire dans un fichier, cout si l'on veut écrire dans le terminal
 
 //-------POUR UN OBJET-------// 
     
