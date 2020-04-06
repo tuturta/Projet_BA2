@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES //Pour régler le problème de M_PI non reconnu par le compilateur sur windows
 #include <cmath>    
 #include <iostream>
+#include "../../constantes.h"
 #include "Toupie.h"
 #include "../Integrable.h"
 #include "../../Classe_Vecteur/Vecteur.h"
@@ -8,7 +9,7 @@
 #include "../../Open_GL/Classe_Dessinable/general/support_a_dessin.h"
 using namespace std;
 
-//=============================CLASSE TOUPIE===================================//
+//=============================CLASSE TOUPIE===================================// 
 
 // METHODES
 ostream& Toupie::affiche(ostream& sortie) const {
@@ -22,6 +23,19 @@ ostream& Toupie::affiche_parametres(ostream& out) const {
     out << "Dérivée : " << P_point << endl;
     out << "Masse volumique (kg m-3) :" << masse_volumique << endl;
     return out;
+}
+
+Matrice Toupie::S() const  {
+    return Matrice({cos(P.coeff[1]),                    sin(P.coeff[1]),                   0},
+                   {-cos(P.coeff[0])*sin(P.coeff[1]),   cos(P.coeff[1])*cos(P.coeff[0]),   sin(P.coeff[0])},
+                   {sin(P.coeff[0])*cos(P.coeff[1]),    -sin(P.coeff[0])*cos(P.coeff[1]),  cos(P.coeff[0])});
+}
+
+void Toupie::ref_G_to_O(Vecteur& v) {
+    v=((S().inv())*v);
+}
+void Toupie::ref_O_to_G(Vecteur& v) {
+    v=S()*v;
 }
 
 Vecteur Toupie::fonction_f() const{
@@ -73,8 +87,33 @@ unique_ptr<Integrable> ConeSimple::copie() const{
     return clone();
 }
 
+Vecteur ConeSimple::moment_poids() const {
+    Vecteur AG = {3/4*hauteur, 0, 0}; // tout est dnas le ref RG
+    Vecteur poids(masse()*g); //dans RO
+    ref_O_to_G(poids);
+    return AG*poids;
+}
+
 Vecteur ConeSimple::fonction_f() const{
-        return -P;
+    
+    //1.CALCUL DE w dans RG (repère d'inertie)
+    Vecteur w(3);
+    double w1(P_point.coeff[0]);
+    double w2(P_point.coeff[1]*sin(P.coeff[0]));
+    double w3(P_point.coeff[1]*cos(P.coeff[0])+P_point.coeff[2]);
+    w = {w1,w2,w3};
+    Vecteur moment_forces_A(moment_poids()); //Vecteur moment de force au point de contact
+    Matrice IA(matrice_inertie()); //Matrice d'inertie d'un cone simple dans RG
+    //reprendre IA point ...
+
+    //2.CALCUL DE W_POINT: (dans Repère d'inertie)
+    Vecteur w_point(3);
+    Vecteur we(w);
+    we.set_coord(2,we.coeff(2) - P_point.coeff(2)); 
+    w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w)));
+    //3.CALCUL DE P_POINT_POINT:
+
+    //4.CALCUL DE G:
 }
 
 // Méthode virtuelle dessinable

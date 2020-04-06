@@ -1,5 +1,5 @@
 #include <iostream>
-//#include "../Classe_Vecteur/Vecteur.h"
+#include "../Classe_Vecteur/Vecteur.h"
 #include "Matrice.h"
 using namespace std;
 
@@ -118,8 +118,7 @@ const Matrice operator*(double a, Matrice M) {
     M*=a;
     return M;
 }
-const Matrice operator*(Matrice M, Vecteur const& v) {
-    M*=v;
-    return M;
+const Vecteur operator*(Matrice M, Vecteur const& v) {
+    return M*=v;
 }
 

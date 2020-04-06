@@ -30,4 +30,4 @@ const Matrice operator+(Matrice M1, Matrice const& M2); //addition de deux matri
 const Matrice operator-(Matrice M1, Matrice const& M2); //soustraction de deux matrices
 const Matrice operator*(Matrice M1, Matrice const& M2); //produit matriciel
 const Matrice operator*(double a, Matrice M); //produit par un scalaire
-const Matrice operator*(Matrice M, Vecteur const& v); //produit par un vecteur
+const Vecteur operator*(Matrice M, Vecteur const& v); //produit par un vecteur

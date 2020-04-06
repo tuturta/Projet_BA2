@@ -31,6 +31,7 @@ SEMAINE 5 :
 SEMAINE 6 :
 
 [] Ajout du polymorphisme dans la classe toupie/integrateur??
+[] Etude de l'introduction à OpenGL........................??
 [] Mise en place de l'espace de travail (Qt/OpenGl)........??
 [] Exercice P8.............................................??
 
