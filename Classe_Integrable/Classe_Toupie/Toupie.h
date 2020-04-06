@@ -21,8 +21,8 @@ class Toupie : public Integrable {
     /*si on doit bien initialiser origine avec la pos d'origine */
 
     Matrice S() const; // Matrice de transition de RG vers RO *********A METTRE DANS CETTE CLASSE OU NON ?************
-    void ref_O_to_G(Vecteur&); //méthodes pour changer un vecteur de référentiel *************************************
-    void ref_G_to_O(Vecteur&); // ************************************************************************************
+    void ref_O_to_G(Vecteur&) const; //méthodes pour changer un vecteur de référentiel *************************************
+    void ref_G_to_O(Vecteur&)const ; // ************************************************************************************
 
 
     std::ostream& affiche(std::ostream& sortie) const;

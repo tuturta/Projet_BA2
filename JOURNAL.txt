@@ -19,7 +19,7 @@ SEMAINE 4 :
 [V] Constructeurs + prototypes des opérateurs..............2h
 [V] Retour sur le fichier avec structure erreur............1h
 [V] Définition des opérateurs/Réagencement classe vecteur..3h
-[ ] Répondre aux questions.................................??
+[V] Répondre aux questions.................................1h
 [V] Création de la classe matrice et ses opérateurs........5h
 
 SEMAINE 5 :
@@ -30,17 +30,18 @@ SEMAINE 5 :
 
 SEMAINE 6 :
 
-[] Ajout du polymorphisme dans la classe toupie/integrateur??
-[] Etude de l'introduction à OpenGL........................??
-[] Mise en place de l'espace de travail (Qt/OpenGl)........??
-[] Exercice P8.............................................??
+[V] Polymorphisme dans les classes toupie/integrateur......3h
+[V] Etude de l'introduction à OpenGL.......................2h
+[V] Mise en place de l'espace de travail (Qt/OpenGl).......4h
+[V] Exercice P8............................................3h
 
 SEMAINE 7 :
 
-[] Modification de la conception globale(ajout classe Integrable)
-[] Correction des erreurs dû aux polymorphismes
-[] Correction du Makefile
-[] Exercice P9
+[V] Modification de la conception globale(ajout classe Integrable)..1h
+[V] Restructuration du fichier conception : mindmap.................2h
+[V] Correction des erreurs dû aux polymorphismes....................3h
+[V] Correction du Makefile.........................................10h
+[] Exercice P9....................................................
 
 
 
