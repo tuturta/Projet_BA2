@@ -12,12 +12,6 @@ using namespace std;
 //=============================CLASSE TOUPIE===================================// 
 
 // METHODES
-ostream& Toupie::affiche(ostream& sortie) const {
-    sortie << P << " # parametres" << endl;
-    sortie << P_point << " # vitesse" << endl;
-    return sortie;
-}
-
 ostream& Toupie::affiche_parametres(ostream& out) const {
     out << "Paramètre : " << P << endl;
     out << "Dérivée : " << P_point << endl;
@@ -44,13 +38,13 @@ Vecteur Toupie::fonction_f() const{
 
 // SURCHARGES D'OPÉRATEURS 
 ostream& operator<<(std::ostream& sortie, Toupie const& toupie) {
-    return toupie.affiche(sortie);
+    return toupie.affiche_parametres(sortie);
 }
 
 unique_ptr<Toupie> Toupie::clone() const{
     return unique_ptr<Toupie>(new Toupie(*this));
 }
-unique_ptr<Integrable> Toupie::copie() const{
+unique_ptr<Toupie> Toupie::copie() const{
     return clone();
 }
 void Toupie::dessine() {
@@ -82,7 +76,7 @@ Matrice ConeSimple::matrice_inertie() const { // Matrice d'inertie calculé grac
 unique_ptr<ConeSimple> ConeSimple::clone() const{
     return unique_ptr<ConeSimple>(new ConeSimple(*this));
 }
-unique_ptr<Integrable> ConeSimple::copie() const{
+unique_ptr<Toupie> ConeSimple::copie() const{
     return clone();
 }
 
@@ -147,6 +141,6 @@ Vecteur Objet_en_chute_libre::fonction_f() const{
 unique_ptr<Objet_en_chute_libre> Objet_en_chute_libre::clone() const{
     return unique_ptr<Objet_en_chute_libre>(new Objet_en_chute_libre(*this));
 }
-unique_ptr<Integrable> Objet_en_chute_libre::copie() const{
+unique_ptr<Toupie> Objet_en_chute_libre::copie() const{
     return clone();
 }

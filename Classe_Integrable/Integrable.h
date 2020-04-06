@@ -21,6 +21,7 @@ class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a s
     Vecteur getP_point() const;
     void setP(Vecteur const& autre);
     void setP_point(Vecteur const& autre);
+    std::ostream& affiche(std::ostream& sortie) const; // Affiche seulement P et Ppoint
 
 };
 

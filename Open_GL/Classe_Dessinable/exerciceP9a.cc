@@ -25,7 +25,7 @@ int main () {
 
 //-------POUR UN OBJET-------// 
     
-        Objet_en_chute_libre toupie({0,1},{1.0,2.0},2.1, &ecran);
+        Objet_en_chute_libre toupie({0,1},{1.0,2.0},2.1, &ecran, {0.0,0.0,0.0});
         IntegrateurEulerCromer integrateur;
     
       //Verification des donnees initiales
