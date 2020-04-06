@@ -21,16 +21,15 @@ class Toupie : public Integrable {
     /*si on doit bien initialiser origine avec la pos d'origine */
 
     Matrice S() const; // Matrice de transition de RG vers RO *********A METTRE DANS CETTE CLASSE OU NON ?************
-    void ref_O_to_G(Vecteur&); //méthodes pour changer un vecteur de référentiel *************************************
-    void ref_G_to_O(Vecteur&); // ************************************************************************************
+    void ref_O_to_G(Vecteur&) const; //méthodes pour changer un vecteur de référentiel *************************************
+    void ref_G_to_O(Vecteur&)const ; // ************************************************************************************
 
 
-    std::ostream& affiche(std::ostream& sortie) const;
-    virtual std::ostream& affiche_parametres(std::ostream& out) const;
+    virtual std::ostream& affiche_parametres(std::ostream& out) const; // Affiche tous les paramètres d'une toupie 
     ///A terme, toupie sera certainement une classe virtuelle : on ne permet donc pas de la dessiner pour l'instant
     virtual Vecteur fonction_f() const override;
     std::unique_ptr<Toupie> clone() const;
-    virtual std::unique_ptr<Integrable> copie() const;
+    virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
     virtual void dessine() override;
 
 };
@@ -45,9 +44,9 @@ class ConeSimple : public Toupie{
     double rayon;
 
    public: 
-    ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, SupportADessin* support, double hauteur, double rayon)
-    : Toupie(P, P_point, masse_volumique, support), hauteur(hauteur), rayon(rayon) {} // COnstructeur qui initialise l'origine à 0,0,0
-    virtual std::ostream& affiche_parametres(std::ostream& out) const override;
+    ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, SupportADessin* support, double hauteur, double rayon, Vecteur const origine)
+    : Toupie(P, P_point, masse_volumique, support, origine), hauteur(hauteur), rayon(rayon) {} // COnstructeur qui initialise l'origine à 0,0,0
+    virtual std::ostream& affiche_parametres(std::ostream& out) const override; // Affiche tous les paramètres d'une toupie
     double masse() const;
     Matrice matrice_inertie() const; //Calcule le moment d'inertie I du cone simple
     Vecteur moment_poids() const;
@@ -56,7 +55,7 @@ class ConeSimple : public Toupie{
     virtual void dessine() override;
     
     std::unique_ptr<ConeSimple> clone() const;
-    virtual std::unique_ptr<Integrable> copie() const;
+    virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
 
 };
 
@@ -68,5 +67,5 @@ class Objet_en_chute_libre : public Toupie {
     virtual Vecteur fonction_f() const override;
     virtual void dessine() override;
     std::unique_ptr<Objet_en_chute_libre> clone() const;
-    std::unique_ptr<Integrable> copie() const;
+    virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
 };

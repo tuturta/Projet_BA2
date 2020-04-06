@@ -44,19 +44,24 @@ Réponse P4.3:
 Pour affiche(), on introduit l'opérateur externe : std::ostream& operator<<(std::ostream& sortie, Vecteur const& vecteur);
 Pour compare(), on introduit l'opérateur interne : bool Vecteur::operator==(Vecteur const& autre) const; //test d'egalite
 
-P5??????????
-
 Réponse P6.1:
 Une toupie en cone simple EST UNE toupie, donc la classe ConeSimple est une classe-enfant de la classe Toupie. Elle hérite ainsi de tous les attributs et méthodes de la classe-parente Toupie.
 
 Réponse P8.1: 
-On souhaite que la methode dessine() ait un comportement polymorphique : dans notre cas, qu'elle s'adapte en fonction du support à dessin. On ne peut pas écrire une méthode dessine() commune à tous les dessinables.
+On souhaite que la methode dessine() ait un comportement polymorphique à deux paramètres: dans notre cas, qu'elle s'adapte en fonction du support à dessin et du type d'objet (double dispatch). On ne peut pas écrire une méthode dessine() commune à tous les dessinables.
 Pour cela, dessine doit être une methode virtuelle pure.
 
 Réponse P8.2: 
 La bonne façon de faire une collection hétérogène est de représenter les données dans un tableaux de pointeurs. 
-Ceci permettra d'avoir un comportement polymorphique pour chaque élèment du tableau.
-Dans notre cas, l'avantage d'utiliser un tableaux de pointeurs de Toupie pour représenter un système est d'avoir, notamment, la bonne equation du mouvent pour chacune des toupies (car l'équation du mouvement est propre à chaque toupie car dépendant de la taille, masse, etc..)
+Ceci permettra d'utiliser le polymorphisme pour chaque élèment du tableau.
+Pour choisir le type de pointeurs, nous étudions les questions évoquéesen cours :
+- Qui est propriétaire des toupies ? Ce n'est pas le Syteme, les toupies doivent être gérées par la classe toupie.
+- Les toupies sont-elles partagées ? Non. /////REPRENDRE/ COMPLETER*************************************
+
+
+
+
+Dans notre cas, l'avantage d'utiliser un tableaux de pointeurs de Toupie pour représenter un système est d'avoir, notamment, la bonne equation du mouvent pour chacune des toupies (car l'équation du mouvement est propre à chaque toupie car dépendant de la taille, masse, etc..).
 
 Réponse P8.3: 
 

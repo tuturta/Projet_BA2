@@ -12,12 +12,6 @@ using namespace std;
 //=============================CLASSE TOUPIE===================================// 
 
 // METHODES
-ostream& Toupie::affiche(ostream& sortie) const {
-    sortie << P << " # parametres" << endl;
-    sortie << P_point << " # vitesse" << endl;
-    return sortie;
-}
-
 ostream& Toupie::affiche_parametres(ostream& out) const {
     out << "Paramètre : " << P << endl;
     out << "Dérivée : " << P_point << endl;
@@ -26,15 +20,15 @@ ostream& Toupie::affiche_parametres(ostream& out) const {
 }
 
 Matrice Toupie::S() const  {
-    return Matrice({cos(P.coeff[1]),                    sin(P.coeff[1]),                   0},
-                   {-cos(P.coeff[0])*sin(P.coeff[1]),   cos(P.coeff[1])*cos(P.coeff[0]),   sin(P.coeff[0])},
-                   {sin(P.coeff[0])*cos(P.coeff[1]),    -sin(P.coeff[0])*cos(P.coeff[1]),  cos(P.coeff[0])});
+    return Matrice({cos(P.coeff(1)),                    sin(P.coeff(1)),                   0},
+                   {-cos(P.coeff(0))*sin(P.coeff(1)),   cos(P.coeff(1))*cos(P.coeff(0)),   sin(P.coeff(0))},
+                   {sin(P.coeff(0))*cos(P.coeff(1)),    -sin(P.coeff(0))*cos(P.coeff(1)),  cos(P.coeff(0))});
 }
 
-void Toupie::ref_G_to_O(Vecteur& v) {
+void Toupie::ref_G_to_O(Vecteur& v) const {
     v=((S().inv())*v);
 }
-void Toupie::ref_O_to_G(Vecteur& v) {
+void Toupie::ref_O_to_G(Vecteur& v) const {
     v=S()*v;
 }
 
@@ -44,13 +38,13 @@ Vecteur Toupie::fonction_f() const{
 
 // SURCHARGES D'OPÉRATEURS 
 ostream& operator<<(std::ostream& sortie, Toupie const& toupie) {
-    return toupie.affiche(sortie);
+    return toupie.affiche_parametres(sortie);
 }
 
 unique_ptr<Toupie> Toupie::clone() const{
     return unique_ptr<Toupie>(new Toupie(*this));
 }
-unique_ptr<Integrable> Toupie::copie() const{
+unique_ptr<Toupie> Toupie::copie() const{
     return clone();
 }
 void Toupie::dessine() {
@@ -83,7 +77,7 @@ Matrice ConeSimple::matrice_inertie() const { // Matrice d'inertie calculé grac
 unique_ptr<ConeSimple> ConeSimple::clone() const{
     return unique_ptr<ConeSimple>(new ConeSimple(*this));
 }
-unique_ptr<Integrable> ConeSimple::copie() const{
+unique_ptr<Toupie> ConeSimple::copie() const{
     return clone();
 }
 
@@ -94,26 +88,39 @@ Vecteur ConeSimple::moment_poids() const {
     return AG*poids;
 }
 
-Vecteur ConeSimple::fonction_f() const{
+Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
     
     //1.CALCUL DE w dans RG (repère d'inertie)
     Vecteur w(3);
-    double w1(P_point.coeff[0]);
-    double w2(P_point.coeff[1]*sin(P.coeff[0]));
-    double w3(P_point.coeff[1]*cos(P.coeff[0])+P_point.coeff[2]);
+    double w1(P_point.coeff(0));
+    double w2(P_point.coeff(1)*sin(P.coeff(0)));
+    double w3(P_point.coeff(1)*cos(P.coeff(0))+P_point.coeff(2));
     w = {w1,w2,w3};
     Vecteur moment_forces_A(moment_poids()); //Vecteur moment de force au point de contact
     Matrice IA(matrice_inertie()); //Matrice d'inertie d'un cone simple dans RG
-    //reprendre IA point ...
-
+    //Ia'accolade point' peut être  approximmée comme étant nulle(?) *********ou utiliser Huygens-Steiner**********
+    
     //2.CALCUL DE W_POINT: (dans Repère d'inertie)
     Vecteur w_point(3);
     Vecteur we(w);
     we.set_coord(2,we.coeff(2) - P_point.coeff(2)); 
     w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w)));
-    //3.CALCUL DE P_POINT_POINT:
-
+    
+    //3.CALCUL DE P_POINT_POINT: 
+    Vecteur P_point_point(3);
+    P_point_point.set_coord(0, w_point.coeff(0)); //Calcul de théta point point 
+    
+    if(P.coeff(0) == 0){ // Cas ou théta = 0
+        P_point_point.set_coord(2,w_point.coeff(2)); //Modification de phi point point = w3point formule (2) p6
+    }else{
+        P_point_point.set_coord(1, (w_point.coeff(1)- P_point.coeff(1)*P_point.coeff(0)*cos(P.coeff(0))) / sin(P.coeff(0)) ); //Modification psi point point : formule (2) p6
+        P_point_point.set_coord(2, w_point.coeff(2) + (P_point.coeff(1)*P_point.coeff(0)- w_point.coeff(1)*cos(P.coeff(0)))/sin(P.coeff(0))); //Modification phi point point formule (2) p6
+    }
+    
     //4.CALCUL DE G:
+        //Pour le moment on le fait pas car on considère qu'il n'y a pas de glissement Va = 0
+
+    return P_point_point;
 }
 
 // Méthode virtuelle dessinable
@@ -135,6 +142,6 @@ Vecteur Objet_en_chute_libre::fonction_f() const{
 unique_ptr<Objet_en_chute_libre> Objet_en_chute_libre::clone() const{
     return unique_ptr<Objet_en_chute_libre>(new Objet_en_chute_libre(*this));
 }
-unique_ptr<Integrable> Objet_en_chute_libre::copie() const{
+unique_ptr<Toupie> Objet_en_chute_libre::copie() const{
     return clone();
 }

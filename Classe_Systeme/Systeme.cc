@@ -7,8 +7,7 @@
 
 using namespace std;
 
-ostream& Systeme::affiche(ostream& out) const {
-    out << "Le sytème est constitué de  :" << endl;
+ostream& Systeme::affiche_parametres(ostream& out) const {
     for (auto const& ptr_toupie : objets) {
         if(ptr_toupie!=nullptr) {
             ptr_toupie->affiche_parametres(out);
@@ -18,7 +17,7 @@ ostream& Systeme::affiche(ostream& out) const {
 }
 
 ostream& operator<<(ostream& out, Systeme const& S) {
-    return S.affiche(out);
+    return S.affiche_parametres(out);
 } 
 
 void Systeme::evolue(const double dt){
@@ -27,6 +26,19 @@ void Systeme::evolue(const double dt){
             integrateur.evolue(*ptr_toupie, dt);
         }
     }
+}
+
+ostream& Systeme::affiche(ostream& out) const {
+    for(auto const& ptr_toupie : objets){
+        if(ptr_toupie != nullptr){
+            ptr_toupie->affiche(out);
+        }
+    }
+    return out;
+}
+    
+void Systeme::ajoute_toupie(Toupie const& nouvelle){
+    objets.push_back(nouvelle.copie());
 }
 
 void Systeme::dessine() {
