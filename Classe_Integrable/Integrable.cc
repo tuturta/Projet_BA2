@@ -1,4 +1,4 @@
-#include "integrable.h"
+#include "Integrable.h"
 #include "../Classe_Vecteur/Vecteur.h"
 #include <iostream>
 

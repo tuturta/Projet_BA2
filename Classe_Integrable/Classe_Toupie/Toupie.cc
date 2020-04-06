@@ -15,7 +15,7 @@ using namespace std;
 ostream& Toupie::affiche_parametres(ostream& out) const {
     out << "Paramètre : " << P << endl;
     out << "Dérivée : " << P_point << endl;
-    out << "Masse volumique (kg m-3) :" << masse_volumique << endl;
+    out << "Masse volumique (kg m-3) : " << masse_volumique << endl;
     return out;
 }
 
@@ -56,10 +56,10 @@ void Toupie::dessine() {
 //METHODES:
 
 ostream& ConeSimple::affiche_parametres(ostream& out) const {
-    out << "CONE SIMPLE " << endl;
+    out << "CONIQUE SIMPLE " << endl;
     Toupie::affiche_parametres(out);
     out << "Hauteur (m) : " << hauteur << endl;
-    out << "Rayon (m) : " << rayon << endl;
+    out << "Rayon   (m) : " << rayon << endl;
     out << "Origine (A) : " << origine << endl;
     return out;
 }

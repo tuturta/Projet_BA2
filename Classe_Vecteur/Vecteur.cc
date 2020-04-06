@@ -13,7 +13,7 @@ void Vecteur::set_coord(size_t position, double valeur){
 	if (position<=dim()) {
 		coeff_[position]=valeur; ///Position 0=x,position 1=y, position 2=z
 	}else{
-		Erreur Err = {"DIMENSIONS!",1}; //Erreur de dim, code 1, niveau 1, n'arrette pas le programme
+		Erreur Err = {"DIMENSIONS! (set_coord)",1}; //Erreur de dim, code 1, niveau 1, n'arrette pas le programme
 		throw Err;
 	}
 }
@@ -71,7 +71,7 @@ const Vecteur operator^(Vecteur v, Vecteur const& w){
 // --> INTERNES
 Vecteur& Vecteur::operator+=(Vecteur const& autre){
 	if (dim()!=autre.dim()) {
-		Erreur Err = {"DIMENSIONS!",1};
+		Erreur Err = {"DIMENSIONS! (op+=)",1};
 		throw Err;
 	}
 	for (size_t i(0); i<dim(); ++i) {
@@ -81,7 +81,7 @@ Vecteur& Vecteur::operator+=(Vecteur const& autre){
 }
 double Vecteur::operator*(Vecteur const& autre){
 	if(dim()!=autre.dim()) {
-		Erreur Err= {"DIMENSIONS!",1};
+		Erreur Err= {"DIMENSIONS!(op*)",1};
 		throw Err;
 	} else {
 		double x;
@@ -106,7 +106,7 @@ Vecteur& Vecteur::operator/=(double a) {
 }
 Vecteur& Vecteur::operator-=(Vecteur const& autre){
 	if(dim() != autre.dim()) {
-		Erreur Err = {"DIMENSIONS!",1};
+		Erreur Err = {"DIMENSIONS! (op-=)",1};
 		throw Err;
 	}
 	for(size_t i(0) ; i<dim() ; ++i){
@@ -116,7 +116,7 @@ Vecteur& Vecteur::operator-=(Vecteur const& autre){
 }
 Vecteur& Vecteur::operator^=(Vecteur const& autre){
 	if(dim() != autre.dim() or dim() != 3) {
-		Erreur Err = {"DIMENSIONS!",1};
+		Erreur Err = {"DIMENSIONS! (op^=)",1};
 		throw Err;
 	}
 	double temp0, temp1, temp2;
@@ -136,7 +136,7 @@ Vecteur Vecteur::operator~() const{
 bool Vecteur::operator==(Vecteur const& autre) const{
 	bool retour(true);
 	if(dim() != autre.dim()) {
-		Erreur Err = {"DIMENSIONS!", 1};
+		Erreur Err = {"DIMENSIONS! (op==)", 1};
 		throw Err;
 	}
 	for(size_t i(0) ; i < dim() ; ++i){

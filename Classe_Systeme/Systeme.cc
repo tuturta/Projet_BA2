@@ -8,9 +8,12 @@
 using namespace std;
 
 ostream& Systeme::affiche_parametres(ostream& out) const {
-    for (auto const& ptr_toupie : objets) {
-        if(ptr_toupie!=nullptr) {
-            ptr_toupie->affiche_parametres(out);
+    out << "Le système est constitué des " << objets.size() << " toupies suivantes :" << endl;
+    for (size_t i(0); i<objets.size(); ++i) {
+        if(objets[i]!=nullptr) {
+            out << "=====Toupie " << i+1  << " :" << endl; 
+            objets[i]->affiche_parametres(out);
+            out << endl;
         }
     }
     return out;
