@@ -22,7 +22,7 @@ ostream& Toupie::affiche_parametres(ostream& out) const {
 Matrice Toupie::S() const  {
     return Matrice({cos(P.coeff(1)),                    sin(P.coeff(1)),                   0},
                    {-cos(P.coeff(0))*sin(P.coeff(1)),   cos(P.coeff(1))*cos(P.coeff(0)),   sin(P.coeff(0))},
-                   {sin(P.coeff(0))*cos(P.coeff(1)),    -sin(P.coeff(0))*cos(P.coeff(1)),  cos(P.coeff(0))});
+                   {sin(P.coeff(0))*sin(P.coeff(1)),    -sin(P.coeff(0))*cos(P.coeff(1)),  cos(P.coeff(0))});
 }
 
 void Toupie::ref_G_to_O(Vecteur& v) const {
@@ -65,12 +65,12 @@ ostream& ConeSimple::affiche_parametres(ostream& out) const {
 }
 
 double ConeSimple::masse() const{ //masse calculé grace a la formule p8
-    return (1/3)*M_PI*masse_volumique*pow(rayon,2)*hauteur;
+    return (1.0/3.0)*M_PI*masse_volumique*pow(rayon,2)*hauteur;
 }
 Matrice ConeSimple::matrice_inertie() const { // Matrice d'inertie calculé grace a la formule p8
     double I1, I3;
-    I1 = masse()*((3/20)*pow(rayon,2) + (3/5)*pow(hauteur,2));
-    I3 = (3/10)*masse()*pow(rayon,2);
+    I1 = masse()*((3.0/20.0)*pow(rayon,2) + (3.0/5.0)*pow(hauteur,2));
+    I3 = (3.0/10.0)*masse()*pow(rayon,2);
     return Matrice(I1, I1, I3);
 }
 
@@ -82,10 +82,10 @@ unique_ptr<Toupie> ConeSimple::copie() const{
 }
 
 Vecteur ConeSimple::moment_poids() const {
-    Vecteur AG = {3/4*hauteur, 0, 0}; // tout est dnas le ref RG
+    Vecteur AG = {3.0/4.0*hauteur, 0, 0}; // tout est dans le ref RG
     Vecteur poids(masse()*g); //dans RO
     ref_O_to_G(poids);
-    return AG*poids;
+    return AG^poids;
 }
 
 Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)

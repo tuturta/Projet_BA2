@@ -6,10 +6,12 @@
 class Matrice {
 private :
     std::array< Vecteur,3 > lignes;
+    void correctif_0();
 public :
     // Constructeurs
-    Matrice (Vecteur const& c1 = {1,0,0}, Vecteur const& c2 = {0,1,0}, Vecteur const& c3 = {0,0,1}) : lignes({c1,c2, c3}) {} // initialise ligne par ligne, renvoie la matrice identite par defaut
-    Matrice (double const& a1, double const& a2, double const& a3) : lignes({Vecteur(a1,0,0),Vecteur(0,a2,0),Vecteur(0,0,a3)}) {} //initialise une matrice diagonale
+    Matrice (Vecteur const& c1 = {1,0,0}, Vecteur const& c2 = {0,1,0}, Vecteur const& c3 = {0,0,1}) : lignes({c1,c2, c3}) { correctif_0();
+    } // initialise ligne par ligne et vérifie les 0, renvoie la matrice identite par defaut
+    Matrice (double const& a1, double const& a2, double const& a3) : lignes({Vecteur(a1,0.0,0.0),Vecteur(0.0,a2,0.0),Vecteur(0.0,0.0,a3)}) {} //initialise une matrice diagonale
     // Accesseurs/Modificateurs si besoin 
     // Méthodes
     std::ostream& affiche(std::ostream& sortie) const;

@@ -1,11 +1,14 @@
 using namespace std;
 #include <iostream>
 #include "../erreurs.h"
+#include "../constantes.h"
 #include "Vecteur.h"
+
 #include <cmath>
 #include <string>
 
 /// MÉTHODES
+
 void Vecteur::augmente(double valeur){
 	coeff_.push_back(valeur);
 }
@@ -38,6 +41,13 @@ double Vecteur::norme2() const{
 }
 double Vecteur::coeff(size_t x) const {return coeff_[x];}
 
+void Vecteur::correctif_0() {
+	 for (auto& c: coeff_) {
+		 if (abs(c)<=eps) {
+			 c=0.0;
+		 }
+	 }
+ }
 // DÉFINITIONS DES OPERATEURS:
 // --> EXTERNES
 
@@ -77,7 +87,8 @@ Vecteur& Vecteur::operator+=(Vecteur const& autre){
 	for (size_t i(0); i<dim(); ++i) {
 			coeff_[i]+=autre.coeff_[i];
 		}
-		return *this;
+		correctif_0();
+	return *this;
 }
 double Vecteur::operator*(Vecteur const& autre){
 	if(dim()!=autre.dim()) {
@@ -95,6 +106,7 @@ Vecteur& Vecteur::operator*=(double a) {
 	for (auto& i : coeff_) {
 		i*=a;
 	}
+	correctif_0(); //vérifier
 	return *this;
 }
 Vecteur& Vecteur::operator/=(double a) {
@@ -112,6 +124,7 @@ Vecteur& Vecteur::operator-=(Vecteur const& autre){
 	for(size_t i(0) ; i<dim() ; ++i){
 		coeff_[i] -= autre.coeff_[i];
 	}
+	correctif_0();
 	return *this;
 }
 Vecteur& Vecteur::operator^=(Vecteur const& autre){
@@ -120,15 +133,15 @@ Vecteur& Vecteur::operator^=(Vecteur const& autre){
 		throw Err;
 	}
 	double temp0, temp1, temp2;
-		temp0 = coeff_[1]*autre.coeff_[2]-coeff_[2]*autre.coeff_[1];
-		temp1 = coeff_[2]*autre.coeff_[0]-coeff_[0]*autre.coeff_[2];
-		temp2 = coeff_[0]*autre.coeff_[1]-coeff_[1]*autre.coeff_[0];
-		coeff_[0] = temp0;
-		coeff_[1] = temp1;
-		coeff_[2] = temp2;
+	temp0 = coeff_[1]*autre.coeff_[2]-coeff_[2]*autre.coeff_[1];
+	temp1 = coeff_[2]*autre.coeff_[0]-coeff_[0]*autre.coeff_[2];
+	temp2 = coeff_[0]*autre.coeff_[1]-coeff_[1]*autre.coeff_[0];
+	coeff_[0] = temp0;
+	coeff_[1] = temp1;
+	coeff_[2] = temp2;
 		
-		
-		return *this;
+	correctif_0();	
+	return *this;
 }
 Vecteur Vecteur::operator~() const{
 	return (*this)/norme();
@@ -140,7 +153,7 @@ bool Vecteur::operator==(Vecteur const& autre) const{
 		throw Err;
 	}
 	for(size_t i(0) ; i < dim() ; ++i){
-		if(abs(coeff_[i] - autre.coeff_[i]) > 1e-8){
+		if(abs(coeff_[i] - autre.coeff_[i]) > eps){
 			retour = false;
 		}
 	}

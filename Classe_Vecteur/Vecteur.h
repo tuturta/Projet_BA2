@@ -8,10 +8,11 @@ class Vecteur
 {
 public:
 // Constructeurs
-	Vecteur(double x, double y, double z): coeff_({x,y,z}) {} //vecteur 3D
+	Vecteur(double x, double y, double z): coeff_({x,y,z}) { correctif_0(); } //vecteur 3D
 	Vecteur(size_t dim) : coeff_(dim,0.0) {}//Vecteur nul de la dimension voulue
 	Vecteur (std::initializer_list<double> const& list) {  //Permet d'initialiser la matrice avec des valeurs
-		for (auto i : list) { coeff_.push_back(i);} 
+		for (auto i : list) { coeff_.push_back(i);
+		correctif_0(); } 
 	}
 // Opérateurs internes (prototypes)
 	Vecteur& operator+=(Vecteur const& v); // addition de deux vecteurs
@@ -32,10 +33,12 @@ public:
 	double norme() const; // renvoie la norme
 	double norme2() const; // renvoie la norme au carré et permet d'éviter le temps de calcul de la racine
 	double coeff(size_t x) const; // renvoie la coordonnée à la position x sachant que la première coordonnée est à la position x = 0
-// Attributs:
+	void correctif_0(); //on l'utilise pour éviter d'avoir des valeurs extremement petites à la place de vrais 0 après certaines opérations.
+
 private:
+	// Attributs
 	std::vector<double> coeff_;
-	
+
 };
 
 // Opérateurs externes (prototypes)
