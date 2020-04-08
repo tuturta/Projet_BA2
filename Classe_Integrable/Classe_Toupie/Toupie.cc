@@ -19,18 +19,6 @@ ostream& Toupie::affiche_parametres(ostream& out) const {
     return out;
 }
 
-Matrice Toupie::S() const  {
-    return Matrice({cos(P.coeff(1)),                    sin(P.coeff(1)),                   0},
-                   {-cos(P.coeff(0))*sin(P.coeff(1)),   cos(P.coeff(1))*cos(P.coeff(0)),   sin(P.coeff(0))},
-                   {sin(P.coeff(0))*sin(P.coeff(1)),    -sin(P.coeff(0))*cos(P.coeff(1)),  cos(P.coeff(0))});
-}
-
-void Toupie::ref_G_to_O(Vecteur& v) const {
-    v=((S().inv())*v);
-}
-void Toupie::ref_O_to_G(Vecteur& v) const {
-    v=S()*v;
-}
 
 Vecteur Toupie::fonction_f() const{
         return 2*P;
@@ -81,11 +69,14 @@ unique_ptr<Toupie> ConeSimple::copie() const{
     return clone();
 }
 
-Vecteur ConeSimple::moment_poids() const {
-    Vecteur AG = {3.0/4.0*hauteur, 0, 0}; // tout est dans le ref RG
+Vecteur ConeSimple::moment_poids() const{
     Vecteur poids(masse()*g); //dans RO
     ref_O_to_G(poids);
-    return AG^poids;
+    return centre_de_masse()^poids;
+}
+
+Vecteur ConeSimple::centre_de_masse() const{ // Centre de masse dans le ref d'inertie G
+    return {0,0, (3.0/4.0)*hauteur};
 }
 
 Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
@@ -96,10 +87,7 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
     double w2(P_point.coeff(1)*sin(P.coeff(0)));
     double w3(P_point.coeff(1)*cos(P.coeff(0))+P_point.coeff(2));
     w = {w1,w2,w3};
-    Vecteur moment_forces_A(moment_poids()); //Vecteur moment de force au point de contact
-    Matrice IA(matrice_inertie()); //Matrice d'inertie d'un cone simple dans RG
-    //Ia'accolade point' peut être  approximmée comme étant nulle(?) *********ou utiliser Huygens-Steiner**********
-    
+
     //2.CALCUL DE W_POINT: (dans Repère d'inertie)
     Vecteur w_point(3);
     Vecteur we(w);
@@ -119,7 +107,6 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
     
     //4.CALCUL DE G:
         //Pour le moment on le fait pas car on considère qu'il n'y a pas de glissement Va = 0
-
     return P_point_point;
 }
 

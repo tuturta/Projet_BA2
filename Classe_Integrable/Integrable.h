@@ -4,6 +4,7 @@
 #include "../Open_GL/Classe_Dessinable/general/dessinable.h"
 #include "../Classe_Vecteur/Vecteur.h"
 #include "../Open_GL/Classe_Dessinable/general/support_a_dessin.h"
+#include "../Classe_Matrice/Matrice.h"
 
 class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a ses paramètres à chaque pas de temps)
    protected : 
@@ -22,6 +23,9 @@ class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a s
     void setP(Vecteur const& autre);
     void setP_point(Vecteur const& autre);
     std::ostream& affiche(std::ostream& sortie) const; // Affiche seulement P et Ppoint
+    void ref_O_to_G(Vecteur&) const; //méthodes pour changer un vecteur de référentiel *************************************
+    void ref_G_to_O(Vecteur&) const; // ************************************************************************************
+    Matrice S() const; // Matrice de transition de RG vers RO *********A METTRE DANS CETTE CLASSE OU NON ?************
 
 };
 

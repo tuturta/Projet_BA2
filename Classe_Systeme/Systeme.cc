@@ -32,9 +32,12 @@ void Systeme::evolue(const double dt){
 }
 
 ostream& Systeme::affiche(ostream& out) const {
+    unsigned int compteur(1);
     for(auto const& ptr_toupie : objets){
         if(ptr_toupie != nullptr){
+            out << "[TOUPIE " << compteur << ']';
             ptr_toupie->affiche(out);
+            ++compteur;
         }
     }
     return out;
