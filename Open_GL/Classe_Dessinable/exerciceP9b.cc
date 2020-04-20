@@ -12,7 +12,7 @@ using namespace std;
 int main() {
     const double dt(0.01); // Pas de temps
     double t(0.0); // Initialise le temps à 0
-    unsigned int nombre_de_tour(50);
+    unsigned int nombre_de_tour(30);
     try{
         //================SUPPORT TEXTUEL======================================================//
         ofstream fichier;
@@ -20,7 +20,7 @@ int main() {
         if (fichier.fail()) {
             //gérer l'erreur
         } else  {
-            TextViewer ecran(fichier); //mettre fichier si on veut écrire dans test.txt 
+            TextViewer ecran(cout); //mettre fichier si on veut écrire dans test.txt 
     
        //================SYSTEME=============================================================//
             IntegrateurEulerCromer integrateur;

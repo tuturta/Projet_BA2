@@ -80,7 +80,7 @@ Vecteur ConeSimple::centre_de_masse() const{ // Centre de masse dans le ref d'in
 }
 
 Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
-    
+
     //1.CALCUL DE w dans RG (repère d'inertie)
     Vecteur w(3);
     double w1(P_point.coeff(0));
@@ -93,7 +93,6 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
     Vecteur we(w);
     we.set_coord(2,we.coeff(2) - P_point.coeff(2)); 
     w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w)));
-    
     //3.CALCUL DE P_POINT_POINT: 
     Vecteur P_point_point(3);
     P_point_point.set_coord(0, w_point.coeff(0)); //Calcul de théta point point 
@@ -107,6 +106,7 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
     
     //4.CALCUL DE G:
         //Pour le moment on le fait pas car on considère qu'il n'y a pas de glissement Va = 0
+
     return P_point_point;
 }
 

@@ -47,6 +47,6 @@ void Systeme::ajoute_toupie(Toupie const& nouvelle){
     objets.push_back(nouvelle.copie());
 }
 
-/*void Systeme::dessine() {
+void Systeme::dessine() {
     support->dessine(*this);
-} */
+}

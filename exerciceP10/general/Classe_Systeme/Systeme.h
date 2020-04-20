@@ -17,7 +17,7 @@ class Systeme : public Dessinable{
     void ajoute_toupie(Toupie const& nouvelle);
     std::ostream& affiche_parametres(std::ostream& out) const; //affiche l'ensemble des paramètres du système
     std::ostream& affiche(std::ostream& out) const; //ensemble le minimum necessaire pour dessine()
-    //virtual void dessine() override;
+    virtual void dessine() override;
 
 };
 

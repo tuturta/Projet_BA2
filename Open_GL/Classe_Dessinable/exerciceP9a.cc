@@ -25,21 +25,21 @@ int main () {
 
 //-------POUR UN OBJET-------// 
     
-        Objet_en_chute_libre toupie({0,1},{1.0,2.0},2.1, &ecran, {0.0,0.0,0.0});
+        ConeSimple cone1({0.523599,0.0,0.0},{0.0,0.0,60.0},0.1, &ecran,1.5,0.5,{0.0,0.0,0.0});
         IntegrateurEulerCromer integrateur;
     
       //Verification des donnees initiales
-        cout << " vitesse initiale "<< toupie.getP_point() <<endl;
-        cout << " position initiale "<< toupie.getP() << endl;
-        cout << "Retour de fonction_f() : " << toupie.fonction_f() << endl;
+        cout << " vitesse initiale "<< cone1.getP_point() <<endl;
+        cout << " position initiale "<< cone1.getP() << endl;
+        cout << "Retour de fonction_f() : " << cone1.fonction_f() << endl;
     
      //Boucle permettant de faire n tours de evolue() et dessine()
         for(size_t i(1); i<=n ;++i){
         t+=dt;
         cout << endl << "=========TOUR " << i << "=========" << endl << endl;
         cout << "Temps : " << t << "s" <<endl;
-        integrateur.evolue(toupie, dt);
-        toupie.dessine(); 
+        integrateur.evolue(cone1, dt);
+        cone1.dessine(); 
         }  
     } 
     fichier.close();

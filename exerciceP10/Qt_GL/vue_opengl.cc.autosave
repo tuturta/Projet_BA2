@@ -37,7 +37,7 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
   matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
 
   matrice.scale(0.5);
-  dessineToupie(matrice);
+  dessinePyramide(matrice);
 }
 
 // ======================================================================

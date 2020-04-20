@@ -5,8 +5,8 @@
 
 int main(int argc, char* argv[])
 {
-  Vecteur P({0.523599,0.0,0.0});
-  Vecteur P_point({0.0,0.0,60.0});
+  Vecteur P({0.0,0.0,0.0});
+  Vecteur P_point({0.523599,0.0,60.0});
   Vecteur origine({0.0,0.0,0.0});
   double masse_volumique(0.1);
   double hauteur(1.5);

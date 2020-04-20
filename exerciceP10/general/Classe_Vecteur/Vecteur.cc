@@ -1,4 +1,3 @@
-using namespace std;
 #include <iostream>
 #include "../erreurs.h"
 #include "../constantes.h"
@@ -6,7 +5,7 @@ using namespace std;
 
 #include <cmath>
 #include <string>
-
+using namespace std;
 /// MÉTHODES
 
 void Vecteur::augmente(double valeur){
@@ -33,7 +32,7 @@ double Vecteur::norme() const {
 	return sqrt(norme2());
 }
 double Vecteur::norme2() const{
-	double retour;
+    double retour(0);
 	for(auto x : coeff_) {
 		retour += x*x;
 	}
@@ -95,7 +94,7 @@ double Vecteur::operator*(Vecteur const& autre){
 		Erreur Err= {"DIMENSIONS!(op*)",1};
 		throw Err;
 	} else {
-		double x;
+        double x(0);
 		for (size_t i(0); i<dim(); ++i) {
 		x+=coeff_[i]*autre.coeff_[i];	
 		}

@@ -1,10 +1,10 @@
 #include <iostream>
 #include <fstream>
-#include "Classe_Vecteur/Vecteur.h"
-#include "Classe_Integrable/Classe_Toupie/Toupie.h"
-#include "Classe_Systeme/Systeme.h"
-#include "../text/text_viewer.h"
-#include "erreurs.h"
+#include "../general/Classe_Vecteur/Vecteur.h"
+#include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
+#include "../general/Classe_Systeme/Systeme.h"
+#include "text_viewer.h"
+#include "../general/erreurs.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ using namespace std;
 int main() {
     const double dt(0.01); // Pas de temps
     double t(0.0); // Initialise le temps à 0
-    unsigned int nombre_de_tour(50);
+    unsigned int nombre_de_tour(10);
     try{
         //================SUPPORT TEXTUEL======================================================//
         ofstream fichier;

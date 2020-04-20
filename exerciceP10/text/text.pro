@@ -17,4 +17,4 @@ HEADERS += \
     ../general/support_a_dessin.h \
     ../general/Classe_Integrable/Classe_Toupie/Toupie.h \
     ../general/Classe_Systeme/Systeme.h \
-    ../general/Classe_Integrable/Integrable.h
+    ../general/Classe_Integrable/Integrable.h \
