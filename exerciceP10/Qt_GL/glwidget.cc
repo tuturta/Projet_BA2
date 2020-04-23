@@ -3,6 +3,7 @@
 #include <QMatrix4x4>
 #include <iostream>
 #include "glwidget.h"
+#include "../general/Classe_Integrateur/Integrateur.h"
 
 double t(0);
 // ======================================================================
@@ -39,7 +40,7 @@ void GLWidget::resizeGL(int width, int height)
 void GLWidget::paintGL()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  c.dessine();
+  contenu->dessine();
 }
 
 
@@ -119,10 +120,7 @@ void GLWidget::timerEvent(QTimerEvent* event)
   Q_UNUSED(event);
 
   double dt = /*chronometre.restart()/1000;*/ 0.001;
-  
-  integrateur.evolue(c,dt);
-  t += dt;
-  std::cout << t << " " << c.getP() << std::endl;
+  integrateur.evolue(*(contenu->copieDessinable()),dt);
   update();
 }
 
@@ -140,3 +138,30 @@ void GLWidget::pause()
   }
 }
 
+void GLWidget::mousePressEvent(QMouseEvent* event)
+{
+  lastMousePosition = event->pos();
+}
+
+void GLWidget::mouseMoveEvent(QMouseEvent* event)
+{
+  /* If mouse tracking is disabled (the default), the widget only receives
+   * mouse move events when at least one mouse button is pressed while the
+   * mouse is being moved.
+   *
+   * Pour activer le "mouse tracking" if faut lancer setMouseTracking(true)
+   * par exemple dans le constructeur de cette classe.
+   */
+
+  if (event->buttons() & Qt::LeftButton) {
+    constexpr double petit_angle(.4); // en degrés
+
+    // Récupère le mouvement relatif par rapport à la dernière position de la souris
+    QPointF d = event->pos() - lastMousePosition;
+    lastMousePosition = event->pos();
+
+    vue.rotate(petit_angle * d.manhattanLength(), d.y(), d.x(), 0);
+
+    update();
+  }
+}

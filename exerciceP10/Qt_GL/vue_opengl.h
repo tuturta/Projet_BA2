@@ -13,7 +13,7 @@ class VueOpenGL : public SupportADessin {
   virtual void dessine(ConeSimple const& objet) override;
   virtual void dessine(Objet_en_chute_libre const& objet) override;
   virtual void dessine(Toupie const& objet) override;
-    //virtual void dessine(Systeme const& objet) override;
+  virtual void dessine(Systeme const& objet) override;
 
   // méthodes de (ré-)initialisation
   void init();
@@ -33,6 +33,7 @@ class VueOpenGL : public SupportADessin {
   void dessinePyramide(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
   void dessineRepere(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
   void dessineSol(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
+  QMatrix4x4 matrice_dessin(Integrable const& a_dessiner) const;
 
 
  private:

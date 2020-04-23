@@ -23,11 +23,13 @@ HEADERS += \
     vue_opengl.h \
     glcone.h \
     ../general/dessinable.h \
-    ../general/support_a_dessin.h \
+    ../general/support_a_dessin.h \   
     ../general/Classe_Integrable/Integrable.h \
     ../general/Classe_Integrable/Classe_Toupie/Toupie.h \
     ../general/Classe_Integrateur/Integrateur.h \
-    ../general/Classe_Vecteur/Vecteur.h
+    ../general/Classe_Vecteur/Vecteur.h \
+    ../general/dessinable.h \
+    ../general/Classe_Systeme/Syteme.h \
 
 
 RESOURCES += \

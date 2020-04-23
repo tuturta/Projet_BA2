@@ -3,8 +3,9 @@
 
 #include <QOpenGLWidget>        // Classe pour faire une fenêtre OpenGL
 #include <QTime>            // Classe pour gérer le temps
+#include <memory>
 #include "vue_opengl.h"
-#include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
+#include "../general/dessinable.h"
 #include "../general/Classe_Integrateur/Integrateur.h"
 #include "../general/Classe_Vecteur/Vecteur.h"
 
@@ -15,10 +16,10 @@ class GLWidget : public QOpenGLWidget
  */
 {
 public:
-  GLWidget( Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const origine, QWidget* parent = nullptr)
+  GLWidget(Dessinable const& a_dessiner, QWidget* parent = nullptr) //ON DOIT TROUVER COMMENT FAIRE DE FACON UNIVERSELLE
     : QOpenGLWidget(parent)
-    , c(P,P_point, masse_volumique,&vue, hauteur, rayon, origine)
-  {}
+    , contenu(a_dessiner.copieDessinable())
+  {contenu->setSupport(&vue);}
   virtual ~GLWidget() {}
 private:
   // Les 3 méthodes clés de la classe QOpenGLWidget à réimplémenter
@@ -29,6 +30,8 @@ private:
   // Méthodes de gestion d'évènements
   virtual void keyPressEvent(QKeyEvent* event) override;
   virtual void timerEvent(QTimerEvent* event)  override;
+  virtual void mousePressEvent(QMouseEvent* event) override;
+  virtual void mouseMoveEvent(QMouseEvent* event)  override;
 
   // Méthodes de gestion interne
   void pause();
@@ -42,10 +45,13 @@ private:
   QTime chronometre;
 
   // objets à dessiner, faire évoluer
-  ConeSimple c; //Pour le moment un cone car on sait pas faire avec une toupie
+  std::unique_ptr<Dessinable> contenu; //Pour le moment un cone car on sait pas faire avec une toupie
 
   // Integrateur pour faire évoluer la toupie :
   IntegrateurEulerCromer integrateur;
+
+  // position de la souris
+    QPoint lastMousePosition;
 };
 
 #endif // GLWIDGET_H

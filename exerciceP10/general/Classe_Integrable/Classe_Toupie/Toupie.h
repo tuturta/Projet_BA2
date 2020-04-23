@@ -13,20 +13,22 @@ class Toupie : public Integrable {
 
    protected : 
     double masse_volumique; //Pour le moment, on le met dans la classe toupie car on ne connait pas la suite
-    
+    std::unique_ptr<Toupie> clone() const;
+
    
    public :
-    Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, SupportADessin* support, Vecteur const& origine = {0,0,0}) 
+    Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
     : Integrable(P, P_point, support, origine), masse_volumique(masse_volumique) {} // Voir plus tard pour le corps : valeurs par défaut ? Message ?
     /*si on doit bien initialiser origine avec la pos d'origine */
 
     
 
-    virtual std::ostream& affiche_parametres(std::ostream& out) const; // Affiche tous les paramètres d'une toupie 
+    virtual std::ostream& affiche_parametres(std::ostream& out) const override; // Affiche tous les paramètres d'une toupie 
     ///A terme, toupie sera certainement une classe virtuelle : on ne permet donc pas de la dessiner pour l'instant
     virtual Vecteur fonction_f() const override;
-    std::unique_ptr<Toupie> clone() const;
     virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
+    virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
+
     virtual void dessine() override;
 
 };
@@ -39,10 +41,10 @@ class ConeSimple : public Toupie{
    private:
     double hauteur;
     double rayon;
-
+    std::unique_ptr<ConeSimple> clone() const;
    public: 
-    ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, SupportADessin* support, double hauteur, double rayon, Vecteur const origine)
-    : Toupie(P, P_point, masse_volumique, support, origine), hauteur(hauteur), rayon(rayon) {} // COnstructeur qui initialise l'origine à 0,0,0
+    ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const origine, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    : Toupie(P, P_point, masse_volumique, origine, support), hauteur(hauteur), rayon(rayon) {} // COnstructeur qui initialise l'origine à 0,0,0
     virtual std::ostream& affiche_parametres(std::ostream& out) const override; // Affiche tous les paramètres d'une toupie
     double masse() const;
     Matrice matrice_inertie() const; //Calcule le moment d'inertie I du cone simple
@@ -52,21 +54,21 @@ class ConeSimple : public Toupie{
     virtual Vecteur fonction_f() const override;
     virtual void dessine() override;
     
-    std::unique_ptr<ConeSimple> clone() const;
-    virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
 
-    //getter pour les attributs nécéssités par dessineToupie
-    double getHauteur() const;
-    double getRayon() const;
+    virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
+    virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
 };
 
 
 //================================================================================
 class Objet_en_chute_libre : public Toupie {
-   public:
+   private:
+    std::unique_ptr<Objet_en_chute_libre> clone() const;
+   public:   
     using Toupie::Toupie;
     virtual Vecteur fonction_f() const override;
     virtual void dessine() override;
-    std::unique_ptr<Objet_en_chute_libre> clone() const;
-    virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
+    virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
+    virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
+
 };

@@ -1,6 +1,7 @@
 #include "vue_opengl.h"
 #include "vertex_shader.h" // Identifiants Qt de nos différents attributs
 #include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
+#include "../general/Classe_Systeme/Systeme.h"
 #include <cmath>
 // ======================================================================
 void VueOpenGL::dessine(ConeSimple const& a_dessiner)
@@ -16,20 +17,20 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
    matrice.scale(0.25);2
   dessineCube(matrice);
 
-  // Dessine le 3e cube
-  matrice.setToIdentity();
-  matrice.translate(0.0, 0.0, 1.5);
-  matrice.scale(0.25);
-  matrice.rotate(45.0, 0.0, 1.0, 0.0);
-  dessineCube(matrice);*/
-  
+// ======================================================================
+QMatrix4x4 VueOpenGL::matrice_dessin(Integrable const& a_dessiner) const{
   QMatrix4x4 matrice;
   matrice.setToIdentity();
   
   double psi(a_dessiner.getP().coeff(1)*180/M_PI);  ///angles en degrés
   double theta(a_dessiner.getP().coeff(0)*180/M_PI);
-  double phi(a_dessiner.getP().coeff(2)*180/M_PI);
-  std::cout << "psi: " << psi << "; theta : " << theta << "; phi: " << std::endl;
+  double phi(a_dessiner.getP().coeff(2)*180/M_PI); 
+  double x0(a_dessiner.getOrigine().coeff(0));
+  double y0(a_dessiner.getOrigine().coeff(1));
+  double z0(a_dessiner.getOrigine().coeff(2));
+
+
+
   matrice.rotate(phi,0.0, 0.0, 1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)?*/); //rotation propre PHI autour de Oz'
   matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0 ?*/); //nutation THETA autour de l'axe nodal
   matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
@@ -44,38 +45,12 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
 
 void VueOpenGL::dessine(Toupie const& a_dessiner)
 {
-  QMatrix4x4 matrice;
-  matrice.setToIdentity();
-    
-  double psi(a_dessiner.getP().coeff(1)*180/M_PI);  ///angles en degrés
-  double theta(a_dessiner.getP().coeff(0)*180/M_PI); 
-  double phi(a_dessiner.getP().coeff(2)*180/M_PI);
-
-  matrice.rotate(psi,0 , 0 , 1); // précession PSI autour de Oz
-  matrice.rotate(theta , cos(psi) , sin(psi) , 0); //nutation THETA autour de l'axe nodal
-  matrice.rotate(phi,sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)); //rotation propre PHI autour de Oz'
-  matrice.scale(0.5);
-  dessineToupie(matrice);
+    dessineRepere();
+    dessinePyramide(matrice_dessin(a_dessiner));
 }
 // ======================================================================
 void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
 {
-    dessineRepere();
-  /*// Dessine le 1er cube (à l'origine)
-    dessineCube();
-
-  // Dessine le 2e cube
-   matrice.translate(0.0, 1.5, 0.0);
-   matrice.scale(0.25);2
-  dessineCube(matrice);
-
-  // Dessine le 3e cube
-  matrice.setToIdentity();
-  matrice.translate(0.0, 0.0, 1.5);
-  matrice.scale(0.25);
-  matrice.rotate(45.0, 0.0, 1.0, 0.0);
-  dessineCube(matrice);*/
-
   QMatrix4x4 matrice;
   // Dessine le 4e cube
   matrice.setToIdentity();
@@ -92,7 +67,16 @@ void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
   dessineToupie(matrice);
 }
 // ======================================================================
-    //EMPLACEMENT POUR DESSINE(SYSTEME)
+void VueOpenGL::dessine(Systeme const& a_dessiner)
+{
+  dessineRepere();
+  QMatrix4x4 matrice;
+  for(size_t i(0) ; i < a_dessiner.size() ; ++i){
+    matrice = matrice_dessin(a_dessiner.getToupie(i));
+    matrice.translate(i, 0.0, 0.0);
+    dessinePyramide(matrice);
+  }
+}
 // ======================================================================
 void VueOpenGL::init()
 {
@@ -144,11 +128,14 @@ void VueOpenGL::init()
    * Le Back-face culling consiste à ne dessiner que les face avec ordre
    * de déclaration dans le sens trigonométrique.
    */
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+  glClearDepth(1.0f);                   // Set background depth to farthest
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
 
   cone.initialize(); // initialise le cone
   initializePosition();
+
 }
 
 // ======================================================================
@@ -276,7 +263,6 @@ void VueOpenGL::dessineConeSimple (QMatrix4x4 const& point_de_vue,
 void VueOpenGL::dessinePyramide (QMatrix4x4 const& point_de_vue) //PYRAMIDE DE HAUTEUR 1.5 et de BASE 0.5 (de rayon)
 {
   prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
-
   glBegin(GL_QUADS);
 
   prog.setAttributeValue(CouleurId, 0.0, 1.0, 1.0); // cyan // Base carrée

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "glwidget.h"
 #include "../general/Classe_Vecteur/Vecteur.h"
+#include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
 
 int main(int argc, char* argv[])
 {
@@ -11,9 +12,9 @@ int main(int argc, char* argv[])
   double masse_volumique(0.1);
   double hauteur(1.5);
   double rayon(0.5);
-
+  ConeSimple cone1(P,P_point,masse_volumique,hauteur,rayon,origine);
   QApplication a(argc, argv);
-  GLWidget w(P,P_point,masse_volumique,hauteur,rayon,origine);
+  GLWidget w(cone1); //A adapter pour un systeme
   w.show();
   return a.exec();
 }
