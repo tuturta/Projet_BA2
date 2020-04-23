@@ -11,6 +11,10 @@ Vecteur Integrable::getP() const {
 Vecteur Integrable::getP_point() const {
     return P_point;
 }
+Vecteur Integrable::getOrigine() const{
+    return origine;
+}
+
 void Integrable::setP(Vecteur const& v) {
     P=v;
 }

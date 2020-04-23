@@ -13,6 +13,6 @@
    void TextViewer::dessine(Toupie const& objet){
      objet.affiche(flot);
    } 
-  /*void TextViewer::dessine(Systeme const& objet) {
+  void TextViewer::dessine(Systeme const& objet) {
     objet.affiche(flot);
-  }*/
+  }

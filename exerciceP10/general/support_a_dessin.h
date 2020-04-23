@@ -15,7 +15,7 @@ class SupportADessin {
    virtual void dessine(ConeSimple const& objet) =0;
    virtual void dessine(Objet_en_chute_libre const& objet) =0;
    virtual void dessine(Toupie const& objet) =0;
-   //virtual void dessine(Systeme const& objet) =0;
+   virtual void dessine(Systeme const& objet) =0;
 
    //....
 };
