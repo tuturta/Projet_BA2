@@ -1,76 +1,81 @@
 ﻿Réponse P1.1:
 
-Les vecteurs sont représentés par une classe.
+    Les vecteurs sont représentés par une classe.
 
-On a choisi de mettre en attribut seulement les composantes (x, y, z, …) du vecteur représentées dans un tableau dynamique (vector). Cela facilite la définition des méthodes qui effectuent des opérations sur les vecteurs et qui nécessitent très souvent des boucles sur les composantes du vecteurs.
+    On a choisi de mettre en attribut seulement les composantes (x, y, z, …) du vecteur représentées dans un tableau dynamique (vector). Cela facilite la définition des méthodes qui effectuent des opérations sur les vecteurs et qui nécessitent très souvent des boucles sur les composantes du vecteurs.
 
-Pour le moment, on a choisi de mettre l’ensemble des méthodes en public et les attributs en private: 
-Méthodes : 
-    augmente():
-    set_coord():
-    affiche():
-    compare():
-    dim():
-    addition():
-    soustraction():
-    oppose():
-    mult():
-    prod_scal():
-    prod_vect():
-    norme() :
-    norme2() :
-    unitaire()
+    Pour le moment, on a choisi de mettre l’ensemble des méthodes en public et les attributs en private: 
+    Méthodes : 
+        augmente():
+        set_coord():
+        affiche():
+        compare():
+        dim():
+        addition():
+        soustraction():
+        oppose():
+        mult():
+        prod_scal():
+        prod_vect():
+        norme() :
+        norme2() :
+        unitaire()
 
-Attributs:
+    Attributs:
 
-tableau de double de la forme (x1, x2, …, xn) noté coordonnees.
+    tableau de double de la forme (x1, x2, …, xn) noté coordonnees.
 
 
 Réponse P1.2:
 
-On lance une exception pour les erreurs de dimension.
+    On lance une exception pour les erreurs de dimension.
 
 Réponse P4.1:
 
-Nous n'ajoutons pas de constructeur de copie, celui par défaut convient pour l'instant puisquon veut seulement copier une à une les valeurs du tableau de coordonnees.
+    Nous n'ajoutons pas de constructeur de copie, celui par défaut convient pour l'instant puisquon veut seulement copier une à une les valeurs du tableau de coordonnees.
 
 Réponse P4.2:
 
-a] On peut ajouter un constructeur par coordonnées sphériques sans que cela ne change quoi que ce soit aux attributs.
-b] ****aucune idée : des formules de conversion existent pour passer des coordonnées sphériques aux cartésiennes (pour garder des coordonnees cartesiennes en attributs). Cela implquerait seulement de rajouter un paramètre dans le constructeur, pour ne pas avoir deux constructeurs qui prennent comme arguments 3 'double'.
+    a] On peut ajouter un constructeur par coordonnées sphériques sans que cela ne change quoi que ce soit aux attributs.
+    b] ****aucune idée : des formules de conversion existent pour passer des coordonnées sphériques aux cartésiennes (pour garder des coordonnees cartesiennes en attributs). Cela implquerait seulement de rajouter un paramètre dans le constructeur, pour ne pas avoir deux constructeurs qui prennent comme arguments 3 'double'.
 
 Réponse P4.3:
 
-Pour affiche(), on introduit l'opérateur externe : std::ostream& operator<<(std::ostream& sortie, Vecteur const& vecteur);
-Pour compare(), on introduit l'opérateur interne : bool Vecteur::operator==(Vecteur const& autre) const; //test d'egalite
+    Pour affiche(), on introduit l'opérateur externe : std::ostream& operator<<(std::ostream& sortie, Vecteur const& vecteur);
+    Pour compare(), on introduit l'opérateur interne : bool Vecteur::operator==(Vecteur const& autre) const; //test d'egalite
 
 Réponse P6.1:
-Une toupie en cone simple EST UNE toupie, donc la classe ConeSimple est une classe-enfant de la classe Toupie. Elle hérite ainsi de tous les attributs et méthodes de la classe-parente Toupie.
+    Une toupie en cone simple EST UNE toupie, donc la classe ConeSimple est une classe-enfant de la classe Toupie. Elle hérite ainsi de tous les attributs et méthodes de la classe-parente Toupie.
 
 Réponse P8.1: 
-On souhaite que la methode dessine() ait un comportement polymorphique à deux paramètres: dans notre cas, qu'elle s'adapte en fonction du support à dessin et du type d'objet (double dispatch). On ne peut pas écrire une méthode dessine() commune à tous les dessinables.
-Pour cela, dessine doit être une methode virtuelle pure.
+    On souhaite que la methode dessine() ait un comportement polymorphique à deux paramètres: dans notre cas, qu'elle s'adapte en fonction du support à dessin et du type d'objet (double dispatch). On ne peut pas écrire une méthode dessine() commune à tous les dessinables.
+    Pour cela, dessine doit être une methode virtuelle pure.
 
 Réponse P8.2: 
-La bonne façon de faire une collection hétérogène est de représenter les données dans un tableaux de pointeurs. 
-Ceci permettra d'utiliser le polymorphisme pour chaque élèment du tableau.
-Pour choisir le type de pointeurs, nous étudions les questions évoquéesen cours :
-- Qui est propriétaire des toupies ? Ce n'est pas le Syteme, les toupies doivent être gérées par la classe toupie.
-- Les toupies sont-elles partagées ? Non. /////REPRENDRE/ COMPLETER*************************************
+    La bonne façon de faire une collection hétérogène est de représenter les données dans un tableaux de pointeurs. 
+    Ceci permettra d'utiliser le polymorphisme pour chaque élèment du tableau.
+    Pour choisir le type de pointeurs, nous étudions les questions évoquéesen cours :
+    - Qui est propriétaire des toupies ? Ce n'est pas le Syteme, les toupies doivent être gérées par la classe toupie.
+    - Les toupies sont-elles partagées ? Non. /////REPRENDRE/ COMPLETER*************************************
 
 
 
 
-Dans notre cas, l'avantage d'utiliser un tableaux de pointeurs de Toupie pour représenter un système est d'avoir, notamment, la bonne equation du mouvent pour chacune des toupies (car l'équation du mouvement est propre à chaque toupie car dépendant de la taille, masse, etc..).
+    Dans notre cas, l'avantage d'utiliser un tableaux de pointeurs de Toupie pour représenter un système est d'avoir, notamment, la bonne equation du mouvent pour chacune des toupies (car l'équation du mouvement est propre à chaque toupie car dépendant de la taille, masse, etc..).
 
 Réponse P8.3: 
 
-Les classes contenant des pointeurs vont devoir allouer de l'espace dynamiquement. Il faut donc faire attention à bien gérer cette mémoire dynamique (surtout la désallocation et la durée de vie de chaque pointeurs/objets pointés).
-Pour cela, on peut redéfinir le destructeur de la classe. En revanche, on devra, très certainement, également redéfinir les constructeurs de copie et l'opérateur d'affcetion "=".
-Pour éviter la problème de la gestion de mémoire, on peut aussi opter pour des unique_ptr (notre choix) qui désallouent automatiquement la mémoire et qui empêchent les problèmes liés au fait que plusieurs pointeurs pointent la même variable.
+    Les classes contenant des pointeurs vont devoir allouer de l'espace dynamiquement. Il faut donc faire attention à bien gérer cette mémoire dynamique (surtout la désallocation et la durée de vie de chaque pointeurs/objets pointés).
+    Pour cela, on peut redéfinir le destructeur de la classe. En revanche, on devra, très certainement, également redéfinir les constructeurs de copie et l'opérateur d'affcetion "=".
+    Pour éviter la problème de la gestion de mémoire, on peut aussi opter pour des unique_ptr (notre choix) qui désallouent automatiquement la mémoire et qui empêchent les problèmes liés au fait que plusieurs pointeurs pointent la même variable.
 
 
 Réponse P8.4: 
 
-Pour le moment : 
-ATTRIBUTS: tableaux de unique_ptr<Intégrable> (raisons expliquées ci-dessus) //On choisit de prendre tous les intégrables afin d'élargir les possibilités et d'étendre le problème
+    Pour le moment : 
+    ATTRIBUTS: tableaux de unique_ptr<Intégrable> (raisons expliquées ci-dessus) //On choisit de prendre tous les intégrables afin d'élargir les possibilités et d'étendre le problème
+
+Réponse P10 :
+
+    Concernant la classe contenu, nous choississons pour le moment de ne pas la garder : notre contenu est en fai tla classe Dessinable préalablement crée. 
+    Toutefois, cette décision est remise en question par la suite et nous hésitons..///À SUIVRE !!

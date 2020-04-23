@@ -33,7 +33,7 @@ double Vecteur::norme() const {
 	return sqrt(norme2());
 }
 double Vecteur::norme2() const{
-	double retour(0);
+	double retour(0.0);
 	for(auto x : coeff_) {
 		retour += x*x;
 	}
@@ -95,7 +95,7 @@ double Vecteur::operator*(Vecteur const& autre){
 		Erreur Err= {"DIMENSIONS!(op*)",1};
 		throw Err;
 	} else {
-		double x(0);
+		double x(0.0);
 		for (size_t i(0); i<dim(); ++i) {
 		x+=coeff_[i]*autre.coeff_[i];	
 		}

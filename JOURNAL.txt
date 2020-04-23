@@ -1,47 +1,108 @@
 SEMAINE 1 :
-[V] Faire le journal.......................................2min 
-[V] Créer/configurer le repository  git/github etc.........5h    
-[V] lire le projet.........................................30min
+ [V] Faire le journal..............................................2min 
+ [V] Créer/configurer le repository  git/github etc..................5h    
+ [V] lire le projet...............................................30min
 
 SEMAINE 2 :
-[V] Créer la classe vecteur................................3h
-[V] Créer le fichier réponse...............................30min
-[V] Introduction OpenGL....................................3h
-[V] Séparer les fichiers...................................30min
+ [V] Créer la classe vecteur.........................................3h
+ [V] Créer le fichier réponse.....................................30min
+ [V] Introduction OpenGL.............................................3h
+ [V] Séparer les fichiers.........................................30min
 
 SEMAINE 3 :
-[V] Ajouter les exceptions/gestion d'erreurs, tester.......3h
+ [V] Ajouter les exceptions/gestion d'erreurs, tester................3h
 
-A faire : creer un fichier erreur.h avec une structure (ou classe?) erreur afin de pouvoir gérer plus facilement les erreurs 
-(configurer un code unique,niveau,indication sur l'arret ou non du programme suite à l'erreur...)  
+    A faire : creer un fichier erreur.h avec une structure (ou classe?) erreur afin de pouvoir gérer plus facilement les erreurs 
+    (configurer un code unique,niveau,indication sur l'arret ou non du programme suite à l'erreur...)  
 
 SEMAINE 4 :
-[V] Constructeurs + prototypes des opérateurs..............2h
-[V] Retour sur le fichier avec structure erreur............1h
-[V] Définition des opérateurs/Réagencement classe vecteur..3h
-[V] Répondre aux questions.................................1h
-[V] Création de la classe matrice et ses opérateurs........5h
+ [V] Constructeurs + prototypes des opérateurs.......................2h
+ [V] Retour sur le fichier avec structure erreur.....................1h
+ [V] Définition des opérateurs/Réagencement classe vecteur...........3h
+ [V] Répondre aux questions..........................................1h
+ [V] Création de la classe matrice et ses opérateurs.................5h
 
 SEMAINE 5 :
 
-[V] Ajout de la classe Toupie..............................3h
-[V] Ajout de la classe Integrateur + test GNU plot.........3h
-[V] Ecriture du Makefile et correction des erreurs.........8h
+ [V] Ajout de la classe Toupie.......................................3h
+ [V] Ajout de la classe Integrateur + test GNU plot..................3h
+ [V] Ecriture du Makefile et correction des erreurs..................8h
 
 SEMAINE 6 :
 
-[V] Polymorphisme dans les classes toupie/integrateur......3h
-[V] Etude de l'introduction à OpenGL.......................2h
-[V] Mise en place de l'espace de travail (Qt/OpenGl).......4h
-[V] Exercice P8............................................3h
+ [V] Polymorphisme dans les classes toupie/integrateur...............3h
+ [V] Etude de l'introduction à OpenGL................................2h
+ [V] Mise en place de l'espace de travail (Qt/OpenGl)................4h
+ [V] Exercice P8.....................................................3h
+ [V] Exercice P9a....................................................3h
 
 SEMAINE 7 :
 
-[V] Modification de la conception globale(ajout classe Integrable)..1h
-[V] Restructuration du fichier conception : mindmap.................2h
-[V] Correction des erreurs dû aux polymorphismes....................3h
-[V] Correction du Makefile.........................................10h
-[] Exercice P9....................................................
+ [V] Modification de la conception globale(ajout classe Integrable)..1h
+ [V] Restructuration du fichier conception : mindmap.................2h
+ [V] Correction des erreurs dû aux polymorphismes....................3h
+ [V] Correction du Makefile.........................................10h
+ [V] Exercice P9b....................................................7h
+ [V] Ajout d'une méthode correctif_0.................................1h
+
+    Nous obtenons des résultats très petits (10e-314) pour certains angles 
+    dans P9 , au lieu de 0.0 :
+    nous implémentons donc une méthode qui corrige ces valeurs en 0.0 après 
+    chaque opération sur les matrices/vecteurs qui retourneraient éventuellement 
+    ce genre de valeurs, au moyen d'une nouvelle constante 'eps' valant 10e-8.  
+
+SEMAINE 8 :
+
+ [V] Mise en place de l'architecture de l'exercice P10 pour Qt.......2h
+ [V] Retour sur le tutoriel Qt/OpenGL , notamment exercices 5-6-7-8..5h
+ [V] Conception de la classe GLWidget................................2h
+ [V] Conception de la classe vue_opengl ............................10h
+ [V] Recherche d'une erreur .........................................5h
+
+    À ce stade, nous avons réussi à faire tourner un cube avec qt, en utilisant 
+    le logiciel QtCreator. Nous observons que le cube n'a pas les mouvements attendus,
+    ses rotations ne ressemblent en rien à celles d'une toupie, même mal orientée.
+    Nous nous apercevons que les valeurs des angles sont fausses lorsque nous les
+    faisons s'afficher dans le terminal QtCreator.
+    En remontant pas-pas dans le programme, tout semble indiquer une erreur dans les méthodes
+    appeléespar la fonction f. Pourtant, avec cette même fonction f, l'exerice P9 retourne
+    les bons angles... 
+
+
+VACANCES
+
+ [V] Recherche de l'erreur...........................................5h
+
+    Nous finissons par trouver l'erreur en question : une belle leçon, puisqu'il 
+    s'agissait de deux nombres de type 'double' qui n'avaient pas été initialisés dans 
+    norme2 et la surcharge operator* ! Nous n'avions pas remarqué l'oubli avant car il
+    semble que lors de notre compilation dans VSCode, ces 'double' étaient initialisés 
+    automatiquement à 0 : tout fonctionnait donc normalement ; Lors de la compilation 
+    avec QtCreator, par contre ils avaient une autre valeur, ce qui faussait complètement 
+    nos calculs. 
+    Maintenant tout fonctionne.
+
+ [V] Remplacer le cube par une pyramide (pour l'esthétique)..........3h
+
+    Problème de shader : les différentes faces de la pyramide ne s'affichent
+    pas toutes à la fois  - irrésolu, trop complexe au vu de notre compréhension
+    de qt. 
+
+SEMAINE 9 :
+
+ [V] Graphisme : dessiner un cône....................................5h
+ [V] Dicussion conceptuelle sur le contenu dans glWidget.............2h
+
+
+    Nous passons bcp de temps à essayer de trouver un moyen de pouvoir construire
+    le glWidget avec un systeme de toupies ou bien une toupie de la manière la plus 
+    efficace et sensée. De nombreux problèmes se posent et nous  obligent à questionner
+    les liens d'héritage entre toutes nos classes.
+
+    À revoir  : 
+    - le cône se re-calcule à chaque pas de temps : cela ralentit considérabelement
+    la simulation. S'inspirer de la sphère pour corriger ça.
+
 
 
 

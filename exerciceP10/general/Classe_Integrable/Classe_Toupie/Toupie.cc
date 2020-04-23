@@ -110,6 +110,15 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
     return P_point_point;
 }
 
+// Getters
+
+double ConeSimple::getHauteur() const {
+    return hauteur;
+}
+double ConeSimple::getRayon() const {
+    return rayon;
+}
+
 // Méthode virtuelle dessinable
 
 void ConeSimple::dessine() {

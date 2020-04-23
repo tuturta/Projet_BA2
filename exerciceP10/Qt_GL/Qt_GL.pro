@@ -14,12 +14,14 @@ INCLUDEPATH = ../general
 SOURCES += \
     exerciceP10.cc \
     glwidget.cc \
-    vue_opengl.cc  
+    vue_opengl.cc \
+    glcone.cc
 
 HEADERS += \
     glwidget.h \
     vertex_shader.h \
     vue_opengl.h \
+    glcone.h \
     ../general/dessinable.h \
     ../general/support_a_dessin.h \
     ../general/Classe_Integrable/Integrable.h \

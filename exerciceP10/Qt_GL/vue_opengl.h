@@ -5,6 +5,7 @@
 #include <QMatrix4x4>
 #include "../general/support_a_dessin.h"
 #include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
+#include "glcone.h"
 
 class VueOpenGL : public SupportADessin {
  public:
@@ -27,7 +28,8 @@ class VueOpenGL : public SupportADessin {
   void rotate(double angle, double dir_x, double dir_y, double dir_z);
   
   // méthode utilitaire offerte pour simplifier
-  void dessineToupie(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
+  void dessineToupie(QMatrix4x4 const& point_de_vue = QMatrix4x4());
+  void dessineConeSimple(QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu);
   void dessinePyramide(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
   void dessineRepere(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
   void dessineSol(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
@@ -36,7 +38,8 @@ class VueOpenGL : public SupportADessin {
  private:
   // Un shader OpenGL encapsulé dans une classe Qt
   QOpenGLShaderProgram prog;
-
+  //Un cone
+  GLCone cone;
   // Caméra
   QMatrix4x4 matrice_vue;
 };

@@ -54,6 +54,10 @@ class ConeSimple : public Toupie{
     
     std::unique_ptr<ConeSimple> clone() const;
     virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
+
+    //getter pour les attributs nécéssités par dessineToupie
+    double getHauteur() const;
+    double getRayon() const;
 };
 
 

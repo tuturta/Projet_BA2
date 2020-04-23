@@ -5,7 +5,6 @@
 // ======================================================================
 void VueOpenGL::dessine(ConeSimple const& a_dessiner)
 {
-
     dessineRepere();
     //dessineSol();
   /*// Dessine le 1er cube (à l'origine)
@@ -25,7 +24,6 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
   dessineCube(matrice);*/
   
   QMatrix4x4 matrice;
-  // Dessine le 4e cube
   matrice.setToIdentity();
   
   double psi(a_dessiner.getP().coeff(1)*180/M_PI);  ///angles en degrés
@@ -37,30 +35,16 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
   matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
 
   matrice.scale(0.5);
-  dessineToupie(matrice);
+  cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon());
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
+  dessineConeSimple(matrice,1.0,0.5,1.0); // rouge
 }
 
 // ======================================================================
 
 void VueOpenGL::dessine(Toupie const& a_dessiner)
 {
-  /*// Dessine le 1er cube (à l'origine)
-    dessineCube();
-
-  // Dessine le 2e cube
-   matrice.translate(0.0, 1.5, 0.0);
-   matrice.scale(0.25);2
-  dessineCube(matrice);
-
-  // Dessine le 3e cube
-  matrice.setToIdentity();
-  matrice.translate(0.0, 0.0, 1.5);
-  matrice.scale(0.25);
-  matrice.rotate(45.0, 0.0, 1.0, 0.0);
-  dessineCube(matrice);*/
-
   QMatrix4x4 matrice;
-  // Dessine le 4e cube
   matrice.setToIdentity();
     
   double psi(a_dessiner.getP().coeff(1)*180/M_PI);  ///angles en degrés
@@ -163,6 +147,7 @@ void VueOpenGL::init()
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
 
+  cone.initialize(); // initialise le cone
   initializePosition();
 }
 
@@ -250,6 +235,43 @@ void VueOpenGL::dessineToupie (QMatrix4x4 const& point_de_vue)
 
   glEnd();
 }
+
+/********* MÉTHODE SIMPLE POUR DESSINER UN CONE, MAIS PEU EFFICACE ******************************************************
+ * pour information, elle ne peut plus être utilisée dans cette version du code *
+void VueOpenGL::dessineConeSimple( double hauteur, double rayon, const QMatrix4x4 &point_de_vue) //Cone de hauteur h,rayon r
+{
+    prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
+    /* Notre méthode : on dessine un cône comme un empilement de cercles concentriques
+     * dont les rayons diminuent quand la position verticale diminue*//*
+
+
+    glBegin(GL_LINES);
+    double pas_hauteur(0.1); //À voir : plus de précision et sans ralentissement  ??
+    double pas_angle(0.1);
+    double pas_couleur(0.0028);
+    for(double z(hauteur); z>=0.0 ; z-=pas_hauteur) {
+        for(double angle(0.0); angle<360.0; angle+=pas_angle) {
+            prog.setAttributeValue(CouleurId, 1.0, 1.0, 1.0);
+            double rayon_actuel(rayon*z/hauteur);
+            prog.setAttributeValue(SommetId, cos(angle)*rayon_actuel, sin(angle)*rayon_actuel, z);
+        }
+    }
+    //traits verticaux
+    //
+    glEnd();
+
+
+}
+***********************************************************************************************************************/
+
+void VueOpenGL::dessineConeSimple (QMatrix4x4 const& point_de_vue,
+                               double rouge, double vert, double bleu)
+{
+  prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
+  prog.setAttributeValue(CouleurId, rouge, vert, bleu);  // met la couleur
+  cone.draw(prog, SommetId);                           // dessine la sphère
+}
+
 
 void VueOpenGL::dessinePyramide (QMatrix4x4 const& point_de_vue) //PYRAMIDE DE HAUTEUR 1.5 et de BASE 0.5 (de rayon)
 {
