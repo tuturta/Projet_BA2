@@ -10,6 +10,8 @@
 #include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../general/Classe_Integrateur/Integrateur.h"
 #include "../general/Classe_Vecteur/Vecteur.h"
+#include "../general/Classe_Systeme/Systeme.h"
+
 
 
 class GLWidget : public QOpenGLWidget
