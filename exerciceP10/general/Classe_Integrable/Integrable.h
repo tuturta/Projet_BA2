@@ -28,8 +28,8 @@ class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a s
     void ref_O_to_G(Vecteur&) const; //méthodes pour changer un vecteur de référentiel *************************************
     void ref_G_to_O(Vecteur&) const; // ************************************************************************************
     Matrice S() const; // Matrice de transition de RG vers RO *********A METTRE DANS CETTE CLASSE OU NON ?************
-   // virtual std::unique_ptr<Integrable> copie() const =0;
-    virtual std::unique_ptr<Dessinable> copieDessinable() const =0;
+    //virtual std::unique_ptr<Integrable> copie() const =0;
+    //virtual std::unique_ptr<Dessinable> copieDessinable() const =0;
 
 };
 

@@ -27,7 +27,7 @@ class Toupie : public Integrable {
     ///A terme, toupie sera certainement une classe virtuelle : on ne permet donc pas de la dessiner pour l'instant
     virtual Vecteur fonction_f() const override;
     virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
-    virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
+    //virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
 
     virtual void dessine() override;
 
@@ -56,7 +56,7 @@ class ConeSimple : public Toupie{
     
 
     virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
-    virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
+   // virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
 };
 
 
@@ -69,6 +69,6 @@ class Objet_en_chute_libre : public Toupie {
     virtual Vecteur fonction_f() const override;
     virtual void dessine() override;
     virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
-    virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
+  //  virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
 
 };

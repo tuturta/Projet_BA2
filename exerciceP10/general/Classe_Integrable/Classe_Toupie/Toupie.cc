@@ -35,9 +35,9 @@ unique_ptr<Toupie> Toupie::clone() const{
 unique_ptr<Toupie> Toupie::copie() const{
     return clone();
 }
-unique_ptr<Dessinable> Toupie::copieDessinable() const{
+/*unique_ptr<Dessinable> Toupie::copieDessinable() const{
     return clone();
-}
+}*/
 void Toupie::dessine() {
     support->dessine(*this);
 } 
@@ -71,9 +71,9 @@ unique_ptr<ConeSimple> ConeSimple::clone() const{
 unique_ptr<Toupie> ConeSimple::copie() const{
     return clone();
 }
-unique_ptr<Dessinable> ConeSimple::copieDessinable() const{
+/*unique_ptr<Dessinable> ConeSimple::copieDessinable() const{
     return clone();
-}
+}*/
 
 Vecteur ConeSimple::moment_poids() const{
     Vecteur poids(masse()*g); //dans RO
@@ -139,6 +139,6 @@ unique_ptr<Toupie> Objet_en_chute_libre::copie() const{
     return clone();
 }
 
-unique_ptr<Dessinable> Objet_en_chute_libre::copieDessinable() const{
+/*unique_ptr<Dessinable> Objet_en_chute_libre::copieDessinable() const{
     return clone();
-}
+}*/

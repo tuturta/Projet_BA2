@@ -8,6 +8,8 @@
 #include "../general/dessinable.h"
 #include "../general/Classe_Integrateur/Integrateur.h"
 #include "../general/Classe_Vecteur/Vecteur.h"
+#include "../general/Classe_Systeme/Systeme.h"
+
 
 
 class GLWidget : public QOpenGLWidget
@@ -16,10 +18,10 @@ class GLWidget : public QOpenGLWidget
  */
 {
 public:
-  GLWidget(Dessinable const& a_dessiner, QWidget* parent = nullptr) //ON DOIT TROUVER COMMENT FAIRE DE FACON UNIVERSELLE
+  GLWidget(Systeme const& s/*Dessinable const& a_dessiner*/, QWidget* parent = nullptr) //ON DOIT TROUVER COMMENT FAIRE DE FACON UNIVERSELLE
     : QOpenGLWidget(parent)
-    , contenu(a_dessiner.copieDessinable())
-  {contenu->setSupport(&vue);}
+    , contenu(s/*a_dessiner.copieDessinable()*/)
+  {contenu.setSupport(&vue);}
   virtual ~GLWidget() {}
 private:
   // Les 3 méthodes clés de la classe QOpenGLWidget à réimplémenter
@@ -45,7 +47,7 @@ private:
   QTime chronometre;
 
   // objets à dessiner, faire évoluer
-  std::unique_ptr<Dessinable> contenu; //Pour le moment un cone car on sait pas faire avec une toupie
+  Systeme contenu; //Pour le moment un cone car on sait pas faire avec une toupie
 
   // Integrateur pour faire évoluer la toupie :
   IntegrateurEulerCromer integrateur;

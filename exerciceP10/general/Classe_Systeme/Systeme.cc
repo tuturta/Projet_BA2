@@ -56,7 +56,7 @@ void Systeme::dessine() {
     support->dessine(*this);
 }
 
-unique_ptr<Systeme> Systeme::clone() const{
+/*unique_ptr<Systeme> Systeme::clone() const{
     //return unique_ptr<Systeme>(new Systeme(*this));
     return nullptr; //POUR LES TESTS
 }
@@ -64,7 +64,7 @@ unique_ptr<Systeme> Systeme::clone() const{
 unique_ptr<Dessinable> Systeme::copieDessinable() const {
    // return clone();
     return nullptr; //POUR LES TEST AUSSI
-}
+}*/
 
 Toupie Systeme::getToupie(size_t i) const{
     return *objets[i];
