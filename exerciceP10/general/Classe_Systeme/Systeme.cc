@@ -56,7 +56,7 @@ void Systeme::dessine() {
     support->dessine(*this);
 }
 
-/*unique_ptr<Systeme> Systeme::clone() const{
+unique_ptr<Systeme> Systeme::clone() const{
     //return unique_ptr<Systeme>(new Systeme(*this));
     return nullptr; //POUR LES TESTS
 }

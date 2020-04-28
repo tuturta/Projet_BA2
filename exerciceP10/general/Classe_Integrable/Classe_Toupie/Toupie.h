@@ -24,6 +24,7 @@ class Toupie : public Integrable {
     //A terme, toupie sera certainement une classe virtuelle : on ne permet donc pas de la dessiner pour l'instant
     virtual Vecteur fonction_f() const override; //à terme  =0; ?
     virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
+
     //virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
 
     virtual void dessine() override;

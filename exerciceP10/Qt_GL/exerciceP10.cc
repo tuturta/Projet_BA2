@@ -6,13 +6,15 @@
 
 int main(int argc, char* argv[])
 {
-ConeSimple cone1({0.523599,0.0,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0});
-ConeSimple cone2({0.785398, 0.0,0.0}, {0,0.0,40.0} ,0.1, 1.5, 0.5, {0.1,0.0,0.0});
-Systeme systeme;
-systeme.ajoute_toupie(cone1);
-systeme.ajoute_toupie(cone2);
+  Vecteur P({0.0,0.0,0.0});
+  Vecteur P_point({0.523599,0.0,60.0});
+  Vecteur origine({0.0,0.0,0.0});
+  double masse_volumique(0.1);
+  double hauteur(1.5);
+  double rayon(0.5);
+  ConeSimple cone1(P,P_point,masse_volumique,hauteur,rayon,origine);
   QApplication a(argc, argv);
-  GLWidget w(systeme); //A adapter pour un systeme
+  GLWidget w(cone1); //A adapter pour un systeme
   w.show();
   return a.exec();
 }
