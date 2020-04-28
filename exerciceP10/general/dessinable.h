@@ -12,8 +12,11 @@ class Dessinable {
   virtual ~Dessinable() {}
   virtual void dessine() = 0;
   void setSupport(SupportADessin* nouveau_support) {support = nouveau_support;} // Permet de modifier le support dans le constructeur de GLWidget
-  virtual std::unique_ptr<Dessinable> copieDessinable() const =0;
- protected:
+
+  //ESSAI ARTHUR *****************************************
+  //virtual std::unique_ptr<Dessinable> copieDessinable() const =0;
+
+protected:
   SupportADessin* support;
 };
 

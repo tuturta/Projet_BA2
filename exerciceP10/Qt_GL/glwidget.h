@@ -2,10 +2,12 @@
 #define GLWIDGET_H
 
 #include <QOpenGLWidget>        // Classe pour faire une fenêtre OpenGL
-#include <QTime>            // Classe pour gérer le temps
-#include <memory>
+#include <QTime>                // Classe pour gérer le temps
+
+//#include <memory> ***ESSAI ARTHUR***********************
+
 #include "vue_opengl.h"
-#include "../general/dessinable.h"
+#include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../general/Classe_Integrateur/Integrateur.h"
 #include "../general/Classe_Vecteur/Vecteur.h"
 
@@ -16,10 +18,10 @@ class GLWidget : public QOpenGLWidget
  */
 {
 public:
-  GLWidget(Dessinable const& a_dessiner, QWidget* parent = nullptr) //ON DOIT TROUVER COMMENT FAIRE DE FACON UNIVERSELLE
+  GLWidget(ConeSimple const& a_dessiner, QWidget* parent = nullptr) //ON DOIT TROUVER COMMENT FAIRE DE FACON UNIVERSELLE
     : QOpenGLWidget(parent)
-    , contenu(a_dessiner.copieDessinable())
-  {contenu->setSupport(&vue);}
+    , contenu(a_dessiner)
+  {contenu.setSupport(&vue);}
   virtual ~GLWidget() {}
 private:
   // Les 3 méthodes clés de la classe QOpenGLWidget à réimplémenter
@@ -45,7 +47,7 @@ private:
   QTime chronometre;
 
   // objets à dessiner, faire évoluer
-  std::unique_ptr<Dessinable> contenu; //Pour le moment un cone car on sait pas faire avec une toupie
+  ConeSimple contenu;
 
   // Integrateur pour faire évoluer la toupie :
   IntegrateurEulerCromer integrateur;

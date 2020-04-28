@@ -28,7 +28,7 @@ HEADERS += \
     ../general/Classe_Integrable/Classe_Toupie/Toupie.h \
     ../general/Classe_Integrateur/Integrateur.h \
     ../general/Classe_Vecteur/Vecteur.h \
-    ../general/dessinable.h \
+    ../general/dessinable.h \ #VRAIMENT BESOIN ? -> VERIFIER
     ../general/Classe_Systeme/Syteme.h \
 
 

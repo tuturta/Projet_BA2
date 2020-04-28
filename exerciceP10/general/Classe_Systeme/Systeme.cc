@@ -3,7 +3,7 @@
 #include "../Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../Classe_Integrateur/Integrateur.h"
 #include "../support_a_dessin.h"
-#include "../Classe_Integrable/Integrable.h"
+//#include "../Classe_Integrable/Integrable.h"
 
 
 
@@ -61,10 +61,11 @@ unique_ptr<Systeme> Systeme::clone() const{
     return nullptr; //POUR LES TESTS
 }
 
-unique_ptr<Dessinable> Systeme::copieDessinable() const {
+//ESSAI ARTHUR *****************************************
+/*unique_ptr<Dessinable> Systeme::copieDessinable() const {
    // return clone();
     return nullptr; //POUR LES TEST AUSSI
-}
+}*/
 
 Toupie Systeme::getToupie(size_t i) const{
     return *objets[i];

@@ -9,8 +9,10 @@
 
 class Systeme : public Dessinable{
    private :
+
     std::vector<std::unique_ptr<Toupie>> objets; //classe hétérogène de Toupie(plus tard d'Intégrables)
     std::unique_ptr<Systeme> clone() const;
+
    public :
     Systeme(SupportADessin* support) : Dessinable(support) {}
     //Pas de constructeur autre que par défaut pour le moment.
@@ -18,12 +20,12 @@ class Systeme : public Dessinable{
     std::ostream& affiche_parametres(std::ostream& out) const; //affiche l'ensemble des paramètres du système
     std::ostream& affiche(std::ostream& out) const; //ensemble le minimum necessaire pour dessine()
     virtual void dessine() override;
-   // std::unique_ptr<Integrable> getObjets(size_t i) const; //Accéde à la ieme toupie du systeme (0 etant la premiere)
+    // std::unique_ptr<Integrable> getObjets(size_t i) const; //Accéde à la ieme toupie du systeme (0 etant la premiere)
     //void setObjets(size_t i, Integrable const& autre); //Modifie la ieme toupie du systeme (0 etant la premiere) en la remplaçant par "autre"
     Toupie getToupie(size_t i) const;
     void setToupie(size_t i, Toupie const& autre);
     size_t size() const;
-    virtual std::unique_ptr<Dessinable> copieDessinable() const override;
+    //virtual std::unique_ptr<Dessinable> copieDessinable() const override;
 
 };
 

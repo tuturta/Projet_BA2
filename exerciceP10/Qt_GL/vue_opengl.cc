@@ -3,18 +3,8 @@
 #include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../general/Classe_Systeme/Systeme.h"
 #include <cmath>
-// ======================================================================
-void VueOpenGL::dessine(ConeSimple const& a_dessiner)
-{
-  dessineRepere();
-  //dessineSol();
-  QMatrix4x4 matrice(matrice_dessin(a_dessiner));
-  cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
-  dessineConeSimple(matrice,1.0,0.5,1.0); // violet
-}
 
-// ======================================================================
+// ======================================================================MATRICE DESSIN
 QMatrix4x4 VueOpenGL::matrice_dessin(Integrable const& a_dessiner) const{
   QMatrix4x4 matrice;
   matrice.setToIdentity();
@@ -34,7 +24,8 @@ QMatrix4x4 VueOpenGL::matrice_dessin(Integrable const& a_dessiner) const{
 
   return matrice;
 }
-// ======================================================================
+
+// ======================================================================DESSINE(TOUPIE)
 
 void VueOpenGL::dessine(Toupie const& a_dessiner)
 {
@@ -42,7 +33,18 @@ void VueOpenGL::dessine(Toupie const& a_dessiner)
     dessinePyramide(matrice_dessin(a_dessiner));
 }
 
-// ======================================================================
+// ======================================================================DESSINE(CONE)
+void VueOpenGL::dessine(ConeSimple const& a_dessiner)
+{
+  dessineRepere();
+  //dessineSol();
+  QMatrix4x4 matrice(matrice_dessin(a_dessiner));
+  cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
+  dessineConeSimple(matrice,1.0,0.5,1.0); // violet
+}
+
+// ======================================================================DESSINE(OBJ_EN_CHUTE_LIBRE)
 void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
 {
   QMatrix4x4 matrice;
@@ -60,7 +62,7 @@ void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
   matrice.scale(0.5);
   dessineToupie(matrice);
 }
-// ======================================================================
+// ======================================================================DESSINE(SYSTEME)
 void VueOpenGL::dessine(Systeme const& a_dessiner)
 {
   dessineRepere();
@@ -71,7 +73,7 @@ void VueOpenGL::dessine(Systeme const& a_dessiner)
     dessineConeSimple(matrice,1.0,1.0,0.0);
   }
 }
-// ======================================================================
+// ======================================================================INITIALISATION
 void VueOpenGL::init()
 {
   /* Initialise notre vue OpenGL.
@@ -148,7 +150,9 @@ void VueOpenGL::translate(double x, double y, double z)
   /* Multiplie la matrice de vue par LA GAUCHE.
    * Cela fait en sorte que la dernière modification apportée
    * à la matrice soit appliquée en dernier (composition de fonctions).
-   */
+   */// ======================================================================DESSINE(CONE)
+
+
   QMatrix4x4 translation_supplementaire;
   translation_supplementaire.translate(x, y, z);
   matrice_vue = translation_supplementaire * matrice_vue;
@@ -163,7 +167,7 @@ void VueOpenGL::rotate(double angle, double dir_x, double dir_y, double dir_z)
   matrice_vue = rotation_supplementaire * matrice_vue;
 }
 
-// ======================================================================
+// =====================================================================DESSINETOUPIE ? ->CUBE -> A ENLEVER ?
 void VueOpenGL::dessineToupie (QMatrix4x4 const& point_de_vue)
 {
   prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
@@ -214,9 +218,12 @@ void VueOpenGL::dessineToupie (QMatrix4x4 const& point_de_vue)
   glEnd();
 }
 
-/********* MÉTHODE SIMPLE POUR DESSINER UN CONE, MAIS PEU EFFICACE ******************************************************
- * pour information, elle ne peut plus être utilisée dans cette version du code *
-void VueOpenGL::dessineConeSimple( double hauteur, double rayon, const QMatrix4x4 &point_de_vue) //Cone de hauteur h,rayon r
+//========================================================================DESSINECONE
+
+/********* MÉTHODE SIMPLE POUR DESSINER UN CONE, MAIS PEU EFFICACE ******************
+ * pour information, elle ne peut plus être utilisée dans cette version du code *****
+
+void VueOpenGL::dessineConeSimple( double hauteur, double rayon, const QMatrix4x4 &point_de_vue)
 {
     prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
 
@@ -241,7 +248,7 @@ void VueOpenGL::dessineConeSimple( double hauteur, double rayon, const QMatrix4x
 
 
 }
-***********************************************************************************************************************/
+**************************************************************************************/
 
 void VueOpenGL::dessineConeSimple (QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu)
 {
@@ -250,6 +257,7 @@ void VueOpenGL::dessineConeSimple (QMatrix4x4 const& point_de_vue, double rouge,
   cone.draw(prog, SommetId); // dessine le cône
 }
 
+//===========================================================================DESSINEPYRAMIDE
 
 void VueOpenGL::dessinePyramide (QMatrix4x4 const& point_de_vue) //PYRAMIDE DE HAUTEUR 1.5 et de BASE 0.5 (de rayon)
 {
@@ -295,6 +303,8 @@ void VueOpenGL::dessinePyramide (QMatrix4x4 const& point_de_vue) //PYRAMIDE DE H
 
 }
 
+//==========================================================================DESSINEREPERE
+
 void VueOpenGL::dessineRepere (QMatrix4x4 const& point_de_vue)
 {
   prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
@@ -317,6 +327,8 @@ void VueOpenGL::dessineRepere (QMatrix4x4 const& point_de_vue)
 
 
 }
+
+//========================================================================DESSINESOL
 
 void VueOpenGL::dessineSol (QMatrix4x4 const& point_de_vue)
 {

@@ -3,7 +3,7 @@
 #include <QMatrix4x4>
 #include <iostream>
 #include "glwidget.h"
-#include "../general/Classe_Integrateur/Integrateur.h"
+#include "../general/Classe_Integrateur/Integrateur.h" //VRAIMENT BESOIN ?? -> VÉRIFIER
 
 double t(0);
 // ======================================================================
@@ -40,7 +40,7 @@ void GLWidget::resizeGL(int width, int height)
 void GLWidget::paintGL()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  contenu->dessine();
+  contenu.dessine();
 }
 
 
@@ -120,7 +120,9 @@ void GLWidget::timerEvent(QTimerEvent* event)
   Q_UNUSED(event);
 
   double dt = /*chronometre.restart()/1000;*/ 0.001;
-  integrateur.evolue(*(contenu->copieDessinable()),dt);
+  integrateur.evolue(contenu,dt);
+  t+=dt;
+  std::cout << t << " " << contenu.getP() << std::endl;
   update();
 }
 
