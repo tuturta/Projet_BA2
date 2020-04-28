@@ -6,41 +6,34 @@
 // ======================================================================
 void VueOpenGL::dessine(ConeSimple const& a_dessiner)
 {
-    dessineRepere();
-    //dessineSol();
-  /*// Dessine le 1er cube (à l'origine)
-    dessineCube();
-
-  
-  // Dessine le 2e cube
-   matrice.translate(0.0, 1.5, 0.0);
-   matrice.scale(0.25);2
-  dessineCube(matrice);
+  dessineRepere();
+  //dessineSol();
+  QMatrix4x4 matrice(matrice_dessin(a_dessiner));
+  cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
+  dessineConeSimple(matrice,1.0,0.5,1.0); // violet
+}
 
 // ======================================================================
 QMatrix4x4 VueOpenGL::matrice_dessin(Integrable const& a_dessiner) const{
   QMatrix4x4 matrice;
   matrice.setToIdentity();
-  
+
   double psi(a_dessiner.getP().coeff(1)*180/M_PI);  ///angles en degrés
   double theta(a_dessiner.getP().coeff(0)*180/M_PI);
-  double phi(a_dessiner.getP().coeff(2)*180/M_PI); 
+  double phi(a_dessiner.getP().coeff(2)*180/M_PI);
   double x0(a_dessiner.getOrigine().coeff(0));
   double y0(a_dessiner.getOrigine().coeff(1));
   double z0(a_dessiner.getOrigine().coeff(2));
 
-
-
   matrice.rotate(phi,0.0, 0.0, 1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)?*/); //rotation propre PHI autour de Oz'
   matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0 ?*/); //nutation THETA autour de l'axe nodal
   matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
-
+  matrice.translate(x0,y0,z0);
   matrice.scale(0.5);
-  cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon());
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
-  dessineConeSimple(matrice,1.0,0.5,1.0); // rouge
-}
 
+  return matrice;
+}
 // ======================================================================
 
 void VueOpenGL::dessine(Toupie const& a_dessiner)
@@ -48,6 +41,7 @@ void VueOpenGL::dessine(Toupie const& a_dessiner)
     dessineRepere();
     dessinePyramide(matrice_dessin(a_dessiner));
 }
+
 // ======================================================================
 void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
 {
@@ -74,7 +68,7 @@ void VueOpenGL::dessine(Systeme const& a_dessiner)
   for(size_t i(0) ; i < a_dessiner.size() ; ++i){
     matrice = matrice_dessin(a_dessiner.getToupie(i));
     matrice.translate(i, 0.0, 0.0);
-    dessinePyramide(matrice);
+    dessineConeSimple(matrice,1.0,1.0,0.0);
   }
 }
 // ======================================================================
@@ -133,7 +127,6 @@ void VueOpenGL::init()
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
 
-  cone.initialize(); // initialise le cone
   initializePosition();
 
 }
@@ -147,8 +140,6 @@ void VueOpenGL::initializePosition()
   matrice_vue.rotate(30.0,1.0,0.0,0.0);
   matrice_vue.rotate(30.0,0.0,1.0,0.0);
   matrice_vue.rotate(270.0,1.0,0.0,0.0); //met l'axe z en haut
-  /*matrice_vue.rotate(90.0, 0.0, 1.0, 0.0);
-  matrice_vue.rotate(45.0, 0.0, 0.0, 1.0);*/
 }
 
 // ======================================================================
@@ -228,8 +219,9 @@ void VueOpenGL::dessineToupie (QMatrix4x4 const& point_de_vue)
 void VueOpenGL::dessineConeSimple( double hauteur, double rayon, const QMatrix4x4 &point_de_vue) //Cone de hauteur h,rayon r
 {
     prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
-    /* Notre méthode : on dessine un cône comme un empilement de cercles concentriques
-     * dont les rayons diminuent quand la position verticale diminue*//*
+
+    //on dessine un cône comme un empilement de cercles concentriques
+    //dont les rayons diminuent quand la position verticale diminue
 
 
     glBegin(GL_LINES);
@@ -251,12 +243,11 @@ void VueOpenGL::dessineConeSimple( double hauteur, double rayon, const QMatrix4x
 }
 ***********************************************************************************************************************/
 
-void VueOpenGL::dessineConeSimple (QMatrix4x4 const& point_de_vue,
-                               double rouge, double vert, double bleu)
+void VueOpenGL::dessineConeSimple (QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu)
 {
   prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
   prog.setAttributeValue(CouleurId, rouge, vert, bleu);  // met la couleur
-  cone.draw(prog, SommetId);                           // dessine la sphère
+  cone.draw(prog, SommetId); // dessine le cône
 }
 
 

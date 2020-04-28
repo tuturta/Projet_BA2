@@ -50,6 +50,8 @@ class ConeSimple : public Toupie{
     Matrice matrice_inertie() const; //Calcule le moment d'inertie I du cone simple
     Vecteur moment_poids() const;
     Vecteur centre_de_masse() const;
+    double getHauteur() const;
+    double getRayon() const;
 
     virtual Vecteur fonction_f() const override;
     virtual void dessine() override;
