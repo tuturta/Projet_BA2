@@ -7,15 +7,18 @@
 #include "../Classe_Integrable/Integrable.h"
 #include "../Classe_Integrateur/Integrateur.h"
 
-class Systeme : public Dessinable{
+class Systeme : public Dessinable {
    private :
 
     std::vector<std::unique_ptr<Toupie>> objets; //classe hétérogène de Toupie(plus tard d'Intégrables)
     std::unique_ptr<Systeme> clone() const;
-
    public :
     Systeme(SupportADessin* support) : Dessinable(support) {}
-    //Pas de constructeur autre que par défaut pour le moment.
+    Systeme(Systeme const& autre) : Dessinable(autre.support) {
+        for(auto const& nouvelle: autre.objets) {
+            ajoute_toupie(*nouvelle);
+        }
+    }
     void ajoute_toupie(Toupie const& nouvelle);
     std::ostream& affiche_parametres(std::ostream& out) const; //affiche l'ensemble des paramètres du système
     std::ostream& affiche(std::ostream& out) const; //ensemble le minimum necessaire pour dessine()

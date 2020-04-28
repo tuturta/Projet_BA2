@@ -7,14 +7,16 @@
 
 double t(0);
 // ======================================================================
-void GLWidget::initializeGL()
+template<typename Type>
+void GLWidget<Type>::initializeGL()
 {
   vue.init();
   timerId = startTimer(20);
 }
 
 // ======================================================================
-void GLWidget::resizeGL(int width, int height)
+template<typename Type>
+void GLWidget<Type>::resizeGL(int width, int height)
 {
   /* On commance par dire sur quelle partie de la 
    * fenêtre OpenGL doit dessiner.
@@ -37,7 +39,8 @@ void GLWidget::resizeGL(int width, int height)
 }
 
 // ======================================================================
-void GLWidget::paintGL()
+template<typename Type>
+void GLWidget<Type>::paintGL()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   contenu.dessine();
@@ -45,7 +48,8 @@ void GLWidget::paintGL()
 
 
 // ======================================================================
-void GLWidget::keyPressEvent(QKeyEvent* event)
+template<typename Type>
+void GLWidget<Type>::keyPressEvent(QKeyEvent* event)
 {
   constexpr double petit_angle(5.0); // en degrés
   constexpr double petit_pas(1.0);
@@ -115,7 +119,8 @@ void GLWidget::keyPressEvent(QKeyEvent* event)
 }
 
 // ======================================================================
-void GLWidget::timerEvent(QTimerEvent* event)
+template<typename Type>
+void GLWidget<Type>::timerEvent(QTimerEvent* event)
 {
   Q_UNUSED(event);
 
@@ -127,7 +132,8 @@ void GLWidget::timerEvent(QTimerEvent* event)
 }
 
 // ======================================================================
-void GLWidget::pause()
+template<typename Type>
+void GLWidget<Type>::pause()
 {
   if (timerId == 0) {
 	// dans ce cas le timer ne tourne pas alors on le lance
@@ -140,12 +146,14 @@ void GLWidget::pause()
   }
 }
 
-void GLWidget::mousePressEvent(QMouseEvent* event)
+template<typename Type>
+void GLWidget<Type>::mousePressEvent(QMouseEvent* event)
 {
   lastMousePosition = event->pos();
 }
 
-void GLWidget::mouseMoveEvent(QMouseEvent* event)
+template<typename Type>
+void GLWidget<Type>::mouseMoveEvent(QMouseEvent* event)
 {
   /* If mouse tracking is disabled (the default), the widget only receives
    * mouse move events when at least one mouse button is pressed while the

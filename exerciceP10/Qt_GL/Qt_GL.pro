@@ -13,7 +13,7 @@ INCLUDEPATH = ../general
 
 SOURCES += \
     exerciceP10.cc \
-    glwidget.cc \
+    #glwidget.cc \
     vue_opengl.cc \
     glcone.cc
 
