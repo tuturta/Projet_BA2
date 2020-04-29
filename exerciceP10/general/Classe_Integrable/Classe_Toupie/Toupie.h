@@ -29,6 +29,8 @@ class Toupie : public Integrable {
 
     virtual void dessine() override;
 
+    virtual double getHauteur() const=0;
+    virtual double getRayon() const=0;
 };
 std::ostream& operator<<(std::ostream& sortie,Toupie const& toupie);
 
@@ -48,8 +50,9 @@ class ConeSimple : public Toupie{
     Matrice matrice_inertie() const; //Calcule le moment d'inertie I du cone simple
     Vecteur moment_poids() const;
     Vecteur centre_de_masse() const;
-    double getHauteur() const;
-    double getRayon() const;
+
+    virtual double getHauteur() const override;
+    virtual double getRayon() const override;
 
     virtual Vecteur fonction_f() const override;
     virtual void dessine() override;
@@ -74,5 +77,6 @@ class Objet_en_chute_libre : public Toupie {
 
     //ESSAI ARTHUR *****************************************
     //virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
-
+    virtual double getHauteur() const override;
+    virtual double getRayon() const override;
 };

@@ -24,9 +24,8 @@ class GLWidget : public QOpenGLWidget
 {
 public:
   GLWidget(Type const& a_dessiner, QWidget* parent = nullptr)
-    : QOpenGLWidget(parent)
-    , contenu(a_dessiner)
-  {contenu.setSupport(&vue);}
+    : QOpenGLWidget(parent), contenu(a_dessiner)
+    {contenu.setSupport(&vue); }
   virtual ~GLWidget() {}
 private:
   // Les 3 méthodes clés de la classe QOpenGLWidget à réimplémenter
@@ -186,7 +185,7 @@ void GLWidget<Type>::timerEvent(QTimerEvent* event)
   double dt = /*chronometre.restart()/1000;*/ 0.001;
   integrateur.evolue(contenu,dt);
   t+=dt;
-  std::cout << t << " " /*<< contenu.getP() */<< std::endl;
+  //std::cout << t << " " /*<< contenu.getP() */<< std::endl;
   update();
 }
 

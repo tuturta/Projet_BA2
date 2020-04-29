@@ -33,7 +33,7 @@ class VueOpenGL : public SupportADessin {
   void dessinePyramide(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
   void dessineRepere(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
   void dessineSol(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
-  QMatrix4x4 matrice_dessin(Integrable const& a_dessiner) const;
+  QMatrix4x4 matrice_dessin(Toupie const& a_dessiner) const;
 
 
  private:

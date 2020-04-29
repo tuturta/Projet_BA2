@@ -3,12 +3,13 @@
 #include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../general/Classe_Systeme/Systeme.h"
 #include <cmath>
+#include <iostream>
 
 // ======================================================================MATRICE DESSIN
-QMatrix4x4 VueOpenGL::matrice_dessin(Integrable const& a_dessiner) const{
+QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
   QMatrix4x4 matrice;
   matrice.setToIdentity();
-
+  //std::cout << a_dessiner << std::endl;
   double psi(a_dessiner.getP().coeff(1)*180/M_PI);  ///angles en degrés
   double theta(a_dessiner.getP().coeff(0)*180/M_PI);
   double phi(a_dessiner.getP().coeff(2)*180/M_PI);
@@ -21,7 +22,6 @@ QMatrix4x4 VueOpenGL::matrice_dessin(Integrable const& a_dessiner) const{
   matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
   matrice.translate(x0,y0,z0);
   matrice.scale(0.5);
-
   return matrice;
 }
 
@@ -31,6 +31,7 @@ void VueOpenGL::dessine(Toupie const& a_dessiner)
 {
     dessineRepere();
     dessinePyramide(matrice_dessin(a_dessiner));
+
 }
 
 // ======================================================================DESSINE(CONE)
@@ -67,10 +68,15 @@ void VueOpenGL::dessine(Systeme const& a_dessiner)
 {
   dessineRepere();
   QMatrix4x4 matrice;
+  matrice.setToIdentity();
+
   for(size_t i(0) ; i < a_dessiner.size() ; ++i){
     matrice = matrice_dessin(a_dessiner.getToupie(i));
-    matrice.translate(i, 0.0, 0.0);
+    //matrice.translate(i, 0.0, 0.0);
+    cone.initialize(a_dessiner.getToupie(i).getHauteur(),a_dessiner.getToupie(i).getRayon()); //établit le modèle du cône à dessiner.
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
     dessineConeSimple(matrice,1.0,1.0,0.0);
+    std::cout << "ici i=" << i << std::endl;
   }
 }
 // ======================================================================INITIALISATION
@@ -255,6 +261,7 @@ void VueOpenGL::dessineConeSimple (QMatrix4x4 const& point_de_vue, double rouge,
   prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
   prog.setAttributeValue(CouleurId, rouge, vert, bleu);  // met la couleur
   cone.draw(prog, SommetId); // dessine le cône
+  std::cout << "ici" << std::endl;
 }
 
 //===========================================================================DESSINEPYRAMIDE

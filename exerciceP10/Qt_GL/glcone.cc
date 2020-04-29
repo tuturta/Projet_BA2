@@ -1,6 +1,9 @@
 #define  _USE_MATH_DEFINES
 #include <cmath>
 #include "glcone.h"
+/********/
+#include <iostream>
+/********/
 
 void GLCone::initialize( double h, double r, GLuint slices, GLuint stacks)
 {
@@ -78,12 +81,11 @@ void GLCone::initialize( double h, double r, GLuint slices, GLuint stacks)
 void GLCone::draw(QOpenGLShaderProgram& program, int attributeLocation)
 {
   bind();
-
   program.setAttributeBuffer(attributeLocation, GL_FLOAT, 0, 3);
   program.enableAttributeArray(attributeLocation);
 
 #define BUFFER_OFFSET(a) ((char*)nullptr + (a))
-
+  //probleme********************************************************
   glDrawElements(GL_TRIANGLE_FAN, ibo_sz[0] / sizeof(GLuint), GL_UNSIGNED_INT, BUFFER_OFFSET( 0                     ));
   glDrawElements(GL_QUADS       , ibo_sz[1] / sizeof(GLuint), GL_UNSIGNED_INT, BUFFER_OFFSET( ibo_sz[0]             ));
   glDrawElements(GL_TRIANGLE_FAN, ibo_sz[2] / sizeof(GLuint), GL_UNSIGNED_INT, BUFFER_OFFSET( ibo_sz[0] + ibo_sz[1] ));

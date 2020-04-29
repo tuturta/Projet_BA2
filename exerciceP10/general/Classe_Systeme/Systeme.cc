@@ -50,7 +50,7 @@ void Systeme::ajoute_toupie(Toupie const& nouvelle){
     *objets[i] = autre;
 }*/
 
-size_t Systeme::size() const{return objets.size();}
+size_t Systeme::size() const{ return objets.size(); }
 
 void Systeme::dessine() {
     support->dessine(*this);

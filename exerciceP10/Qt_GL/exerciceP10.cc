@@ -26,6 +26,8 @@ int main(int argc, char* argv[])
   systeme1.ajoute_toupie(cone2);
   QApplication a(argc, argv);
   GLWidget<Systeme> w(systeme1); //A adapter pour un systeme
+
   w.show();
   return a.exec();
+  //return 0;
 }

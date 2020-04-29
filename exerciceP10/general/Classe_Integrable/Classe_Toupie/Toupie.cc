@@ -152,6 +152,10 @@ unique_ptr<Toupie> Objet_en_chute_libre::copie() const{
     return clone();
 }
 
+double Objet_en_chute_libre::getHauteur() const { return 0.0; } //le modèle de l'objet en chute libre est un point matériel
+double Objet_en_chute_libre::getRayon() const { return 0.0; }
+
+
 //ESSAI ARTHUR *****************************************
 /*unique_ptr<Dessinable> Objet_en_chute_libre::copieDessinable() const{
     return clone();
