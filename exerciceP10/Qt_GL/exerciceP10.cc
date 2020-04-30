@@ -9,15 +9,20 @@ using  namespace std;
 
 int main(int argc, char* argv[])
 {
-  Vecteur P({0.0,0.0,0.0});
-  Vecteur P_point({0.523599,0.0,60.0});
-  Vecteur origine({0.0,0.0,0.0});
-  Vecteur origine2({5.0,0.0,0.0});
-  double masse_volumique(0.1);
-  double hauteur(1.5);
-  double rayon(0.5);
-  ConeSimple cone1(P,P_point,masse_volumique,hauteur,rayon,origine);
-  ConeSimple cone2(P,P_point,masse_volumique,hauteur,rayon,origine2);
+  ConeSimple cone1({0.523599,0.0,0.0}, //P
+                   {0.0,0.0,60.0},     //P_point
+                   0.1,                //Masse volumique
+                   1.5,                //Hauteur
+                   0.5,                //Rayon
+                   {0.0,0.0,0.0});     //Origine
+
+  ConeSimple cone2({0.785398, 0.0,0.0}, //P
+                   {0,0.0,40.0},        //P_point
+                   0.1,                 //Masse Volumique
+                   1.5,                 //Hauteur
+                   0.5,                 //Rayon
+                   {0.1,0.0,0.0});      //Origine
+
   TextViewer support(cout);
   Systeme systeme1(&support);
 

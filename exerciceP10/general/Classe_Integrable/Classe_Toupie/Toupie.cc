@@ -35,6 +35,8 @@ unique_ptr<Toupie> Toupie::clone() const{
 unique_ptr<Toupie> Toupie::copie() const{
     return clone();
 }
+double Toupie::getHauteur() const{std::cout << "******APPEL getHauteur() de Toupie******"<< std::endl;return 1.0;}
+double Toupie::getRayon() const{return 1.0;}
 //ESSAI ARTHUR *****************************************
 /*unique_ptr<Dessinable> Toupie::copieDessinable() const{
     return clone();
@@ -123,6 +125,7 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
 // Getters
 
 double ConeSimple::getHauteur() const {
+    cout << "******APPEL getHauteur() de Cone******"<< endl;
     return hauteur;
 }
 double ConeSimple::getRayon() const {

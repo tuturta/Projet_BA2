@@ -13,7 +13,6 @@ class Toupie : public Integrable {
 
    protected : 
     double masse_volumique;
-    std::unique_ptr<Toupie> clone() const;
 
    
    public :
@@ -24,13 +23,14 @@ class Toupie : public Integrable {
     //A terme, toupie sera certainement une classe virtuelle : on ne permet donc pas de la dessiner pour l'instant
     virtual Vecteur fonction_f() const override; //à terme  =0; ?
     virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
+    std::unique_ptr<Toupie> clone() const;
 
     //virtual std::unique_ptr<Dessinable> copieDessinable() const override; // Pour GLwidget, necessite d'un retour covariant des sous classes de dessinable
 
     virtual void dessine() override;
 
-    virtual double getHauteur() const=0;
-    virtual double getRayon() const=0;
+    virtual double getHauteur() const;
+    virtual double getRayon() const;
 };
 std::ostream& operator<<(std::ostream& sortie,Toupie const& toupie);
 
@@ -41,7 +41,6 @@ class ConeSimple : public Toupie{
    private:
     double hauteur;
     double rayon;
-    std::unique_ptr<ConeSimple> clone() const;
    public: 
     ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const origine, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
     : Toupie(P, P_point, masse_volumique, origine, support), hauteur(hauteur), rayon(rayon) {} // COnstructeur qui initialise l'origine à 0,0,0
@@ -57,6 +56,7 @@ class ConeSimple : public Toupie{
     virtual Vecteur fonction_f() const override;
     virtual void dessine() override;
     
+    std::unique_ptr<ConeSimple> clone() const;
 
     virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
 

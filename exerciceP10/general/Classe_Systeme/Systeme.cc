@@ -67,9 +67,16 @@ unique_ptr<Systeme> Systeme::clone() const{
     return nullptr; //POUR LES TEST AUSSI
 }*/
 
-Toupie Systeme::getToupie(size_t i) const{
-    return *objets[i];
+unique_ptr<Toupie> Systeme::getToupie(size_t i) const{
+    return objets[i]->copie();
 }
 void Systeme::setToupie(size_t i, Toupie const& autre){
-    objets[i] = autre.copie();
+    *objets[i] = autre;
+}
+double Systeme::getHauteur(size_t i) const{
+    cout << *objets[i]<< "vérification de la collection..." << endl;
+    return objets[i]->getHauteur();
+}
+double Systeme::getRayon(size_t i) const{
+    return objets[i]->getRayon();
 }

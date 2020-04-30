@@ -17,11 +17,12 @@ QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
   double y0(a_dessiner.getOrigine().coeff(1));
   double z0(a_dessiner.getOrigine().coeff(2));
 
+  matrice.scale(0.5);
+  matrice.translate(x0,y0,z0);
   matrice.rotate(phi,0.0, 0.0, 1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)?*/); //rotation propre PHI autour de Oz'
   matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0 ?*/); //nutation THETA autour de l'axe nodal
   matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
-  matrice.translate(x0,y0,z0);
-  matrice.scale(0.5);
+
   return matrice;
 }
 
@@ -71,11 +72,12 @@ void VueOpenGL::dessine(Systeme const& a_dessiner)
   matrice.setToIdentity();
 
   for(size_t i(0) ; i < a_dessiner.size() ; ++i){
-    matrice = matrice_dessin(a_dessiner.getToupie(i));
-    //matrice.translate(i, 0.0, 0.0);
-    cone.initialize(a_dessiner.getToupie(i).getHauteur(),a_dessiner.getToupie(i).getRayon()); //établit le modèle du cône à dessiner.
+    matrice = matrice_dessin(*(a_dessiner.getToupie(i)));
+    cone.initialize(a_dessiner.getHauteur(i),a_dessiner.getRayon(i)); //établit le modèle du cône à dessiner.
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
-    dessineConeSimple(matrice,1.0,1.0,0.0);
+    dessineConeSimple(matrice,1.0,double(i/(a_dessiner.size()-1)),0.0);
+
     std::cout << "ici i=" << i << std::endl;
   }
 }

@@ -17,9 +17,9 @@ void IntegrateurEulerCromer::evolue(Toupie& T, const double dt) const {
 
 void IntegrateurEulerCromer::evolue(Systeme& S, const double dt) const {
     for(size_t i(0) ; i < S.size() ; ++i){
-            Toupie temp(S.getToupie(i));
-            evolue(temp,dt);
-            S.setToupie(i, temp);
+            unique_ptr<Toupie> temp(S.getToupie(i));
+            evolue(*temp,dt);
+            S.setToupie(i, *temp);
         }
 }
 
