@@ -46,7 +46,7 @@ std::vector<Vecteur> Toupie::getPositions_CM() const {
 }
 Vecteur Toupie::ref_G_to_O_point(Vecteur const& point) const {
     //pour l'instant comme pour le cone
-    double L((3.0/4.0)*getHauteur());
+    double L((3.0/4.0)*getHauteur()); //A MODIFIER, UTILISER NORME DU VECTEUR AG
     double theta(P.coeff(1));
     double psi(P.coeff(0));
     Vecteur point_G( L*sin(theta)*sin(psi), L*sin(theta)*cos(psi), L*cos(theta));
@@ -105,7 +105,7 @@ Vecteur ConeSimple::vecteurAG() const{ // Centre de masse dans le ref d'inertie 
     return {0,0, (3.0/4.0)*hauteur};
 }
 Vecteur ConeSimple::ref_G_to_O_point(Vecteur const& point) const {
-    double L((3.0/4.0)*hauteur);
+    double L(vecteurAG().norme());
     double theta(P.coeff(1));
     double psi(P.coeff(0));
     std::cout << "P= " << P << std::endl;
@@ -114,31 +114,39 @@ Vecteur ConeSimple::ref_G_to_O_point(Vecteur const& point) const {
     return (S().inv()*point + point_G);
 }
 
-
-Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi-theta-phi
-
-    //Pour la lisibilité :
-    double psi(P.coeff(0));
+Vecteur ConeSimple::w() const{
+    
     double theta(P.coeff(1));
-    double phi(P.coeff(2));
     double psi_P(P_point.coeff(0));
     double theta_P(P_point.coeff(1));
     double phi_P(P_point.coeff(2));
-
-
-    //1.CALCUL DE w dans RG (repère d'inertie)
+   
     Vecteur w(3);
     double w1(theta_P);
     double w2(psi_P*sin(theta));
     double w3(psi_P*cos(theta)+phi_P);
     w = {w1,w2,w3};
+    
+    return w;
+}
+
+Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi-theta-phi
+
+    //Pour la lisibilité :
+    double theta(P.coeff(1));
+    double psi_P(P_point.coeff(0));
+    double theta_P(P_point.coeff(1));
+    double phi_P(P_point.coeff(2));
+
+    //1.CALCUL DE w dans RG (repère d'inertie)
+
     //std::cout << "wRef_G = " << w << std::endl;
 
     //2.CALCUL DE W_POINT: (dans Repère d'inertie)
     Vecteur w_point(3);
-    Vecteur we(w);
+    Vecteur we(w());
     we.set_coord(2,we.coeff(2) - phi_P); //rotation du repère (ne prend pas en compte la rotation propre de la toupie
-    w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w)));
+    w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w())));
     //std::cout << "DW_G= " << w_point << std::endl; //1er tour bon après non
 
     //3.CALCUL DE P_POINT_POINT: 

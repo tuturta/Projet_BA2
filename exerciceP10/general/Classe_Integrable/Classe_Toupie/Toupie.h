@@ -64,13 +64,17 @@ class ConeSimple : public Toupie{
     Vecteur moment_poids() const;
     Vecteur vecteurAG() const; //Dans RefG
     Vecteur w() const;
+    virtual Vecteur fonction_f() const override;
+    virtual double getHauteur() const override;
+    virtual double getRayon() const override;
+    virtual Vecteur ref_G_to_O_point(Vecteur const& point) const override;
+    //MECANIQUE - INVARIANTS DU MOUVEMENT
+
     double energie_totale() const;      //Energie mécanique totale du cone : c'est un invariant
     double LAz() const;                 // Composante z du moment cinétique au point A exprimé dans le référentiel galliléen O : c'est un invariant
     double LA3() const;                 // Composante 3 du moment cinétique au point A exprimé dans le référentiel inertiel G : c'est un invariant
     double produitMixte_awL() const;    //Produit mixte a.(w^L) : c'est un invariant   
-    virtual double getHauteur() const override;
-    virtual double getRayon() const override;
-
+    
     // AFFICHAGE - DESSIN
 
     virtual void dessine() override;
