@@ -184,8 +184,6 @@ void GLWidget<Type>::timerEvent(QTimerEvent* event)
 
   double dt = chronometre.restart()/10000.0; //0.001;
   integrateur.evolue(contenu,dt);
-  t+=dt;
-  //std::cout << t << " " /*<< contenu.getP() */<< std::endl;
   update();
 }
 

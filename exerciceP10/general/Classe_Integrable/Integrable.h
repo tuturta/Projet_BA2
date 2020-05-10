@@ -25,8 +25,8 @@ class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a s
     void setP_point(Vecteur const& autre);
     std::ostream& affiche(std::ostream& sortie) const; // Affiche seulement P et Ppoint
     virtual std::ostream& affiche_parametres(std::ostream& out) const =0; // Affiche tous les paramètres d'un intégrable avec du texte
-    void ref_O_to_G(Vecteur&) const; //méthodes pour changer un vecteur de référentiel *************************************
-    void ref_G_to_O(Vecteur&) const; // ************************************************************************************
+    Vecteur ref_O_to_G(Vecteur const&) const; //méthodes pour changer un vecteur de référentiel *************************************
+    Vecteur ref_G_to_O(Vecteur const&) const; // ************************************************************************************
     Matrice S() const; // Matrice de transition de RG vers RO *********A METTRE DANS CETTE CLASSE OU NON ?************
 
     // virtual std::unique_ptr<Integrable> copie() const =0;

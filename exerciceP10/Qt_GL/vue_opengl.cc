@@ -76,9 +76,8 @@ void VueOpenGL::dessine(Systeme const& a_dessiner)
     cone.initialize(a_dessiner.getHauteur(i),a_dessiner.getRayon(i)); //établit le modèle du cône à dessiner.
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
-    dessineConeSimple(matrice,1.0,double(i/(a_dessiner.size()-1)),0.0);
+    dessineConeSimple(matrice,1.0,double(i)/(a_dessiner.size()-1),0.0);
 
-    std::cout << "ici i=" << i << std::endl;
   }
 }
 // ======================================================================INITIALISATION
@@ -263,7 +262,6 @@ void VueOpenGL::dessineConeSimple (QMatrix4x4 const& point_de_vue, double rouge,
   prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
   prog.setAttributeValue(CouleurId, rouge, vert, bleu);  // met la couleur
   cone.draw(prog, SommetId); // dessine le cône
-  std::cout << "ici" << std::endl;
 }
 
 //===========================================================================DESSINEPYRAMIDE

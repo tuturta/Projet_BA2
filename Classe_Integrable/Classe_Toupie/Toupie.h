@@ -25,9 +25,12 @@ class Toupie : public Integrable {
     virtual std::ostream& affiche_parametres(std::ostream& out) const; // Affiche tous les paramètres d'une toupie 
     ///A terme, toupie sera certainement une classe virtuelle : on ne permet donc pas de la dessiner pour l'instant
     virtual Vecteur fonction_f() const override;
+    virtual double energie_totale() const;
     std::unique_ptr<Toupie> clone() const;
     virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
+    
     virtual void dessine() override;
+
 
 };
 std::ostream& operator<<(std::ostream& sortie,Toupie const& toupie);
@@ -45,10 +48,11 @@ class ConeSimple : public Toupie{
     : Toupie(P, P_point, masse_volumique, support, origine), hauteur(hauteur), rayon(rayon) {} // COnstructeur qui initialise l'origine à 0,0,0
     virtual std::ostream& affiche_parametres(std::ostream& out) const override; // Affiche tous les paramètres d'une toupie
     double masse() const;
+    Vecteur w() const;
     Matrice matrice_inertie() const; //Calcule le moment d'inertie I du cone simple
     Vecteur moment_poids() const;
     Vecteur centre_de_masse() const;
-
+    virtual double energie_totale() const;
     virtual Vecteur fonction_f() const override;
     virtual void dessine() override;
     

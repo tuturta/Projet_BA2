@@ -21,6 +21,8 @@ ostream& Toupie::affiche_parametres(ostream& out) const {
 
 
 Vecteur Toupie::fonction_f() const{
+    cout << "--APPEL Toupie::fonction_f()--" <<endl;
+
         return 2*P;
 } //juste pour le test
 
@@ -35,7 +37,7 @@ unique_ptr<Toupie> Toupie::clone() const{
 unique_ptr<Toupie> Toupie::copie() const{
     return clone();
 }
-double Toupie::getHauteur() const{std::cout << "******APPEL getHauteur() de Toupie******"<< std::endl;return 1.0;}
+double Toupie::getHauteur() const{return 1.0;}
 double Toupie::getRayon() const{return 1.0;}
 //ESSAI ARTHUR *****************************************
 /*unique_ptr<Dessinable> Toupie::copieDessinable() const{
@@ -84,27 +86,30 @@ unique_ptr<Toupie> ConeSimple::copie() const{
 Vecteur ConeSimple::moment_poids() const{
     Vecteur poids(masse()*g); //dans RO
     ref_O_to_G(poids);
-    return centre_de_masse()^poids;
+    return vecteurAG()^poids;
 }
 
-Vecteur ConeSimple::centre_de_masse() const{ // Centre de masse dans le ref d'inertie G
+Vecteur ConeSimple::vecteurAG() const{ // Centre de masse dans le ref d'inertie G
     return {0,0, (3.0/4.0)*hauteur};
 }
 
-Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
-
-    //1.CALCUL DE w dans RG (repère d'inertie)
-    Vecteur w(3);
+Vecteur ConeSimple::w() const{
     double w1(P_point.coeff(0));
     double w2(P_point.coeff(1)*sin(P.coeff(0)));
     double w3(P_point.coeff(1)*cos(P.coeff(0))+P_point.coeff(2));
-    w = {w1,w2,w3};
+    return {w1,w2,w3};
+}
+
+Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
+    cout << "--APPEL ConeSimple::fonction_f()--" <<endl;
+    //1.CALCUL DE w dans RG (repère d'inertie)
+        //Methode w()
 
     //2.CALCUL DE W_POINT: (dans Repère d'inertie)
     Vecteur w_point(3);
-    Vecteur we(w);
+    Vecteur we(w());
     we.set_coord(2,we.coeff(2) - P_point.coeff(2)); 
-    w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w)));
+    w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w())));
     //3.CALCUL DE P_POINT_POINT: 
     Vecteur P_point_point(3);
     P_point_point.set_coord(0, w_point.coeff(0)); //Calcul de théta point point 
@@ -122,10 +127,32 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
     return P_point_point;
 }
 
+// INVARIANTS :
+
+double ConeSimple::energie_totale() const{
+    Vecteur La(matrice_inertie()*w());
+    Vecteur g_(g);
+    ref_O_to_G(g_); // Le centre de masse est exprimé dans le ref G donc on doit exprimer aussi g_ dans G avant de faire le produit scalaire (sachant que la constante g est exprimé de base dans le ref galiléen O)
+    return (w()*La)/2.0 - masse()*(g_*vecteurAG());
+}
+
+double ConeSimple::LAz() const{         //D'après le truc du prof, cette fonction renvoie LA3 ...
+    Vecteur La(matrice_inertie()*w());
+    ref_G_to_O(La);                     //Change la base du moment cinétique au point A (noté LA): Referentiel Inertie G --> Referentiel Galiléen O
+    return La.coeff(2);                 // Retourne la composante z de LA exprimé dans cette nouvelle base
+}
+
+double ConeSimple::LA3() const{         //D'après le truc du prof, cette fonction renvoie LAz ...
+   return (matrice_inertie()*w()).coeff(2);        //La matrice d'inertie étant exprimé dans le ref inertiel G, cela renvoie LA3 : 3eme composante du Moment cinétique au point A
+}
+
+double ConeSimple::produitMixte_awL() const{
+    return (w()^(matrice_inertie()*w())).coeff(2);
+}
+
 // Getters
 
 double ConeSimple::getHauteur() const {
-    cout << "******APPEL getHauteur() de Cone******"<< endl;
     return hauteur;
 }
 double ConeSimple::getRayon() const {
@@ -159,7 +186,91 @@ double Objet_en_chute_libre::getHauteur() const { return 0.0; } //le modèle de 
 double Objet_en_chute_libre::getRayon() const { return 0.0; }
 
 
-//ESSAI ARTHUR *****************************************
-/*unique_ptr<Dessinable> Objet_en_chute_libre::copieDessinable() const{
+//=============================CLASSE CONE GENERAL===================================//
+
+
+Vecteur ConeGeneral::fonction_f() const{
+    cout << "--APPEL ConeGeneral::fonction_f()--" <<endl;
+    //1.CALCUL DE w et MA dans RG (repère d'inertie)
+        
+        //Methode w()
+    Vecteur MA(masse()*g.norme()*vecteurAG().coeff(2),0,0); // On considère que seul le poids agit sur la toupie, on néglige les autres forces  
+
+    //2.Calcul de IA avec Huygens-Steiner
+
+    //methode matrice_inertieA
+
+    //3.CALCUL DE W_POINT: (dans Repère d'inertie)
+    Vecteur w_point(3);
+    Vecteur we(w());
+    we.set_coord(2,we.coeff(2) - P_point.coeff(2)); 
+    w_point = matrice_inertie().inv()*(MA-(we^(matrice_inertie()*w())));
+    //4.CALCUL DE P_POINT_POINT: 
+    Vecteur P_point_point(3);
+    P_point_point.set_coord(0, w_point.coeff(0)); //Calcul de théta point point 
+    
+    if(P.coeff(0) == 0){ // Cas ou théta = 0
+        P_point_point.set_coord(2,w_point.coeff(2)); //Modification de phi point point = w3point formule (2) p6
+    }else{
+        P_point_point.set_coord(1, (w_point.coeff(1)- P_point.coeff(1)*P_point.coeff(0)*cos(P.coeff(0))) / sin(P.coeff(0)) ); //Modification psi point point : formule (2) p6
+        P_point_point.set_coord(2, w_point.coeff(2) + (P_point.coeff(1)*P_point.coeff(0)- w_point.coeff(1)*cos(P.coeff(0)))/sin(P.coeff(0))); //Modification phi point point formule (2) p6
+    }
+    
+    //5.CALCUL DE G:
+        //Pour le moment on le fait pas car on considère qu'il n'y a pas de glissement Va = 0
+
+    return P_point_point;
+}
+
+Matrice ConeGeneral::matrice_inertie() const { // Matrice d'inertie au point A dans G calculé grace a la formule de Huygens-Steiner
+    Vecteur AG(vecteurAG()); //Vecteur AG dans le ref G
+    Matrice delta ( { pow(AG.coeff(1),2) + pow(AG.coeff(2),2) ,       -AG.coeff(1)*AG.coeff(2)          ,        -AG.coeff(0)*AG.coeff(2)        },
+                    {       -AG.coeff(1)*AG.coeff(2)          , pow(AG.coeff(0),2) + pow(AG.coeff(2),2) ,         -AG.coeff(1)*AG.coeff(2)       }, 
+                    {       -AG.coeff(0)*AG.coeff(2)          ,       -AG.coeff(1)*AG.coeff(2)          , pow(AG.coeff(0),2) + pow(AG.coeff(1),2)});
+    
+    double ri,ri2; //représente ri^ (le rayon du solide de révolution à la hauteur zo). OPTIMISATION: RI2 permet d'éviter au programme à calculer 2 fois ri ^2 pour les deux sommes
+    double somme1(0),somme2(0);
+    for(size_t i(1) ; i <= N; ++i){
+        ri = (2.0*i-1.0)/(2.0*N) * rayon;
+        ri2 = pow(ri,2);
+        somme1 += ri2*ri2; //Somme des ri^4 ou ri = zi/L et zi = (2i-1)/2N
+        somme2 += pow((2*i-1)*hauteur/(2.0*N),2)* ri2;
+    }
+    double I3 (M_PI/2.0 * masse_volumique*somme1*hauteur/N);
+    double I1 (1.0/2.0*I3 + M_PI*masse_volumique*hauteur/N*somme2 - masse()*pow(AG.coeff(2),2)); //Changer I3_
+    
+    Matrice IG (I1, I1, I3);
+    
+    return (IG + masse()*delta);
+}
+
+double ConeGeneral::masse() const{
+    double masse(0);
+    double ri; //représente ri^ (le rayon du solide de révolution à la hauteur zo)
+    for(size_t i(1) ; i <= N; ++i){
+        ri = rayon*(2.0*i-1.0)/(2.0*N);
+        masse += pow(ri,2); //Somme des ri^2 ou ri = zi/L et zi = (2i-1)/2N
+    }
+    masse *= M_PI * masse_volumique * hauteur / N;
+    return masse;
+}
+
+Vecteur ConeGeneral::vecteurAG() const{
+    double somme1(0), somme2(0);
+    double ri, ri2;
+
+    for(size_t i(1) ; i <= N; ++i){
+        ri = (2.0*i-1.0)/(2.0*N) *rayon;
+        ri2 = ri*ri;                //Optimisation pour éviter de calculer 2 fois ri^2 : une fois pour la somme 1 et une autre fois pour le ri^3 de la somme2
+        somme1 += ri2;
+        somme2 += ri2 * (2.0*i-1)*hauteur/(2.0*N); //= ri3*L
+    }
+    return {0.0,0.0,somme2/somme1};
+}
+
+unique_ptr<ConeGeneral> ConeGeneral::clone() const{
+    return unique_ptr<ConeGeneral>(new ConeGeneral(*this));
+}
+unique_ptr<Toupie> ConeGeneral::copie() const{
     return clone();
-}*/
+}

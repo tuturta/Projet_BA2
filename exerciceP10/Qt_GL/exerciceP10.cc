@@ -9,6 +9,10 @@ using  namespace std;
 
 int main(int argc, char* argv[])
 {
+  Systeme systeme1;
+  Systeme systeme2;
+  Systeme systemeSimple_VS_General;
+
   ConeSimple cone1({0.523599,0.0,0.0}, //P
                    {0.0,0.0,60.0},     //P_point
                    0.1,                //Masse volumique
@@ -21,16 +25,32 @@ int main(int argc, char* argv[])
                    0.1,                 //Masse Volumique
                    1.5,                 //Hauteur
                    0.5,                 //Rayon
-                   {0.1,0.0,0.0});      //Origine
-
-  TextViewer support(cout);
-  Systeme systeme1(&support);
-
+                   {1.0,0.0,0.0});      //Origine
+  ConeSimple cone3({0.1, 0.0,0.0}, //P
+                   {0,0.0,120.0},        //P_point
+                   0.3,                 //Masse Volumique
+                   1.5,                 //Hauteur
+                   1.5,                 //Rayon
+                   {2.0,0.0,0.0});      //Origine
+  ConeGeneral coneG({0.523599,0.0,0.0}, //P
+                    {0.0,0.0,60.0},     //P_point
+                    0.1,                //Masse volumique
+                    1.5,                //Hauteur
+                    0.5,                //Rayon
+                    {0.0,0.0,0.0});     //Origine
 
   systeme1.ajoute_toupie(cone1);
   systeme1.ajoute_toupie(cone2);
+
+  systeme2.ajoute_toupie(cone1);
+  systeme2.ajoute_toupie(cone2);
+  systeme2.ajoute_toupie(cone3);
+
+  systemeSimple_VS_General.ajoute_toupie(cone1);
+  systemeSimple_VS_General.ajoute_toupie(coneG);
+
   QApplication a(argc, argv);
-  GLWidget<Systeme> w(systeme1); //A adapter pour un systeme
+  GLWidget<Systeme> w(systemeSimple_VS_General); //A adapter pour un systeme
 
   w.show();
   return a.exec();

@@ -83,21 +83,16 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
     cout << "============TESTS FONCTION F()============"<< endl;
     cout << "P_point: " << P_point <<endl;
     //1.CALCUL DE w dans RG (repère d'inertie)
-    Vecteur w(3);
-    double w1(P_point.coeff(0));
-    double w2(P_point.coeff(1)*sin(P.coeff(0)));
-    double w3(P_point.coeff(1)*cos(P.coeff(0))+P_point.coeff(2));
-    w = {w1,w2,w3};
-    cout << "w: " << w << endl;
+        //Utilisation de la méthode
     //2.CALCUL DE W_POINT: (dans Repère d'inertie)
     Vecteur w_point(3);
-    Vecteur we(w);
+    Vecteur we(w());
     we.set_coord(2,we.coeff(2) - P_point.coeff(2)); 
     cout << "we: " << we << endl;
         cout << "   matrice_inertie().inv(): " << matrice_inertie().inv() << endl;
-    cout << "   matrice_inertie()*w: " << matrice_inertie()*w << endl;
-    cout << "   we^(matrice_inertie*w): " << (we^(matrice_inertie()*w)) << endl;
-    w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w)));
+    cout << "   matrice_inertie()*w: " << matrice_inertie()*w() << endl;
+    cout << "   we^(matrice_inertie*w): " << (we^(matrice_inertie()*w())) << endl;
+    w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w())));
     cout << "w_point: " << w_point << endl;
     //3.CALCUL DE P_POINT_POINT: 
     Vecteur P_point_point(3);
@@ -117,6 +112,19 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
 
     return P_point_point;
 }
+
+Vecteur ConeSimple::w() const{
+    double w1(P_point.coeff(0));
+    double w2(P_point.coeff(1)*sin(P.coeff(0)));
+    double w3(P_point.coeff(1)*cos(P.coeff(0))+P_point.coeff(2));
+    return {w1,w2,w3};
+}
+
+
+double ConeSimple::energie_totale() const{
+
+}
+
 
 // Méthode virtuelle dessinable
 

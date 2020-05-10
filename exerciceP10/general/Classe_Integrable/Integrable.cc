@@ -27,11 +27,11 @@ ostream& Integrable::affiche(ostream& sortie) const{
     return sortie;
 }
 
-void Integrable::ref_G_to_O(Vecteur& v) const {
-    v=((S().inv())*v);
+Vecteur Integrable::ref_G_to_O(Vecteur const& v) const {
+    return ((S().inv())*v);
 }
-void Integrable::ref_O_to_G(Vecteur& v) const {
-    v=S()*v;
+Vecteur Integrable::ref_O_to_G(Vecteur const& v) const {
+    return S()*v;
 }
 
 Matrice Integrable::S() const  {
