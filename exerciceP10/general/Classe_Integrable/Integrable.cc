@@ -17,6 +17,7 @@ Vecteur Integrable::getOrigine() const{
 
 void Integrable::setP(Vecteur const& v) {
     P=v;
+    P.modulo2pi();
 }
 void Integrable::setP_point(Vecteur const& v){
     P_point=v;
@@ -27,15 +28,19 @@ ostream& Integrable::affiche(ostream& sortie) const{
     return sortie;
 }
 
-void Integrable::ref_G_to_O(Vecteur& v) const {
-    v=((S().inv())*v);
+Vecteur Integrable::ref_G_to_O(Vecteur const& v) const {
+    return ((S().inv())*v);
 }
-void Integrable::ref_O_to_G(Vecteur& v) const {
-    v=S()*v;
+Vecteur Integrable::ref_O_to_G(Vecteur const& v) const {
+    return S()*v;
 }
 
 Matrice Integrable::S() const  {
-    return Matrice ({cos(P.coeff(1)),                         sin(P.coeff(1)),                   0         },
-                    {-cos(P.coeff(0))*sin(P.coeff(1)),   cos(P.coeff(1))*cos(P.coeff(0)),   sin(P.coeff(0))},
-                    {sin(P.coeff(0))*sin(P.coeff(1)),    -sin(P.coeff(0))*cos(P.coeff(1)),  cos(P.coeff(0))});
+
+    double psi(P.coeff(0));
+    double theta(P.coeff(1));
+
+    return Matrice ( {cos(psi)            ,   sin(psi)            ,  0          },
+                     {-cos(theta)*sin(psi),   cos(psi)*cos(theta) ,  sin(theta) },
+                     {sin(theta)*sin(psi) ,   -sin(theta)*cos(psi),  cos(theta) }   );
 }

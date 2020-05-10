@@ -9,28 +9,28 @@ using  namespace std;
 
 int main(int argc, char* argv[])
 {
-  ConeSimple cone1({0.523599,0.0,0.0}, //P
-                   {0.0,0.0,60.0},     //P_point
+  ConeSimple cone1({0.0,0.523599,0.0},      //P (psi-theta-phi)
+                   {0.0,0.0,60.0},    //P_point
                    0.1,                //Masse volumique
                    1.5,                //Hauteur
                    0.5,                //Rayon
                    {0.0,0.0,0.0});     //Origine
 
-  ConeSimple cone2({0.785398, 0.0,0.0}, //P
-                   {0,0.0,40.0},        //P_point
-                   0.1,                 //Masse Volumique
-                   1.5,                 //Hauteur
-                   0.5,                 //Rayon
-                   {0.1,0.0,0.0});      //Origine
+  /*ConeSimple cone2({0.0, 0.785398,0.0}, //P (psi-theta-phi)
+                   {0,0.0,40.0},          //P_point
+                   0.1,                   //Masse Volumique
+                   1.5,                   //Hauteur
+                   0.5,                   //Rayon
+                   {0.1,0.0,0.0});        //Origine dans le ref absolu*/
 
   TextViewer support(cout);
   Systeme systeme1(&support);
 
 
   systeme1.ajoute_toupie(cone1);
-  systeme1.ajoute_toupie(cone2);
+  //systeme1.ajoute_toupie(cone2);
   QApplication a(argc, argv);
-  GLWidget<Systeme> w(systeme1); //A adapter pour un systeme
+  GLWidget w(systeme1);
 
   w.show();
   return a.exec();

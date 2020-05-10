@@ -42,14 +42,6 @@ void Systeme::ajoute_toupie(Toupie const& nouvelle){
     objets.push_back(nouvelle.copie());
 }
 
-/*unique_ptr<Integrable> Systeme::getObjets(size_t i) const{
-    return objets[i]->copie(); //retourne une copie du pointeur du tableau pour pas que l'utilisateur puisse modifier la valeur pointée par celui_ci
-}*/
-
-/*void Systeme::setObjets(size_t i, Integrable const& autre){
-    *objets[i] = autre;
-}*/
-
 size_t Systeme::size() const{ return objets.size(); }
 
 void Systeme::dessine() {
@@ -61,12 +53,6 @@ unique_ptr<Systeme> Systeme::clone() const{
     return nullptr; //POUR LES TESTS
 }
 
-//ESSAI ARTHUR *****************************************
-/*unique_ptr<Dessinable> Systeme::copieDessinable() const {
-   // return clone();
-    return nullptr; //POUR LES TEST AUSSI
-}*/
-
 unique_ptr<Toupie> Systeme::getToupie(size_t i) const{
     return objets[i]->copie();
 }
@@ -74,7 +60,6 @@ void Systeme::setToupie(size_t i, Toupie const& autre){
     *objets[i] = autre;
 }
 double Systeme::getHauteur(size_t i) const{
-    cout << *objets[i]<< "vérification de la collection..." << endl;
     return objets[i]->getHauteur();
 }
 double Systeme::getRayon(size_t i) const{

@@ -13,7 +13,7 @@ void Vecteur::augmente(double valeur){
 }
 void Vecteur::set_coord(size_t position, double valeur){ 
 	if (position<=dim()) {
-		coeff_[position]=valeur; ///Position 0=x,position 1=y, position 2=z
+        coeff_[position]=valeur; ///Position 0=x/psi,position 1=y/theta, position 2=z/phi
 	}else{
 		Erreur Err = {"DIMENSIONS! (set_coord)",1}; //Erreur de dim, code 1, niveau 1, n'arrette pas le programme
 		throw Err;
@@ -47,6 +47,14 @@ void Vecteur::correctif_0() {
 		 }
 	 }
  }
+
+void Vecteur::modulo2pi() {
+    for (int i(0); i<dim() ; ++i) {
+        while (coeff(i)>=2.0*M_PI) {
+            set_coord(i,coeff(i)-2.0*M_PI);
+        }  // pour obtenir les angles modulo 2 pi
+    }
+}
 // DÉFINITIONS DES OPERATEURS:
 // --> EXTERNES
 

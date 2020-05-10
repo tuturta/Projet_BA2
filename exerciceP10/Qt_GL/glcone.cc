@@ -17,7 +17,6 @@ void GLCone::initialize( double h, double r, GLuint slices, GLuint stacks)
 
   positions.reserve(3 * size);
 
-  /*const double alpha(M_PI / double(stacks));*/
   const double delta_h(h/double(stacks)); //pas de hauteur
   const double beta(2.0*M_PI / double(slices)); //pas d'angle
 
@@ -25,10 +24,6 @@ void GLCone::initialize( double h, double r, GLuint slices, GLuint stacks)
 
   for (GLuint i(1); i < stacks; ++i) {
 	for (GLuint j(0); j < slices; ++j) {
-      /*float r = sin(i*alpha);
-	  float z = cos(i*alpha);
-	  float y = sin(j*beta) * r;
-      float x = cos(j*beta) * r;*/
       float z = i*delta_h;
       float r_actuel = (r*z/h);
       float y = r_actuel * sin(j*beta);
@@ -85,7 +80,6 @@ void GLCone::draw(QOpenGLShaderProgram& program, int attributeLocation)
   program.enableAttributeArray(attributeLocation);
 
 #define BUFFER_OFFSET(a) ((char*)nullptr + (a))
-  //probleme********************************************************
   glDrawElements(GL_TRIANGLE_FAN, ibo_sz[0] / sizeof(GLuint), GL_UNSIGNED_INT, BUFFER_OFFSET( 0                     ));
   glDrawElements(GL_QUADS       , ibo_sz[1] / sizeof(GLuint), GL_UNSIGNED_INT, BUFFER_OFFSET( ibo_sz[0]             ));
   glDrawElements(GL_TRIANGLE_FAN, ibo_sz[2] / sizeof(GLuint), GL_UNSIGNED_INT, BUFFER_OFFSET( ibo_sz[0] + ibo_sz[1] ));
