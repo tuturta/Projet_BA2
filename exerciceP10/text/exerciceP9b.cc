@@ -25,10 +25,10 @@ int main() {
        //================SYSTEME=============================================================//
             IntegrateurEulerCromer integrateur;
             ConeSimple cone1({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
-            //ConeSimple cone2({0.785398, 0.0,0.0}, {0,0.0,40.0} ,0.1, 1.5, 0.5, {0.1,0.0,0.0}, &ecran);
+            ConeGeneral cone2({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
             Systeme systeme(&ecran);
             systeme.ajoute_toupie(cone1);
-            //systeme.ajoute_toupie(cone2);
+            systeme.ajoute_toupie(cone2);
 
             cout << systeme << endl;
             cout << "Le système évolue et se dessine à chaque pas de temps (dt=" << dt << ") :" << endl;
