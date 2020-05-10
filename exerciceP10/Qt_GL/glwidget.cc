@@ -4,6 +4,7 @@
 #include "glwidget.h"
 
 // ======================================================================
+
 void GLWidget::initializeGL()
 {
   vue.init();
@@ -11,16 +12,17 @@ void GLWidget::initializeGL()
 }
 
 // ======================================================================
+
 void GLWidget::resizeGL(int width, int height)
 {
-  /* On commance par dire sur quelle partie de la 
+  /* On commance par dire sur quelle partie de la
    * fenêtre OpenGL doit dessiner.
    * Ici on lui demande de dessiner sur toute la fenêtre.
    */
   glViewport(0, 0, width, height);
 
   /* Puis on modifie la matrice de projection du shader.
-   * Pour ce faire on crée une matrice identité (constructeur 
+   * Pour ce faire on crée une matrice identité (constructeur
    * par défaut), on la multiplie par la droite par une matrice
    * de perspective.
    * Plus de détail sur cette matrice
@@ -34,14 +36,16 @@ void GLWidget::resizeGL(int width, int height)
 }
 
 // ======================================================================
+
 void GLWidget::paintGL()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  c.dessine();
+  contenu.dessine();
 }
 
 
 // ======================================================================
+
 void GLWidget::keyPressEvent(QKeyEvent* event)
 {
   constexpr double petit_angle(5.0); // en degrés
@@ -104,8 +108,8 @@ void GLWidget::keyPressEvent(QKeyEvent* event)
     break;
 
   case Qt::Key_Space:
-	pause();
-	break;
+    pause();
+    break;
   };
 
   update(); // redessine
@@ -116,22 +120,54 @@ void GLWidget::timerEvent(QTimerEvent* event)
 {
   Q_UNUSED(event);
 
-  double dt = chronometre.restart() / 1000.0;
-
-  c.evolue(dt);
+  double dt = chronometre.restart()/10000.0;
+  integrateur.evolue(contenu,dt);
+  //pause();
   update();
 }
 
 // ======================================================================
+
 void GLWidget::pause()
 {
   if (timerId == 0) {
-	// dans ce cas le timer ne tourne pas alors on le lance
-	timerId = startTimer(20);
-	chronometre.restart();
+    // dans ce cas le timer ne tourne pas alors on le lance
+    timerId = startTimer(20);
+     chronometre.restart();
   } else {
-	// le timer tourne alors on l'arrête
-	killTimer(timerId);
-	timerId = 0;
+    // le timer tourne alors on l'arrête
+    killTimer(timerId);
+    timerId = 0;
   }
 }
+
+
+void GLWidget::mousePressEvent(QMouseEvent* event)
+{
+  lastMousePosition = event->pos();
+}
+
+
+void GLWidget::mouseMoveEvent(QMouseEvent* event)
+{
+  /* If mouse tracking is disabled (the default), the widget only receives
+   * mouse move events when at least one mouse button is pressed while the
+   * mouse is being moved.
+   *
+   * Pour activer le "mouse tracking" if faut lancer setMouseTracking(true)
+   * par exemple dans le constructeur de cette classe.
+   */
+
+  if (event->buttons() & Qt::LeftButton) {
+    constexpr double petit_angle(.4); // en degrés
+
+    // Récupère le mouvement relatif par rapport à la dernière position de la souris
+    QPointF d = event->pos() - lastMousePosition;
+    lastMousePosition = event->pos();
+
+    vue.rotate(petit_angle * d.manhattanLength(), d.y(), d.x(), 0);
+
+    update();
+  }
+}
+

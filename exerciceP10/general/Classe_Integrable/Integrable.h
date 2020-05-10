@@ -8,30 +8,38 @@
 
 class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a ses paramètres à chaque pas de temps)
    protected : 
-    Vecteur P; // Vecteur de paramètres
+    Vecteur P; // Vecteur de paramètres psi-theta-phi
     Vecteur P_point; // Dérivée temporelle des degrés de liberté
     Vecteur origine;
 
    public:
+
     //METHODES:
     Integrable(Vecteur P, Vecteur P_point, SupportADessin* support, Vecteur origine = {0,0,0})
-    : Dessinable(support), P(P), P_point(P_point), origine(origine)  {} //CONSTRUCTEUR PAR DEFAUT POUR LE SUPPORT
+    : Dessinable(support), P(P), P_point(P_point), origine(origine)  {}  //CONSTRUCTEUR PAR DEFAUT POUR LE SUPPORT ?
     
     virtual Vecteur fonction_f() const = 0; //Equation du mouvement
+
+    // ACCESSEURS / SETTER
+
     Vecteur getP() const;
     Vecteur getP_point() const;
     Vecteur getOrigine() const;
     void setP(Vecteur const& autre);
     void setP_point(Vecteur const& autre);
-    std::ostream& affiche(std::ostream& sortie) const; // Affiche seulement P et Ppoint
-    virtual std::ostream& affiche_parametres(std::ostream& out) const =0; // Affiche tous les paramètres d'un intégrable avec du texte
-    Vecteur ref_O_to_G(Vecteur const&) const; //méthodes pour changer un vecteur de référentiel *************************************
-    Vecteur ref_G_to_O(Vecteur const&) const; // ************************************************************************************
-    Matrice S() const; // Matrice de transition de RG vers RO *********A METTRE DANS CETTE CLASSE OU NON ?************
 
-    // virtual std::unique_ptr<Integrable> copie() const =0;
-    //ESSAI ARTHUR *****************************************
-    //virtual std::unique_ptr<Dessinable> copieDessinable() const =0;
+    // AFFICHAGE
+
+    std::ostream& affiche(std::ostream& sortie) const;                     // Affiche seulement P et Ppoint
+    virtual std::ostream& affiche_parametres(std::ostream& out) const = 0; // Affiche tous les paramètres d'un intégrable avec du texte
+
+    // RÉFÉRENTIELS
+
+    Vecteur ref_O_to_G(Vecteur const& vect) const; //méthodes pour changer un vecteur de référentiel *************************************
+    Vecteur ref_G_to_O(Vecteur const& vect) const; // ************************************************************************************
+    virtual Vecteur ref_G_to_O_point(Vecteur const& point) const =0; //on veut obliger les toupies à avoir une méthode de changement de ref pour les points, mais on ne peut les définir qu'en connaissant leur CM
+
+    Matrice S() const; // Matrice de transition de RG vers RO
 
 };
 

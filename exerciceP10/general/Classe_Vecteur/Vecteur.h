@@ -34,7 +34,7 @@ public:
 	double norme2() const; // renvoie la norme au carré et permet d'éviter le temps de calcul de la racine
 	double coeff(size_t x) const; // renvoie la coordonnée à la position x sachant que la première coordonnée est à la position x = 0
 	void correctif_0(); //on l'utilise pour éviter d'avoir des valeurs extremement petites à la place de vrais 0 après certaines opérations.
-
+    void modulo2pi();
 private:
 	// Attributs
 	std::vector<double> coeff_;

@@ -2,6 +2,7 @@
 #include "vertex_shader.h" // Identifiants Qt de nos différents attributs
 #include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../general/Classe_Systeme/Systeme.h"
+#include "../general/Classe_Vecteur/Vecteur.h"
 #include <cmath>
 #include <iostream>
 
@@ -9,18 +10,23 @@
 QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
   QMatrix4x4 matrice;
   matrice.setToIdentity();
-  //std::cout << a_dessiner << std::endl;
-  double psi(a_dessiner.getP().coeff(1)*180/M_PI);  ///angles en degrés
-  double theta(a_dessiner.getP().coeff(0)*180/M_PI);
-  double phi(a_dessiner.getP().coeff(2)*180/M_PI);
-  double x0(a_dessiner.getOrigine().coeff(0));
+  double psi(a_dessiner.getP().coeff(0)*180.0/M_PI);  ///angles en degrés
+  double theta(a_dessiner.getP().coeff(1)*180.0/M_PI);
+  double phi(a_dessiner.getP().coeff(2)*180.0/M_PI);
+  /*double x0(a_dessiner.getOrigine().coeff(0));
   double y0(a_dessiner.getOrigine().coeff(1));
-  double z0(a_dessiner.getOrigine().coeff(2));
+  double z0(a_dessiner.getOrigine().coeff(2));*/
 
-  matrice.scale(0.5);
+  Vecteur CM_ref_absolu(a_dessiner.ref_G_to_O_point({0.0,0.0,0.0}));
+  double x0(CM_ref_absolu.coeff(0));
+  double y0(CM_ref_absolu.coeff(1));
+  double z0(CM_ref_absolu.coeff(2));
+
+
+  //matrice.scale(0.5);
   matrice.translate(x0,y0,z0);
-  matrice.rotate(phi,0.0, 0.0, 1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)?*/); //rotation propre PHI autour de Oz'
-  matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0 ?*/); //nutation THETA autour de l'axe nodal
+  matrice.rotate(phi,0.0,0.0,1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)*/); //rotation propre PHI autour de Oz'
+  matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0*/ ); //nutation THETA autour de l'axe nodal
   matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
 
   return matrice;
@@ -41,9 +47,11 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
   dessineRepere();
   //dessineSol();
   QMatrix4x4 matrice(matrice_dessin(a_dessiner));
+  dessineRepere(matrice);
   cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
   dessineConeSimple(matrice,1.0,0.5,1.0); // violet
+  //dessineConeSimple(2.0,1.5,matrice);
 }
 
 // ======================================================================DESSINE(OBJ_EN_CHUTE_LIBRE)
@@ -54,12 +62,12 @@ void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
   matrice.setToIdentity();
     
   double psi(a_dessiner.getP().coeff(1)*180.0/M_PI);  ///angles en degrés
-  double theta(a_dessiner.getP().coeff(0)*180.0/M_PI);
+  double theta(a_dessiner.getP().coeff(1)*180.0/M_PI);
   double phi(a_dessiner.getP().coeff(2)*180.0/M_PI);
 
-  matrice.rotate(phi,0.0, 0.0, 1.0); //rotation propre PHI autour de Oz'
+  matrice.rotate(phi,0.0, 0.0, 1.0);      //rotation propre PHI autour de Oz'
   matrice.rotate(theta, 1.0 , 0.0 , 0.0); //nutation THETA autour de l'axe nodal
-  matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
+  matrice.rotate(psi,0.0 , 0.0 , 1.0);    // précession PSI autour de Oz
 
   matrice.scale(0.5);
   dessineToupie(matrice);
@@ -76,10 +84,30 @@ void VueOpenGL::dessine(Systeme const& a_dessiner)
     cone.initialize(a_dessiner.getHauteur(i),a_dessiner.getRayon(i)); //établit le modèle du cône à dessiner.
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
-    dessineConeSimple(matrice,1.0,double(i)/(a_dessiner.size()-1),0.0);
-
+    size_t t(a_dessiner.size()-1);
+    if (t==0) {t+=1;}
+    dessineConeSimple(matrice,1.0,double(i/t),0.0);
+    dessineConeSimplebug(1.5,0.5,matrice);
+    dessineTrace((a_dessiner.getToupie(i))->getPositions_CM());
   }
 }
+// ======================================================================DESSINETRACE
+
+void VueOpenGL::dessineTrace(std::vector<Vecteur> const& positions)
+{
+    QMatrix4x4 matrice;
+    matrice.setToIdentity();
+    prog.setUniformValue("vue_modele", matrice_vue * matrice);
+    glBegin(GL_POINTS);
+    prog.setAttributeValue(CouleurId,1.0,0.0,0.0); //rouge
+    for(auto point: positions) {
+        prog.setAttributeValue(SommetId,point.coeff(0),point.coeff(1), point.coeff(2));
+    }
+
+    glEnd();
+
+}
+
 // ======================================================================INITIALISATION
 void VueOpenGL::init()
 {
@@ -228,9 +256,9 @@ void VueOpenGL::dessineToupie (QMatrix4x4 const& point_de_vue)
 //========================================================================DESSINECONE
 
 /********* MÉTHODE SIMPLE POUR DESSINER UN CONE, MAIS PEU EFFICACE ******************
- * pour information, elle ne peut plus être utilisée dans cette version du code *****
+ * pour information, elle ne peut plus être utilisée dans cette version du code ******/
 
-void VueOpenGL::dessineConeSimple( double hauteur, double rayon, const QMatrix4x4 &point_de_vue)
+void VueOpenGL::dessineConeSimplebug( double hauteur, double rayon, const QMatrix4x4 &point_de_vue)
 {
     prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
 
@@ -241,7 +269,6 @@ void VueOpenGL::dessineConeSimple( double hauteur, double rayon, const QMatrix4x
     glBegin(GL_LINES);
     double pas_hauteur(0.1); //À voir : plus de précision et sans ralentissement  ??
     double pas_angle(0.1);
-    double pas_couleur(0.0028);
     for(double z(hauteur); z>=0.0 ; z-=pas_hauteur) {
         for(double angle(0.0); angle<360.0; angle+=pas_angle) {
             prog.setAttributeValue(CouleurId, 1.0, 1.0, 1.0);
@@ -255,7 +282,7 @@ void VueOpenGL::dessineConeSimple( double hauteur, double rayon, const QMatrix4x
 
 
 }
-**************************************************************************************/
+/*******************************************************************************/
 
 void VueOpenGL::dessineConeSimple (QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu)
 {

@@ -90,19 +90,42 @@ VACANCES
 
 SEMAINE 9 :
 
- [V] Graphisme : dessiner un cône....................................5h
+ [V] Graphismes : dessiner un cône...................................5h
  [V] Dicussion conceptuelle sur le contenu dans glWidget.............2h
-
+ [V] Essais pour adapter glwidget aux systeme et aux toupies simple.15h
+ [V] Graphismes : classe GLCone......................................5h 
 
     Nous passons bcp de temps à essayer de trouver un moyen de pouvoir construire
     le glWidget avec un systeme de toupies ou bien une toupie de la manière la plus 
     efficace et sensée. De nombreux problèmes se posent et nous  obligent à questionner
-    les liens d'héritage entre toutes nos classes.
+    les liens d'héritage entre toutes nos classes, et nous nous perdons un peu dans la 
+    manipulation des pointeurs.
 
     À revoir  : 
     - le cône se re-calcule à chaque pas de temps : cela ralentit considérabelement
-    la simulation. S'inspirer de la sphère pour corriger ça.
+      la simulation. S'inspirer de la sphère pour améliorer ça. --> c'est fait.
+    - probleme avec le chronomètre : le pas de temps est constamment 0, nous ne voyons pas 
+      l'erreur par rapport à avant...
 
+SEMAINE 10 : 
+
+[V] Essai pour glwidget : sous classes --> échec...................3h
+[V] Essai pour glwidget : template --> succès......................2h
+[V] Résolution problème chronomètre................................2h
+[V] Simplification glwidget : abandon du template..................2h
+[ ] Exercice P11...................................................
+
+   Après avoir vu la video sur les template, nous réussissons à faire 
+   de glWidget un modèle de classe qui fonctionne avec les Toupie et 
+   les Systeme. Il reste une erreur de manipulation de unique_ptr qui 
+   nous mène à demander de l'aide à notre assistante. Elle nous dit
+   alors qu'il n'est pas nécessaire de faire un template pour glwidget
+   et qu'on peut très bien considérer les toupies "seules" comme
+   un systeme de 1 toupie. Nous rechangeons donc notre conception de 
+   glWidget.
+
+   L'erreur du chronomètre était en fait basique, une division int/int 
+   au lieu de int/double renvoyait 0 eu lieu du pas de temps voulu...
 
 
 

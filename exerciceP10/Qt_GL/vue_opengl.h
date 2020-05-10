@@ -15,6 +15,7 @@ class VueOpenGL : public SupportADessin {
   virtual void dessine(Toupie const& objet) override;
   virtual void dessine(Systeme const& objet) override;
 
+
   // méthodes de (ré-)initialisation
   void init();
   void initializePosition();
@@ -34,7 +35,10 @@ class VueOpenGL : public SupportADessin {
   void dessineRepere(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
   void dessineSol(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
   QMatrix4x4 matrice_dessin(Toupie const& a_dessiner) const;
+  void dessineTrace( std::vector<Vecteur> const& positions);
 
+//test
+  void dessineConeSimplebug(double h, double r, QMatrix4x4 const& mat);
 
  private:
   // Un shader OpenGL encapsulé dans une classe Qt
