@@ -1,4 +1,4 @@
-SEMAINE 1 :
+﻿SEMAINE 1 :
  [V] Faire le journal..............................................2min 
  [V] Créer/configurer le repository  git/github etc..................5h    
  [V] lire le projet...............................................30min
@@ -127,5 +127,12 @@ SEMAINE 10 :
    L'erreur du chronomètre était en fait basique, une division int/int 
    au lieu de int/double renvoyait 0 eu lieu du pas de temps voulu...
 
+
+
+A FAIRE:
+corriger std bad alloc
+fonction f() de Toupie Chinoise
+dessineToupieChinoise dans Gl widget
+essayer de rendre virtuelle la classe de toupie pour supprimer toutes les definitions de fonctions virtuelles dans toupie
 
 

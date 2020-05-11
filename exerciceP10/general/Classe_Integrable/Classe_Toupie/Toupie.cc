@@ -46,7 +46,7 @@ std::vector<Vecteur> Toupie::getPositions_CM() const {
 }
 Vecteur Toupie::ref_G_to_O_point(Vecteur const& point) const {
     //pour l'instant comme pour le cone
-    double L((3.0/4.0)*getHauteur()); //A MODIFIER, UTILISER NORME DU VECTEUR AG
+    double L((3.0/4.0)*vecteurAG().norme()); //A MODIFIER, UTILISER NORME DU VECTEUR AG
     double theta(P.coeff(1));
     double psi(P.coeff(0));
     Vecteur point_G( L*sin(theta)*sin(psi), L*sin(theta)*cos(psi), L*cos(theta));
@@ -62,11 +62,11 @@ void Toupie::dessine() {
 // POUR LE CAS GENERAL : 
 
 double Toupie::zi(size_t i) const{
-    return (2*i-1)*hauteur_/(2*N);
+    return (2.0*i-1)*hauteur_/(2.0*N);
 }
 
 double Toupie::rayon2(size_t i) const {  //TEMPORAIRE, DOIT ETRE REDEFINI DANS CHAQUE CLASSE
-    return pow((2.0*i-1.0)/(2.0*N)*rayon_,2);
+    return pow(((zi(i)/hauteur_)*rayon_),2);
 }
 
 double Toupie::masse() const{
@@ -79,12 +79,12 @@ double Toupie::masse() const{
 }
 
 double Toupie::distanceOG() const{ // où O est l'origine du solide de construction et G le centre de masse
-    double somme1(0), somme2(0);
+    double somme1(0.0), somme2(0.0);
     for(size_t i(1) ; i <= N; ++i){
                 somme1 += rayon2(i) * zi(i); 
                 somme2 += rayon2(i);
     }
-    return (somme2/somme1);
+    return somme1/somme2;
 }
 
 Matrice Toupie::matrice_inertie() const {   // Matrice d'inertie au point A dans G calculé grace a la formule de Huygens-Steiner
@@ -111,7 +111,7 @@ Matrice Toupie::matrice_inertie() const {   // Matrice d'inertie au point A dans
 
 
 Vecteur Toupie::vecteurAG() const{ // TEMPORAIRE POUR PAS QUE LA TOUPIE SOIT VIRTUELLE
-    return {0,0, (3.0/4.0)*hauteur_};
+    return {0.0,0.0, distanceOG()};
 }
 
 Vecteur Toupie::w() const{
@@ -184,12 +184,13 @@ Vecteur ConeSimple::ref_G_to_O_point(Vecteur const& point) const {
     std::cout << "P= " << P << std::endl;
     Vecteur point_G ={L*sin(theta)*sin(psi), -L*sin(theta)*cos(psi),L*cos(theta)}; //ref absolu
     std::cout <<  "point G=" << point_G << std::endl;
+    cout << "point g methode 2 : " << ref_G_to_O(vecteurAG()) << endl;
     return (S().inv()*point + point_G);
 }
 
 
 Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi-theta-phi
-
+    cout << "-----appel ConeSimple::fonction()-----" << endl;
     //Pour la lisibilité :
     double theta(P.coeff(1));
     double psi_P(P_point.coeff(0));
@@ -197,15 +198,15 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi
     double phi_P(P_point.coeff(2));
 
     //1.CALCUL DE w dans RG (repère d'inertie)
-
-    //std::cout << "wRef_G = " << w << std::endl;
+    cout << "MA_G = " << moment_poids() << endl;
+    cout << "w_G = " << w() << endl;
 
     //2.CALCUL DE W_POINT: (dans Repère d'inertie)
     Vecteur w_point(3);
     Vecteur we(w());
     we.set_coord(2,we.coeff(2) - phi_P); //rotation du repère (ne prend pas en compte la rotation propre de la toupie
     w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w())));
-    //std::cout << "DW_G= " << w_point << std::endl; //1er tour bon après non
+    std::cout << "Dw_G= " << w_point << std::endl; //1er tour bon après non
 
     //3.CALCUL DE P_POINT_POINT: 
     Vecteur P_point_point(3);
@@ -218,9 +219,9 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi
         P_point_point.set_coord(2, w_point.coeff(2) - P_point_point.coeff(0)*cos(theta) + psi_P*theta_P*sin(theta)); //Modification phi point point formule (2) p6
     }
 
-    /*std::cout << "DDpsi =" << P_point_point.coeff(0) << std::endl;
+    std::cout << "DDpsi =" << P_point_point.coeff(0) << std::endl;
     std::cout << "DDtheta =" << P_point_point.coeff(1) << std::endl;
-    std::cout << "DDphi =" << P_point_point.coeff(2) << std::endl;*/
+    std::cout << "DDphi =" << P_point_point.coeff(2) << std::endl;
 
     //4.CALCUL DE G:
     //Pour le moment on le fait pas car on considère qu'il n'y a pas de glissement Va = 0
@@ -302,7 +303,9 @@ Vecteur ConeGeneral::fonction_f() const{
     //1.CALCUL DE w et MA dans RG (repère d'inertie)
         
         //Methode w()
-    Vecteur MA(masse()*g.norme()*vecteurAG().norme(),0,0); // On considère que seul le poids agit sur la toupie, on néglige les autres forces  
+    Vecteur MA(masse()*(g.norme())*(distanceOG()*sin(theta)),0,0); // On considère que seul le poids agit sur la toupie, on néglige les autres forces  
+    cout << "MA_G = " << MA << endl;
+    cout << "w_G = " << w() << endl;
 
     //2.Calcul de IA avec Huygens-Steiner
 
@@ -313,7 +316,7 @@ Vecteur ConeGeneral::fonction_f() const{
     Vecteur we(w());
     we.set_coord(2,we.coeff(2) - phi_P); //rotation du repère (ne prend pas en compte la rotation propre de la toupie
     w_point = matrice_inertie().inv()*(MA-(we^(matrice_inertie()*w())));
-    //std::cout << "DW_G= " << w_point << std::endl; //1er tour bon après non
+    std::cout << "Dw_G= " << w_point << std::endl; //1er tour bon après non
     
     //4.CALCUL DE P_POINT_POINT: 
     Vecteur P_point_point(3);
@@ -326,9 +329,9 @@ Vecteur ConeGeneral::fonction_f() const{
         P_point_point.set_coord(2, w_point.coeff(2) - P_point_point.coeff(0)*cos(theta) + psi_P*theta_P*sin(theta)); //Modification phi point point formule (2) p6
     }
 
-    /*std::cout << "DDpsi =" << P_point_point.coeff(0) << std::endl;
+    std::cout << "DDpsi =" << P_point_point.coeff(0) << std::endl;
     std::cout << "DDtheta =" << P_point_point.coeff(1) << std::endl;
-    std::cout << "DDphi =" << P_point_point.coeff(2) << std::endl;*/
+    std::cout << "DDphi =" << P_point_point.coeff(2) << std::endl;
 
     
     //5.CALCUL DE G:
@@ -338,15 +341,7 @@ Vecteur ConeGeneral::fonction_f() const{
 }
 
 Vecteur ConeGeneral::vecteurAG() const{
-    double somme1(0), somme2(0);
-    double ri2;
-
-    for(size_t i(1) ; i <= N; ++i){
-        ri2 = rayon2(i);                //Optimisation pour éviter de calculer 2 fois ri^2 : une fois pour la somme 1 et une autre fois pour le ri^3 de la somme2
-        somme1 += ri2;
-        somme2 += ri2 * (2.0*i-1)*hauteur_/(2.0*N); //= ri3*L
-    }
-    return {0.0,0.0,somme2/somme1};
+    return {0.0,0.0,distanceOG()};
 }
 
 unique_ptr<ConeGeneral> ConeGeneral::clone() const{
@@ -357,16 +352,17 @@ unique_ptr<Toupie> ConeGeneral::copie() const{
 }
 
 double ConeGeneral::rayon2(size_t i) const {
-    return (2.0*i-1.0)/(2.0*N) *rayon_;
+    return pow((zi(i)/hauteur_ *rayon_),2);
 }
 
 //=============================CLASSE TOUPIE CHINOISE===================================//
 
 
 Vecteur ToupieChinoise::fonction_f() const{
-    cout << "--APPEL ConeGeneral::fonction_f()--" <<endl;
+    cout << "--APPEL ToupieChinoise::fonction_f()--" <<endl;
     
     //Lisibilité:
+    double psi(P.coeff(0));
     double theta(P.coeff(1));
     double psi_P(P_point.coeff(0));
     double theta_P(P_point.coeff(1));
@@ -375,7 +371,7 @@ Vecteur ToupieChinoise::fonction_f() const{
     //1.CALCUL DE w et MA dans RG (repère d'inertie)
         
         //Methode w()
-    Vecteur MA(masse()*g.norme()*vecteurAG().norme(),0,0); // On considère que seul le poids agit sur la toupie, on néglige les autres forces  
+    Vecteur MA(masse()*(g.norme())*(distanceOG()*sin(theta)),0,0); // On considère que seul le poids agit sur la toupie, on néglige les autres forces  
 
     //2.Calcul de IA avec Huygens-Steiner
 
@@ -389,7 +385,7 @@ Vecteur ToupieChinoise::fonction_f() const{
     //std::cout << "DW_G= " << w_point << std::endl; //1er tour bon après non
     
     //4.CALCUL DE P_POINT_POINT: 
-    Vecteur P_point_point(3);
+    Vecteur P_point_point(5);
     P_point_point.set_coord(1, w_point.coeff(0)); //Calcul de théta point point
     
     if(abs(theta) < eps){ //test theta=0.0
@@ -399,11 +395,10 @@ Vecteur ToupieChinoise::fonction_f() const{
         P_point_point.set_coord(2, w_point.coeff(2) - P_point_point.coeff(0)*cos(theta) + psi_P*theta_P*sin(theta)); //Modification phi point point formule (2) p6
     }
 
-    /*std::cout << "DDpsi =" << P_point_point.coeff(0) << std::endl;
-    std::cout << "DDtheta =" << P_point_point.coeff(1) << std::endl;
-    std::cout << "DDphi =" << P_point_point.coeff(2) << std::endl;*/
+    P_point_point.set_coord(3,rayon_*(theta_P*sin(psi)-phi_P*cos(psi)*sin(theta))); // Calcul la composante x du centre de la sphère tronquée dans le repère O
+    P_point_point.set_coord(4,-rayon_*(theta_P*cos(psi) + phi_P*sin(psi)*sin(theta))); // Calcul la composante y du centre de la sphère tronquée dans le repère O
 
-    
+
     //5.CALCUL DE G:
         //Pour le moment on le fait pas car on considère qu'il n'y a pas de glissement Va = 0
 
@@ -413,7 +408,8 @@ Vecteur ToupieChinoise::fonction_f() const{
 
 
 Vecteur ToupieChinoise::vecteurAG() const{ // A revoir car different si la rotation ne se fait pas autour de l'axe de symètrie
-    return {0.0,0.0,distanceOG()};
+    Vecteur AC (ref_O_to_G({0.0,0.0,rayon_})); // AC dans le ref G
+    return (AC - vecteurAG());
 }
 
 double ToupieChinoise::rayon2(size_t i) const {
@@ -425,4 +421,8 @@ unique_ptr<ToupieChinoise> ToupieChinoise::clone() const{
 }
 unique_ptr<Toupie> ToupieChinoise::copie() const{
     return clone();
+}
+
+Vecteur ToupieChinoise::vecteurGC() const{
+    return {0.0,0.0, rayon_ - distanceOG()};
 }

@@ -127,11 +127,16 @@ class Objet_en_chute_libre : public Toupie {
 
 class ToupieChinoise: public Toupie{ // Cone simple avec la fonction génèrale !
    public: 
-    using Toupie :: Toupie; // COnstructeur du cone simple
+    ToupieChinoise(Vecteur P, Vecteur P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    :Toupie(P,  P_point,    masse_volumique,    hauteur,    rayon,origine,  support){
+        P_point.augmente(ref_G_to_O(vecteurGC()).coeff(0)); //Ajoute Cx, la composante en x du centre de la toupie dans le ref G
+        P_point.augmente(ref_G_to_O(vecteurGC()).coeff(1)); //Ajoute Cy, la composante en y du centre de la toupie dans le ref G
+    }
     
     virtual Vecteur fonction_f() const override;
     Vecteur vecteurAG() const;
     virtual double rayon2(size_t i) const override; //c'est ce qui défini le solide de révolution : c'est la distance à l'axe ri en fonction de la hauteur zi
     std::unique_ptr<ToupieChinoise> clone() const;
     virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
+    Vecteur vecteurGC() const; //Retourne le vecteur GC DANS LE REF G
 };
