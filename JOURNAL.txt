@@ -130,9 +130,11 @@ SEMAINE 10 :
 
 
 A FAIRE:
-corriger std bad alloc
-fonction f() de Toupie Chinoise
+corriger std bad alloc //DONE
+fonction f() de Toupie Chinoise	//DONE
+COrriger fonction f() de toupie chinoise de sorte à considérer le déplacement du centre de masse
 dessineToupieChinoise dans Gl widget
 essayer de rendre virtuelle la classe de toupie pour supprimer toutes les definitions de fonctions virtuelles dans toupie
+
 
 

@@ -2,7 +2,7 @@ TEMPLATE = lib
 
 CONFIG = staticlib c++11
 
-SOURCES = Classe_Vecteur/Vecteur.cc Classe_Matrice/Matrice.cc erreurs.cc constantes.cc Classe_Integrable/Integrable.cc Classe_Integrable/Classe_Toupie/Toupie.cc Classe_Integrateur/Integrateur.cc Classe_Systeme/Systeme.cc ../text/text_viewer.cc
+SOURCES = Classe_Integrable/Integrable.cc Classe_Vecteur/Vecteur.cc Classe_Matrice/Matrice.cc erreurs.cc constantes.cc  Classe_Integrable/Classe_Toupie/Toupie.cc Classe_Integrateur/Integrateur.cc Classe_Systeme/Systeme.cc ../text/text_viewer.cc
 
 HEADERS += \
     Classe_Vecteur/Vecteur.h \

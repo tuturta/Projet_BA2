@@ -39,6 +39,9 @@ double Toupie::getRayon() const{ return 2.0;}   //pour l'instant
 void Toupie::ajoute_position_CM() {
     Vecteur CM_refG = {0.0,0.0,0.0};
     positions_CM.push_back(ref_G_to_O_point(CM_refG));
+    //cout << "Ref g to O point (0,0,0) : " << ref_G_to_O_point(CM_refG) << endl;
+    //cout << "Ref g to O  AG : " << ref_G_to_O(vecteurAG()) << endl;
+
 }
 
 std::vector<Vecteur> Toupie::getPositions_CM() const {
@@ -66,6 +69,7 @@ double Toupie::zi(size_t i) const{
 }
 
 double Toupie::rayon2(size_t i) const {  //TEMPORAIRE, DOIT ETRE REDEFINI DANS CHAQUE CLASSE
+    cout << "APPEl TOUPIE::RAYON2()"<<endl;
     return pow(((zi(i)/hauteur_)*rayon_),2);
 }
 
@@ -89,28 +93,34 @@ double Toupie::distanceOG() const{ // où O est l'origine du solide de construct
 
 Matrice Toupie::matrice_inertie() const {   // Matrice d'inertie au point A dans G calculé grace a la formule de Huygens-Steiner
     Vecteur AG(vecteurAG());                // Vecteur AG dans le ref G
-    Matrice delta ( { pow(AG.coeff(1),2) + pow(AG.coeff(2),2) ,       -AG.coeff(1)*AG.coeff(2)          ,        -AG.coeff(0)*AG.coeff(2)        },
-                    {       -AG.coeff(1)*AG.coeff(2)          , pow(AG.coeff(0),2) + pow(AG.coeff(2),2) ,         -AG.coeff(1)*AG.coeff(2)       }, 
+    cout << "AG: " << AG << endl;
+    Matrice delta ( { pow(AG.coeff(1),2) + pow(AG.coeff(2),2) ,       -AG.coeff(0)*AG.coeff(1)          ,        -AG.coeff(0)*AG.coeff(2)        },
+                    {       -AG.coeff(0)*AG.coeff(1)          , pow(AG.coeff(0),2) + pow(AG.coeff(2),2) ,         -AG.coeff(1)*AG.coeff(2)       }, 
                     {       -AG.coeff(0)*AG.coeff(2)          ,       -AG.coeff(1)*AG.coeff(2)          , pow(AG.coeff(0),2) + pow(AG.coeff(1),2)});
     
     double ri2;                          //représente ri^ (le rayon du solide de révolution à la hauteur zo). OPTIMISATION: RI2 permet d'éviter au programme à calculer 2 fois ri ^2 pour les deux sommes
-    double somme1(0),somme2(0);
+    double somme1(0.0),somme2(0.0);
     for(size_t i(1) ; i <= N; ++i){
         ri2 = rayon2(i);                    //Pour éviter de calculer 2fois le rayon au carré
+       // cout << "Z" << i << " = " << zi(i) << endl;
+        //cout << "R" << i << " = " << ri2 << endl;
         somme1 += ri2*ri2;                  //Somme des ri^4 
         somme2 += pow(zi(i),2)* ri2;
     }
-
+    cout << "masse() " << masse() << endl;
     double I3 (M_PI/2.0 * masse_volumique*somme1*hauteur_/N);
-    double I1 (1.0/2.0*I3 + M_PI*masse_volumique*hauteur_/N*somme2 - masse()*pow(distanceOG(),2)); //Changer I3_
-    
+    cout << "I3 :" << I3 << endl;
+    cout << masse() << endl;
+    double I1 (1.0/2.0*I3 + M_PI*masse_volumique*hauteur_/N*somme2 - masse()*pow(distanceOG(),2)); 
+    cout << "I1: " << I1 << endl;
     Matrice IG (I1, I1, I3);
-    
-    return (IG + masse()*delta);
+    cout << "retour matrice inertie()" << (IG+masse()*delta) << endl;
+    return (IG /*+ masse()*delta*/);
 }
 
 
 Vecteur Toupie::vecteurAG() const{ // TEMPORAIRE POUR PAS QUE LA TOUPIE SOIT VIRTUELLE
+    cout << "APPEL TOUPIE::vecteurAG()" << endl;
     return {0.0,0.0, distanceOG()};
 }
 
@@ -367,22 +377,31 @@ Vecteur ToupieChinoise::fonction_f() const{
     double psi_P(P_point.coeff(0));
     double theta_P(P_point.coeff(1));
     double phi_P(P_point.coeff(2));
+ 
+    cout << "psi = " << psi << endl;
+    cout << "theta = " << theta << endl;
+    cout << "Dpsi = " << psi_P << endl;
+    cout << "Dtheta = " << theta_P << endl;
+    cout << "Dphi = " << phi_P << endl;
+
     
     //1.CALCUL DE w et MA dans RG (repère d'inertie)
         
         //Methode w()
-    Vecteur MA(masse()*(g.norme())*(distanceOG()*sin(theta)),0,0); // On considère que seul le poids agit sur la toupie, on néglige les autres forces  
-
+    Vecteur MA(masse()*(g.norme())*(vecteurAG().norme()*sin(theta)),0.0,0.0); // On considère que seul le poids agit sur la toupie, on néglige les autres forces  
+    cout << "MA_G = " << MA << endl;
+    cout << "w_G = " << w() << endl;
     //2.Calcul de IA avec Huygens-Steiner
 
     //methode matrice_inertie()
-
+    Matrice IA(matrice_inertie());
     //3.CALCUL DE W_POINT: (dans Repère d'inertie)
     Vecteur w_point(3);
     Vecteur we(w());
     we.set_coord(2,we.coeff(2) - phi_P); //rotation du repère (ne prend pas en compte la rotation propre de la toupie
     w_point = matrice_inertie().inv()*(MA-(we^(matrice_inertie()*w())));
-    //std::cout << "DW_G= " << w_point << std::endl; //1er tour bon après non
+   // cout << "matrice inertie.inv() " << (matrice_inertie().inv()) << endl;
+    cout << "Dw_G= " << w_point << endl;
     
     //4.CALCUL DE P_POINT_POINT: 
     Vecteur P_point_point(5);
@@ -398,7 +417,7 @@ Vecteur ToupieChinoise::fonction_f() const{
     P_point_point.set_coord(3,rayon_*(theta_P*sin(psi)-phi_P*cos(psi)*sin(theta))); // Calcul la composante x du centre de la sphère tronquée dans le repère O
     P_point_point.set_coord(4,-rayon_*(theta_P*cos(psi) + phi_P*sin(psi)*sin(theta))); // Calcul la composante y du centre de la sphère tronquée dans le repère O
 
-
+    cout << "P point point en sortie de  f() : " << P_point_point << endl;
     //5.CALCUL DE G:
         //Pour le moment on le fait pas car on considère qu'il n'y a pas de glissement Va = 0
 
@@ -409,11 +428,13 @@ Vecteur ToupieChinoise::fonction_f() const{
 
 Vecteur ToupieChinoise::vecteurAG() const{ // A revoir car different si la rotation ne se fait pas autour de l'axe de symètrie
     Vecteur AC (ref_O_to_G({0.0,0.0,rayon_})); // AC dans le ref G
-    return (AC - vecteurAG());
+    cout << "AC dans le ref G: " << AC<< endl;
+    cout << "AG dans le ref G: " << AC -vecteurGC() << endl;
+    return (AC - vecteurGC());
 }
 
 double ToupieChinoise::rayon2(size_t i) const {
-    return 2.0*rayon_*zi(i) -  pow(zi(i),2);
+    return (2.0*rayon_*zi(i) -  pow(zi(i),2));
 }
 
 unique_ptr<ToupieChinoise> ToupieChinoise::clone() const{
@@ -424,5 +445,6 @@ unique_ptr<Toupie> ToupieChinoise::copie() const{
 }
 
 Vecteur ToupieChinoise::vecteurGC() const{
+    cout << "GC: " <<  Vecteur({0.0,0.0, rayon_ - distanceOG()}).norme() << endl;
     return {0.0,0.0, rayon_ - distanceOG()};
 }

@@ -13,21 +13,21 @@ QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
   double psi(a_dessiner.getP().coeff(0)*180.0/M_PI);  ///angles en degrés
   double theta(a_dessiner.getP().coeff(1)*180.0/M_PI);
   double phi(a_dessiner.getP().coeff(2)*180.0/M_PI);
-  /*double x0(a_dessiner.getOrigine().coeff(0));
+  double x0(a_dessiner.getOrigine().coeff(0));
   double y0(a_dessiner.getOrigine().coeff(1));
-  double z0(a_dessiner.getOrigine().coeff(2));*/
+  double z0(a_dessiner.getOrigine().coeff(2));
 
-  Vecteur CM_ref_absolu(a_dessiner.ref_G_to_O_point({0.0,0.0,0.0}));
+  /*Vecteur CM_ref_absolu(a_dessiner.ref_G_to_O_point({0.0,0.0,0.0}));
   double x0(CM_ref_absolu.coeff(0));
   double y0(CM_ref_absolu.coeff(1));
-  double z0(CM_ref_absolu.coeff(2));
+  double z0(CM_ref_absolu.coeff(2));*/
 
 
   //matrice.scale(0.5);
-  matrice.translate(x0,y0,z0);
-  matrice.rotate(phi,0.0,0.0,1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)*/); //rotation propre PHI autour de Oz'
-  matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0*/ ); //nutation THETA autour de l'axe nodal
+  //matrice.translate(x0,y0,z0);
   matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
+  matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0*/ ); //nutation THETA autour de l'axe nodal
+  matrice.rotate(phi,0.0,0.0,1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)*/); //rotation propre PHI autour de Oz'
 
   return matrice;
 }
@@ -87,7 +87,8 @@ void VueOpenGL::dessine(Systeme const& a_dessiner)
     size_t t(a_dessiner.size()-1);
     if (t==0) {t+=1;}
     dessineConeSimple(matrice,1.0,double(i/t),0.0);
-    dessineConeSimplebug(1.5,0.5,matrice);
+    //dessineConeSimplebug(1.5,0.5,matrice);
+    //dessine(*(a_dessiner.getToupie(i)));
     dessineTrace((a_dessiner.getToupie(i))->getPositions_CM());
   }
 }
