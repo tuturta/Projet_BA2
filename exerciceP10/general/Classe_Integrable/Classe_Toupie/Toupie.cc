@@ -31,8 +31,8 @@ unique_ptr<Toupie> Toupie::clone() const{
 unique_ptr<Toupie> Toupie::copie() const{
     return clone();
 }
-double Toupie::getHauteur() const{ std::cout << "toupie gethauteur" << std:: endl; return 2.0;} //pour l'instant
-double Toupie::getRayon() const{ return 2.0;}   //pour l'instant
+double Toupie::getHauteur() const{ std::cout << "toupie gethauteur" << std:: endl; return 1.0;} //pour l'instant
+double Toupie::getRayon() const{ return 1.0;}   //pour l'instant
 
 void Toupie::ajoute_position_CM() {
     Vecteur CM_refG = {0.0,0.0,0.0};
@@ -99,21 +99,19 @@ Vecteur ConeSimple::moment_poids() const{
     return vecteurAG()^poids;
 }
 
-Vecteur ConeSimple::vecteurAG() const{ // Centre de masse dans le ref d'inertie G vu depuis le point de contact
+Vecteur ConeSimple::vecteurAG() const{    // Centre de masse dans le ref d'inertie G vu depuis le point de contact
     return {0,0, (3.0/4.0)*hauteur};
 }
 Vecteur ConeSimple::ref_G_to_O_point(Vecteur const& point) const {
     double L((3.0/4.0)*hauteur);
     double theta(P.coeff(1));
     double psi(P.coeff(0));
-    std::cout << "P= " << P << std::endl;
     Vecteur point_G ={L*sin(theta)*sin(psi), -L*sin(theta)*cos(psi),L*cos(theta)}; //ref absolu
-    std::cout <<  "point G=" << point_G << std::endl;
     return (S().inv()*point + point_G);
 }
 
 
-Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi-theta-phi
+Vecteur ConeSimple::fonction_f() const{   //(Cf cadre rouge page 12) //avec P= psi-theta-phi
 
     //Pour la lisibilité :
     double psi(P.coeff(0));
@@ -182,7 +180,7 @@ void Objet_en_chute_libre::dessine() {
 }
 
 Vecteur Objet_en_chute_libre::fonction_f() const{
-        return {0,-9.81};
+        return {0,-9.81,0.0};
 }
 
 unique_ptr<Objet_en_chute_libre> Objet_en_chute_libre::clone() const{

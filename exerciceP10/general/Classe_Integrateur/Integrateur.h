@@ -8,7 +8,6 @@
 
 class Integrateur{
    public:
-
     virtual void evolue(Toupie& T, const double dt) const = 0;
     virtual void evolue(Systeme& S, const double dt) const = 0;
 
@@ -16,7 +15,19 @@ class Integrateur{
 
 class IntegrateurEulerCromer : public Integrateur {
     public :
+    virtual void evolue(Toupie& T, const double dt) const override;
+    virtual void evolue(Systeme& S, const double dt) const override;
+};
 
+class IntegrateurNewmark : public Integrateur {
+    public :
+    virtual void evolue(Toupie& T, const double dt) const override;
+    virtual void evolue(Systeme& S, const double dt) const override;
+
+};
+
+class IntegrateurRungeKutta : public Integrateur {
+    public :
     virtual void evolue(Toupie& T, const double dt) const override;
     virtual void evolue(Systeme& S, const double dt) const override;
 };

@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -Wall -std=c++11 -pedantic -Wall
-SRC =  testIntegrateur.cc Integrateur.cc ../Classe_Integrable/Integrable.cc ../Classe_Integrable/Classe_Toupie/Toupie.cc   ../Classe_Vecteur/Vecteur.cc ../Open_GL/Classe_Dessinable/text/text_viewer.cc ../Classe_Systeme/Systeme.cc
+SRC =  testIntegrateur.cc Integrateur.cc ../Classe_Integrable/Integrable.cc ../Classe_Integrable/Classe_Toupie/Toupie.cc   ../Classe_Vecteur/Vecteur.cc ../../text/text_viewer.cc ../Classe_Systeme/Systeme.cc ../constantes.cc ../erreurs.cc ../Classe_Matrice/Matrice.cc
 
 
 OBJ = $(SRC:.cc=.o)

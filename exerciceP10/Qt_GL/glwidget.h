@@ -43,7 +43,7 @@ private:
   Systeme contenu;
 
   // Integrateur pour faire évoluer la toupie :
-  IntegrateurEulerCromer integrateur;
+  IntegrateurNewmark integrateur;
 
   // position de la souris
     QPoint lastMousePosition;

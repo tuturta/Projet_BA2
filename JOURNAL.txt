@@ -113,7 +113,8 @@ SEMAINE 10 :
 [V] Essai pour glwidget : template --> succès......................2h
 [V] Résolution problème chronomètre................................2h
 [V] Simplification glwidget : abandon du template..................2h
-[ ] Exercice P11...................................................
+[V] Exercice P11...................................................3h
+[V] Début P12......................................................4h
 
    Après avoir vu la video sur les template, nous réussissons à faire 
    de glWidget un modèle de classe qui fonctionne avec les Toupie et 
@@ -127,5 +128,31 @@ SEMAINE 10 :
    L'erreur du chronomètre était en fait basique, une division int/int 
    au lieu de int/double renvoyait 0 eu lieu du pas de temps voulu...
 
+SEMAINE 11 :
 
+[ ] Retour sur la trace/ les graphismes...........................20h
+[V] Cône général..................................................15h
+[V] Toupie générale................................................3h
+[V] Toupie chinoise................................................6h
+[V] Integrateur de Newmark.........................................2h
 
+   Nous remarquons que le dessin de nos toupies ne tourne en fait pas si 
+   bien ; la rotation propre est trop faible (un tour sur elle même pour 
+   un tour autour de la verticale). Pourtant nos valeurs du vecteur P sont 
+   correctes. En cherchant la raison de ce mauvais rendu graphique, nous 
+   clarifions une partie du code pour la rendre moins tortueuse (cela 
+   concernait l'ordre des angles dans le vecteur P). Suite à cette 
+   modification, nous retrouvons toujours les bonnes valeurs des angles 
+   mais cette fois la trace ne ressemble plus non plus à celle du professeur...
+   A ce jour, nous n'avons donc pas réussi à ré-obtenir une trace correcte ni 
+   des rotations (visuelles) correctes. 
+
+SEMAINE 12 : 
+
+[ ] Retour sur la trace /les graphismes............................5h
+[ ] Toupie chinoise - retouche.....................................4h
+[ ]  
+
+   Malgré la consultation de deux assistants et du professeur, personne
+   ne comprend ce qu'il se passe dans notre problène de trace ni dans
+   celui des graphismes...

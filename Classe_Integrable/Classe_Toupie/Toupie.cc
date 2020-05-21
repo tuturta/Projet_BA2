@@ -131,7 +131,7 @@ void Objet_en_chute_libre::dessine() {
 }
 
 Vecteur Objet_en_chute_libre::fonction_f() const{
-        return {0,-9.81};
+        return {0,-9.81, 0.0};
 }
 
 unique_ptr<Objet_en_chute_libre> Objet_en_chute_libre::clone() const{

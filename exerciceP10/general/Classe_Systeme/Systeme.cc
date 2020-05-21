@@ -56,7 +56,7 @@ unique_ptr<Systeme> Systeme::clone() const{
 unique_ptr<Toupie> Systeme::getToupie(size_t i) const{
     return objets[i]->copie();
 }
-void Systeme::setToupie(size_t i, Toupie const& autre){
+void Systeme::setToupie(size_t i, Toupie const& autre){    
     *objets[i] = autre;
 }
 double Systeme::getHauteur(size_t i) const{

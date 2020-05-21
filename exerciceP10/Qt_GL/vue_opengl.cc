@@ -13,14 +13,15 @@ QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
   double psi(a_dessiner.getP().coeff(0)*180.0/M_PI);  ///angles en degrés
   double theta(a_dessiner.getP().coeff(1)*180.0/M_PI);
   double phi(a_dessiner.getP().coeff(2)*180.0/M_PI);
-  /*double x0(a_dessiner.getOrigine().coeff(0));
-  double y0(a_dessiner.getOrigine().coeff(1));
-  double z0(a_dessiner.getOrigine().coeff(2));*/
 
-  Vecteur CM_ref_absolu(a_dessiner.ref_G_to_O_point({0.0,0.0,0.0}));
+  double x0(a_dessiner.getOrigine().coeff(0));
+  double y0(a_dessiner.getOrigine().coeff(1));
+  double z0(a_dessiner.getOrigine().coeff(2));
+
+  /*Vecteur CM_ref_absolu(a_dessiner.ref_G_to_O_point({0.0,0.0,0.0}));
   double x0(CM_ref_absolu.coeff(0));
   double y0(CM_ref_absolu.coeff(1));
-  double z0(CM_ref_absolu.coeff(2));
+  double z0(CM_ref_absolu.coeff(2));*/
 
 
   //matrice.scale(0.5);
@@ -44,21 +45,20 @@ void VueOpenGL::dessine(Toupie const& a_dessiner)
 // ======================================================================DESSINE(CONE)
 void VueOpenGL::dessine(ConeSimple const& a_dessiner)
 {
-  dessineRepere();
+  dessineRepere(); //repère absolu
   //dessineSol();
   QMatrix4x4 matrice(matrice_dessin(a_dessiner));
-  dessineRepere(matrice);
+  std::cout << "dans dessine(cone)" << std::endl;
+  dessineRepere(matrice); //ref d'inertie
   cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
   dessineConeSimple(matrice,1.0,0.5,1.0); // violet
-  //dessineConeSimple(2.0,1.5,matrice);
 }
 
 // ======================================================================DESSINE(OBJ_EN_CHUTE_LIBRE)
 void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
 {
   QMatrix4x4 matrice;
-  // Dessine le 4e cube
   matrice.setToIdentity();
     
   double psi(a_dessiner.getP().coeff(1)*180.0/M_PI);  ///angles en degrés
@@ -80,27 +80,26 @@ void VueOpenGL::dessine(Systeme const& a_dessiner)
   matrice.setToIdentity();
 
   for(size_t i(0) ; i < a_dessiner.size() ; ++i){
-    matrice = matrice_dessin(*(a_dessiner.getToupie(i)));
-    cone.initialize(a_dessiner.getHauteur(i),a_dessiner.getRayon(i)); //établit le modèle du cône à dessiner.
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
-    size_t t(a_dessiner.size()-1);
-    if (t==0) {t+=1;}
-    dessineConeSimple(matrice,1.0,double(i/t),0.0);
-    dessineConeSimplebug(1.5,0.5,matrice);
-    dessineTrace((a_dessiner.getToupie(i))->getPositions_CM());
+  matrice = matrice_dessin(*(a_dessiner.getToupie(i)));
+  //dessine(  *(a_dessiner.getToupie(i)) ); //pb appelle systématiquement dessin(toupie)
+   dessineRepere(matrice);
+   cone.initialize(a_dessiner.getHauteur(i),a_dessiner.getRayon(i)); //établit le modèle du cône à dessiner.
+   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
+   size_t t(a_dessiner.size()-1);
+   if (t==0) {t+=1;}
+   dessineConeSimple(matrice,1.0,double(i/t),0.0);
+   dessineTrace((a_dessiner.getToupie(i))->getPositions_CM());
   }
 }
 // ======================================================================DESSINETRACE
 
 void VueOpenGL::dessineTrace(std::vector<Vecteur> const& positions)
 {
-    QMatrix4x4 matrice;
-    matrice.setToIdentity();
-    prog.setUniformValue("vue_modele", matrice_vue * matrice);
+    prog.setUniformValue("vue_modele", matrice_vue*QMatrix4x4());
     glBegin(GL_POINTS);
-    prog.setAttributeValue(CouleurId,1.0,0.0,0.0); //rouge
-    for(auto point: positions) {
+    prog.setAttributeValue(CouleurId,1.0,0.5,0.2);
+    for(auto const& point: positions) {
+        std::cout << point << std::endl;
         prog.setAttributeValue(SommetId,point.coeff(0),point.coeff(1), point.coeff(2));
     }
 
@@ -184,8 +183,7 @@ void VueOpenGL::translate(double x, double y, double z)
 {
   /* Multiplie la matrice de vue par LA GAUCHE.
    * Cela fait en sorte que la dernière modification apportée
-   * à la matrice soit appliquée en dernier (composition de fonctions).
-   */// ======================================================================DESSINE(CONE)
+   * à la matrice soit appliquée en dernier (composition de fonctions).*/
 
 
   QMatrix4x4 translation_supplementaire;
