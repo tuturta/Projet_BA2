@@ -96,6 +96,8 @@ void IntegrateurRungeKutta::evolue(Toupie& T, const double dt) const {
 
         T.setP(P_temp+dt/6.0*(k1+2*k2+2*k3+k4));
         T.setP_point(P_point_temp+dt/6.0*(k1_p+2*k2_p+2*k3_p+k4_p));
+
+        T.ajoute_position_CM(); // ajoute cette nouvelle position du CM dans le vector nécessaire pour la trace
         
 }
 

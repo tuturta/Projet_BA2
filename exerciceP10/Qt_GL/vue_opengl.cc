@@ -26,9 +26,9 @@ QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
 
   //matrice.scale(0.5);
   matrice.translate(x0,y0,z0);
-  matrice.rotate(phi,0.0,0.0,1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)*/); //rotation propre PHI autour de Oz'
-  matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0*/ ); //nutation THETA autour de l'axe nodal
   matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
+  matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0*/ ); //nutation THETA autour de l'axe nodal
+  matrice.rotate(phi,0.0,0.0,1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)*/); //rotation propre PHI autour de Oz'
 
   return matrice;
 }
