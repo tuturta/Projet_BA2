@@ -23,18 +23,27 @@ int main(int argc, char* argv[])
                    0.5,                   //Rayon
                    {0.1,0.0,0.0});        //Origine dans le ref absolu
 
-  ConeSimple conetrace({0.0,0.4,0.0},      //P (psi-theta-phi)
-                   {0.0,0.0,70.0},    //P_point
-                   0.1,                //Masse volumique
-                   2.0,                //Hauteur
-                   0.9,                //Rayon
-                   {0.0,0.0,0.0});     //Origine
+  ConeSimple coneTrace({0.0,0.4,0.0},      //P (psi-theta-phi)
+                       {0.0,0.0,70.0},    //P_point
+                       0.1,                //Masse volumique
+                       2.0,                //Hauteur
+                       0.9,                //Rayon
+                       {0.0,0.0,0.0});     //Origine
+
+
+  ToupieChinoise chinoise({0.0,0.0,0.30,0.0,0.0},
+                       {50.0,0.0,0.0,0.0,0.0},
+                       0.1,
+                       0.80,
+                       0.5,
+                       {0.0,0.0,0.0});
+
 
   TextViewer support(cout);
   Systeme systeme1(&support);
 
 
-  systeme1.ajoute_toupie(conetrace);
+  systeme1.ajoute_toupie(chinoise);
   //systeme1.ajoute_toupie(cone2);
   QApplication a(argc, argv);
   GLWidget w(systeme1);

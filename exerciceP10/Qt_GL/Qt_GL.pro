@@ -30,6 +30,8 @@ HEADERS += \
     ../general/Classe_Vecteur/Vecteur.h \
     ../general/dessinable.h \ #VRAIMENT BESOIN ? -> VERIFIER
     ../general/Classe_Systeme/Syteme.h \
+    ../general/constante.h \
+
 
 
 RESOURCES += \

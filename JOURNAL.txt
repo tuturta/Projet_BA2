@@ -1,4 +1,4 @@
-SEMAINE 1 :
+﻿SEMAINE 1 :
  [V] Faire le journal..............................................2min 
  [V] Créer/configurer le repository  git/github etc..................5h    
  [V] lire le projet...............................................30min
@@ -178,7 +178,20 @@ SEMAINE 12 :
    rotation puis, en dessous, la translation), donc nous ne savons pas
    pourquoi ici il semble que ce soit l'inverse qui fonctionne...
 
+   A FAIRE:
+   corriger std bad alloc //DONE
+   fonction f() de Toupie Chinoise	//DONE
+   Corriger fonction f() de toupie chinoise de sorte à considérer le déplacement du centre de masse
+   dessineToupieChinoise dans Gl widget
+   essayer de rendre virtuelle la classe de toupie pour supprimer toutes les definitions de fonctions virtuelles dans toupie
+
+
+
 SEMAINE 13 : 
 
 [ ] Résolution de problèmes sur la toupie chinoise................
 [ ]  
+
+
+
+

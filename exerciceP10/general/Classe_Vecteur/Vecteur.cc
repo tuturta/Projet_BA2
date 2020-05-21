@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES //Pour régler le problème de M_PI non reconnu par le compilateur sur windows
 #include <iostream>
 #include "../erreurs.h"
 #include "../constantes.h"
