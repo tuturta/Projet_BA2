@@ -12,7 +12,7 @@ using namespace std;
 int main() {
     const double dt(0.01); // Pas de temps
     double t(0.0); // Initialise le temps à 0
-    unsigned int nombre_de_tour(2);
+    unsigned int nombre_de_tour(1);
     try{
         //================SUPPORT TEXTUEL======================================================//
         ofstream fichier;
@@ -26,11 +26,11 @@ int main() {
             IntegrateurEulerCromer integrateur;
             ConeSimple cone1({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
             ConeGeneral cone2({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
-            ToupieChinoise chinoise({0.0,0.11,0.0,0.0,0.0},{50.0,0.0,0.0,0.0,0.0},0.1,0.56,0.3,{0.0,0.0,0.0}, &ecran);
+            ToupieChinoise ToupieChinoise({0.0,0.11,0.0,0.0,0.0},{50.0,0.0,0.0,0.0,0.0},0.1,0.02,0.15,{0.0,0.0,0.0}, &ecran);
             Systeme systeme(&ecran);
             // systeme.ajoute_toupie(cone1);
             //systeme.ajoute_toupie(cone2);
-            systeme.ajoute_toupie(chinoise);
+            systeme.ajoute_toupie(ToupieChinoise);
 
             cout << systeme << endl;
             cout << "Le système évolue et se dessine à chaque pas de temps (dt=" << dt << ") :" << endl;

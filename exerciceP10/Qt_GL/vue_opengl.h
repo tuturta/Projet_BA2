@@ -6,6 +6,8 @@
 #include "../general/support_a_dessin.h"
 #include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "glcone.h"
+#include "glsphere_tronquee.h"
+
 
 class VueOpenGL : public SupportADessin {
  public:
@@ -32,6 +34,7 @@ class VueOpenGL : public SupportADessin {
   void dessineToupie(QMatrix4x4 const& point_de_vue = QMatrix4x4());
   void dessineConeSimple(QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu);
   void dessinePyramide(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
+  void dessineToupieChinoise (QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu) ;
   void dessineRepere(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
   void dessineSol(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
   QMatrix4x4 matrice_dessin(Toupie const& a_dessiner) const;
@@ -45,6 +48,8 @@ class VueOpenGL : public SupportADessin {
   QOpenGLShaderProgram prog;
   //Un cone
   GLCone cone;
+  //Un sphère tronquée
+  GLSphere_Tronquee sphere_tronquee;
   // Caméra
   QMatrix4x4 matrice_vue;
 };

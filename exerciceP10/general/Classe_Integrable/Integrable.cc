@@ -23,6 +23,10 @@ void Integrable::setP_point(Vecteur const& v){
     P_point=v;
 }
 
+void Integrable::setOrigine(Vecteur const& v){
+    origine=v;
+}
+
 ostream& Integrable::affiche(ostream& sortie) const{
     sortie <<"paramètre : " << P << " ; dérivée : " << P_point << endl;
     return sortie;

@@ -46,7 +46,7 @@ std::vector<Vecteur> Toupie::getPositions_CM() const {
 }
 Vecteur Toupie::ref_G_to_O_point(Vecteur const& point) const {
     //pour l'instant comme pour le cone
-    double L((3.0/4.0)*vecteurAG().norme()); //A MODIFIER, UTILISER NORME DU VECTEUR AG
+    double L((3.0/4.0)*hauteur_);
     double theta(P.coeff(1));
     double psi(P.coeff(0));
     return (S().inv()*point + point_de_contact +ref_G_to_O(vecteurAG()));
@@ -78,7 +78,7 @@ double Toupie::masse() const{
     return masse;
 }
 
-double Toupie::distanceOG() const{ // où O est l'origine du solide de construction et G le centre de masse
+double Toupie::distanceBG() const{ // où O est l'origine du solide de construction et G le centre de masse
     double somme1(0.0), somme2(0.0);
     for(size_t i(1) ; i <= N; ++i){
                 somme1 += rayon2(i) * zi(i); 
@@ -117,7 +117,7 @@ Matrice Toupie::matrice_inertie() const {   // Matrice d'inertie au point A dans
 
 Vecteur Toupie::vecteurAG() const{ // TEMPORAIRE POUR PAS QUE LA TOUPIE SOIT VIRTUELLE
     cout << "APPEL TOUPIE::vecteurAG()" << endl;
-    return {0.0,0.0, distanceOG()};
+    return {0.0,0.0, distanceBG()};
 }
 
 Vecteur Toupie::w() const{
@@ -306,7 +306,7 @@ Vecteur ConeGeneral::fonction_f() const{
     //1.CALCUL DE w et MA dans RG (repère d'inertie)
         
         //Methode w()
-    Vecteur MA(masse()*(g.norme())*(distanceOG()*sin(theta)),0,0); // On considère que seul le poids agit sur la toupie, on néglige les autres forces  
+    Vecteur MA(masse()*(g.norme())*(distanceBG()*sin(theta)),0,0); // On considère que seul le poids agit sur la toupie, on néglige les autres forces  
     cout << "MA_G = " << MA << endl;
     cout << "w_G = " << w() << endl;
 
@@ -344,7 +344,7 @@ Vecteur ConeGeneral::fonction_f() const{
 }
 
 Vecteur ConeGeneral::vecteurAG() const{
-    return {0.0,0.0,distanceOG()};
+    return {0.0,0.0,distanceBG()};
 }
 
 unique_ptr<ConeGeneral> ConeGeneral::clone() const{
@@ -358,12 +358,11 @@ double ConeGeneral::rayon2(size_t i) const {
     return pow((zi(i)/hauteur_ *rayon_),2);
 }
 
+//=============================CLASSE TOUPIE ROULANTE===================================//
 
-//=============================CLASSE TOUPIE CHINOISE=====================================//
 
-
-Vecteur ToupieChinoise::fonction_f() const{
-    cout << "--APPEL ToupieChinoise::fonction_f()--" <<endl;
+Vecteur ToupieRoulante::fonction_f() const{
+    cout << "--APPEL ToupieRoulante::fonction_f()--" <<endl;
     
     //Lisibilité:
     double psi(P.coeff(0));
@@ -423,15 +422,103 @@ Vecteur ToupieChinoise::fonction_f() const{
 
 
 
-Vecteur ToupieChinoise::vecteurAG() const{ // A revoir car different si la rotation ne se fait pas autour de l'axe de symètrie
+Vecteur ToupieRoulante::vecteurAG() const{ // A revoir car different si la rotation ne se fait pas autour de l'axe de symètrie
     Vecteur AC (ref_O_to_G({0.0,0.0,rayon_})); // AC dans le ref G
     cout << "AC dans le ref G: " << AC << endl;
     cout << "AG dans le ref G: " << AC -vecteurGC() << endl;
     return (AC - vecteurGC());
 }
 
-double ToupieChinoise::rayon2(size_t i) const {
+double ToupieRoulante::rayon2(size_t i) const {
     return (2.0*rayon_*zi(i) -  pow(zi(i),2));
+}
+
+unique_ptr<ToupieRoulante> ToupieRoulante::clone() const{
+    return unique_ptr<ToupieRoulante>(new ToupieRoulante(*this));
+}
+unique_ptr<Toupie> ToupieRoulante::copie() const{
+    return clone();
+}
+
+Vecteur ToupieRoulante::vecteurGC() const{
+    cout << "appel ToupieRoulante::VecteurGC()" << endl;
+    return {0.0,0.0, rayon_ - distanceBG()};
+}
+
+Vecteur ToupieRoulante::vecteurOB() const{
+    Vecteur OA({P_point.coeff(3), P_point.coeff(4), 0.0}); //Dans le ref O /// A MODIFIER QUAND ON GENERALISERA LES 4 ET 5 EME PARAMETRES : en ce moment P4 = Cx et P5 = Py
+    Vecteur GB (ref_G_to_O({0.0, 0.0, - distanceBG()}));   // Dans le ref O        
+    Vecteur OB(OA + ref_G_to_O(vecteurAG()) + GB);    
+    return OB ;
+}
+
+
+//=============================CLASSE TOUPIE CHINOISE===================================//
+
+double ToupieChinoise::masse() const{
+    return (M_PI*masse_volumique*((4.0/3.0)*pow(rayon_,3) - hauteur_*hauteur_*(rayon_-(1.0/3.0)*hauteur_)));
+}
+
+double ToupieChinoise::alpha() const{ // CORRECT
+    return (3.0*pow(hauteur_,2)/(4.0*rayon_*(rayon_ + hauteur_)));
+}
+
+Vecteur ToupieChinoise::vecteurGC() const{ //CORRECT
+    cout << "|GC|= " << rayon_*alpha() << endl;
+    return {0.0, 0.0, rayon_*alpha()};
+}
+
+Matrice ToupieChinoise::matrice_inertie() const{
+double I3 ((M_PI/30.0)*masse_volumique*pow((2*rayon_-hauteur_),3)*(2*pow(rayon_,2)+3*hauteur_*rayon_+3*pow(hauteur_,2)));
+double I1 ((1.0/2.0)*I3 + ((M_PI/15.0)*masse_volumique*pow((2*rayon_-hauteur_),2)*(pow(rayon_,3)+ hauteur_*pow(rayon_,2) - 3*pow(hauteur_,2)*rayon_+3*pow(hauteur_,3))) -masse()*vecteurGC().norme2());
+cout << "I3: " << I3 << endl;
+cout << "I1: " << I1 << endl;
+return Matrice(I1,I1,I3);
+}
+
+Vecteur ToupieChinoise::fonction_f() const{
+    cout << "APPEL ToupieChinoise::fonction_f()" << endl;
+
+    double psi(P.coeff(0));
+    double theta(P.coeff(1));
+    double psi_p(P_point.coeff(0));
+    double theta_p(P_point.coeff(1));
+    double phi_p(P_point.coeff(2));
+    double I1((matrice_inertie()*Vecteur({1.0,0.0,0.0})).coeff(0));
+    double I3((matrice_inertie()*Vecteur({0.0,0.0,1.0})).coeff(2));
+    double f1(phi_p + psi_p*cos(theta));    
+    double f3( I1*I3 +masse()*pow(rayon_,2)*I1*pow(sin(theta),2) + masse()*pow(rayon_,2)*I3*pow( (alpha()-cos(theta)),2 ) );
+    double f2( (theta_p/sin(theta))*f1* (I3*(I3 + masse()*pow(rayon_,2)* (1-alpha()*cos(theta))))/f3 -(2*psi_p*theta_p)/tan(theta) );
+
+    Vecteur P_p_p(5); // Vecteur P_point_point que l'on veut calculer et retourner
+    
+    if(theta <eps){
+        //TROUVER QUOI FAIRE SI THETA = 0 ??
+        cout << "--- |!| Theta = 0 " << endl;
+    }else{
+    
+    //Psi_point_point
+    P_p_p.set_coord(0,  f2);
+   
+    //Theta_point_point
+    cout << "1er terme de theta_p_p: " << (sin(theta)/(I1+masse()*pow(rayon_,2)*(pow((alpha() - cos(theta)),2) + pow(sin(theta),2)))) << endl;
+    P_p_p.set_coord(1,  (sin(theta)/(I1+masse()*pow(rayon_,2)*(pow((alpha() - cos(theta)),2) + pow(sin(theta),2))))
+                        *(pow(psi_p,2)*(-masse()*pow(rayon_,2))*(alpha()-cos(theta))*(1-alpha()*cos(theta)) + I1*cos(theta)) 
+                        + f1*psi_p*(masse()*pow(rayon_,2)*(alpha()*cos(theta) - 1) - I3) - masse()*pow(rayon_*theta_p,2)*alpha() + masse()*rayon_*alpha()*g.coeff(2)  );
+    
+    //Phi_point_point
+    P_p_p.set_coord(2,  psi_p*theta_p*sin(theta)-cos(theta)*f2 
+                        - f1*theta_p*sin(theta)*(masse()*pow(rayon_,2)*(I3*(alpha()-cos(theta)) + I1*cos(theta)))/f3    );
+    }   
+    //Cx: composante en x du milieu C de la sphère dans le repère O
+    P_p_p.set_coord(3,  rayon_*(theta_p*sin(psi) - phi_p*cos(psi)*sin(theta)) );
+    
+    //Cy: composante en y du milieu C de la sphère dans le repère O   
+    P_p_p.set_coord(4,  -rayon_*(theta_p*cos(psi)+phi_p*sin(psi)*sin(theta)));
+
+    cout << "Vecteur P_p_p: " << P_p_p << endl;
+    return P_p_p;
+
 }
 
 unique_ptr<ToupieChinoise> ToupieChinoise::clone() const{
@@ -439,9 +526,4 @@ unique_ptr<ToupieChinoise> ToupieChinoise::clone() const{
 }
 unique_ptr<Toupie> ToupieChinoise::copie() const{
     return clone();
-}
-
-Vecteur ToupieChinoise::vecteurGC() const{
-    cout << "GC: " <<  Vecteur({0.0,0.0, rayon_ - distanceOG()}).norme() << endl;
-    return {0.0,0.0, rayon_ - distanceOG()};
 }
