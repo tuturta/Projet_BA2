@@ -31,19 +31,19 @@ int main(int argc, char* argv[])
                        {0.0,0.0,0.0});     //Origine
 
 
-  ToupieChinoise cone3({0.0,0.0,0.30,0.0,0.0},
-                       {50.0,0.0,0.0,0.0,0.0},
-                       0.1,
-                       0.80,
-                       0.5,
-                       {0.0,0.0,0.0});
+  ToupieRoulante flipflop({0.0,0.11,0.30,0.0,0.0},
+                          {50.0,0.0,0.0,0.0,0.0},
+                           0.1,
+                           4.48,
+                           2.4,
+                           {0.0,0.0,0.0});
 
 
   TextViewer support(cout);
   Systeme systeme1(&support);
 
 
-  systeme1.ajoute_toupie(cone3);
+  systeme1.ajoute_toupie(flipflop);
   //systeme1.ajoute_toupie(cone2);
   QApplication a(argc, argv);
   GLWidget w(systeme1);

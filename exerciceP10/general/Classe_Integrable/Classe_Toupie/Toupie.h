@@ -39,11 +39,11 @@ class Toupie : public Integrable { // Dans Toupie, le vecteur paramètre P est d
 
 
     //METHODES POUR LE CAS GENERAL
-    double distanceOG() const; // retourne la distance entre l'origine du solide de révolution et son centre de masse 
+    double distanceBG() const; // retourne la distance entre l'origine du solide de révolution et son centre de masse 
     virtual Vecteur vecteurAG() const;
     virtual double rayon2(size_t i) const; //c'est ce qui défini le solide de révolution : c'est la distance au carré à l'axe ri en fonction de la hauteur zi. Il doit être redefini dans chaque classe --> A TRANSFORMER EN VIRTUELLE PURE
     double masse() const;
-    Matrice matrice_inertie() const; //Calcul le moment d'inertie I du cone simple
+    Matrice matrice_inertie() const; //Calcul la matrice d'inertie du solide de révolution dans le repère d'inertie et au point A 
 
 
 
@@ -123,26 +123,36 @@ class Objet_en_chute_libre : public Toupie {
 
 
 
-//===============================TOUPIE CHINOISE==================================================
+//===============================TOUPIE Roulante==================================================
 
-class ToupieChinoise: public Toupie{ // Cone simple avec la fonction génèrale !
+class ToupieRoulante: public Toupie{ // Cone simple avec la fonction génèrale !
    public: 
-    ToupieChinoise(Vecteur P, Vecteur P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    :Toupie(P,  P_point,    masse_volumique,    hauteur,    rayon,origine,  support){
-        /*P_point.augmente(origine.coeff(0)); //Ajoute Cx, la composante en x du centre de la toupie dans le ref O
-        P_point.augmente(origine.coeff(1)); //Ajoute Cy, la composante en y du centre de la toupie dans le ref O
-        std::cout << "P_point après construction: " << P_point << std::endl;
-       
-        P.augmente(0.0); //Permet d'avoir la bonne dimension de P
-        P.augmente(0.0); 
-        std::cout << "P après construction: " << P << std::endl;*/
-
-    }
+    ToupieRoulante(Vecteur P, Vecteur P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    :Toupie(P,  P_point,    masse_volumique,    hauteur,    rayon,origine,  support){}
     
     virtual Vecteur fonction_f() const override;
     virtual Vecteur vecteurAG() const override;
     virtual double rayon2(size_t i) const override; //c'est ce qui défini le solide de révolution : c'est la distance à l'axe ri en fonction de la hauteur zi
-    std::unique_ptr<ToupieChinoise> clone() const;
+    std::unique_ptr<ToupieRoulante> clone() const;
     virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
     Vecteur vecteurGC() const; //Retourne le vecteur GC DANS LE REF G
+    Vecteur vecteurOB() const; //vecteur entre l'origine du solide de révolution et l'origine du repère galiléen (REF O). Methode utile pour QtGL
+};
+
+//===============================TOUPIE CHINOISE==================================================
+
+
+class ToupieChinoise : public ToupieRoulante{ //Cas spécifique de toupie roulante
+   public: 
+    using ToupieRoulante::ToupieRoulante ; // Attention, ici la hauteur est en réalité h (cf p9): c'est la hauteur tranquée à la sphère de rayon R et non la hauteur de la toupie 
+   
+    Matrice matrice_inertie() const; //Calcul la matrice d'inertie dans le repère d'inertie ET AU POINT G
+    virtual Vecteur fonction_f() const override;
+    double masse() const; 
+    double alpha() const; // Cf fiigure de la sphère tronquée p9 du complément mathématique
+    Vecteur vecteurGC() const; //Retourne le vecteur GC DANS LE REF G
+    std::unique_ptr<ToupieChinoise> clone() const;
+    virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
+
+
 };

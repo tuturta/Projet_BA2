@@ -27,6 +27,8 @@ class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a s
     Vecteur getOrigine() const;
     void setP(Vecteur const& autre);
     void setP_point(Vecteur const& autre);
+    void setOrigine(Vecteur const& autre);
+
 
     // AFFICHAGE
 
