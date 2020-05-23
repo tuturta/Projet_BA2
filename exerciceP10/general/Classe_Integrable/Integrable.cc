@@ -11,8 +11,8 @@ Vecteur Integrable::getP() const {
 Vecteur Integrable::getP_point() const {
     return P_point;
 }
-Vecteur Integrable::getOrigine() const{
-    return origine;
+Vecteur Integrable::getPoint_de_conact() const{
+    return point_de_contact;
 }
 
 void Integrable::setP(Vecteur const& v) {

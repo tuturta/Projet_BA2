@@ -89,7 +89,7 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
     Vecteur we(w());
     we.set_coord(2,we.coeff(2) - P_point.coeff(2)); 
     cout << "we: " << we << endl;
-        cout << "   matrice_inertie().inv(): " << matrice_inertie().inv() << endl;
+    cout << "   matrice_inertie().inv(): " << matrice_inertie().inv() << endl;
     cout << "   matrice_inertie()*w: " << matrice_inertie()*w() << endl;
     cout << "   we^(matrice_inertie*w): " << (we^(matrice_inertie()*w())) << endl;
     w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w())));
@@ -98,9 +98,9 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12)
     Vecteur P_point_point(3);
     P_point_point.set_coord(0, w_point.coeff(0)); //Calcul de théta point point 
     
-    if(P.coeff(0) == 0){ // Cas ou théta = 0
+    if (P.coeff(0) == 0){ // Cas ou théta = 0
         P_point_point.set_coord(2,w_point.coeff(2)); //Modification de phi point point = w3point formule (2) p6
-    }else{
+    } else {
         P_point_point.set_coord(1, (w_point.coeff(1)- P_point.coeff(1)*P_point.coeff(0)*cos(P.coeff(0))) / sin(P.coeff(0)) ); //Modification psi point point : formule (2) p6
         P_point_point.set_coord(2, w_point.coeff(2) + (P_point.coeff(1)*P_point.coeff(0)- w_point.coeff(1)*cos(P.coeff(0)))/sin(P.coeff(0))); //Modification phi point point formule (2) p6
     }

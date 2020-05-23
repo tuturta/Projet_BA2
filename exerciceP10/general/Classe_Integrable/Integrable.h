@@ -10,13 +10,13 @@ class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a s
    protected : 
     Vecteur P; // Vecteur de paramètres psi-theta-phi
     Vecteur P_point; // Dérivée temporelle des degrés de liberté
-    Vecteur origine;
+    Vecteur point_de_contact;
 
    public:
 
     //METHODES:
-    Integrable(Vecteur P, Vecteur P_point, SupportADessin* support, Vecteur origine = {0,0,0})
-    : Dessinable(support), P(P), P_point(P_point), origine(origine)  {}  //CONSTRUCTEUR PAR DEFAUT POUR LE SUPPORT ?
+    Integrable(Vecteur P, Vecteur P_point, SupportADessin* support, Vecteur point_de_contact = {0,0,0})
+    : Dessinable(support), P(P), P_point(P_point), point_de_contact(point_de_contact)  {}  //CONSTRUCTEUR PAR DEFAUT POUR LE SUPPORT ?
     
     virtual Vecteur fonction_f() const = 0; //Equation du mouvement
 
@@ -24,7 +24,7 @@ class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a s
 
     Vecteur getP() const;
     Vecteur getP_point() const;
-    Vecteur getOrigine() const;
+    Vecteur getPoint_de_conact() const;
     void setP(Vecteur const& autre);
     void setP_point(Vecteur const& autre);
 

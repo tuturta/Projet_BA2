@@ -26,11 +26,11 @@ int main() {
             IntegrateurEulerCromer integrateur;
             ConeSimple cone1({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
             ConeGeneral cone2({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
-            ToupieChinoise cone3({0.0,0.11,0.0,0.0,0.0},{50.0,0.0,0.0,0.0,0.0},0.1,0.28,0.15,{0.0,0.0,0.0}, &ecran);
+            ToupieChinoise chinoise({0.0,0.11,0.0,0.0,0.0},{50.0,0.0,0.0,0.0,0.0},0.1,0.56,0.3,{0.0,0.0,0.0}, &ecran);
             Systeme systeme(&ecran);
-           // systeme.ajoute_toupie(cone1);
+            // systeme.ajoute_toupie(cone1);
             //systeme.ajoute_toupie(cone2);
-            systeme.ajoute_toupie(cone3);
+            systeme.ajoute_toupie(chinoise);
 
             cout << systeme << endl;
             cout << "Le système évolue et se dessine à chaque pas de temps (dt=" << dt << ") :" << endl;

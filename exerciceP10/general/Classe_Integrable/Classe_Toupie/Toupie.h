@@ -10,27 +10,28 @@
 #include "../../support_a_dessin.h"
 
 
-class Toupie : public Integrable { // Dans Toupie, le vecteur paramètre P est défini comme étant les angles d'Euler dans l'ordre (psi, theta, phi)
+class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P est défini comme étant les angles d'Euler dans l'ordre (psi, theta, phi)
 
    protected : 
     std::vector<Vecteur> positions_CM; // il s'agit des coordonnées du CM depuis le début de la simulation, dans le repère absolu
     double masse_volumique;
-    double hauteur_;                    // hauteur du solide de révolution 
-    double rayon_;                      // Rayon de la base du cône / rayon de la sphère (tronquée)
+    double hauteur_;                   // hauteur du solide de révolution
+    double rayon_;                     // Rayon de la base du cône / rayon de la sphère (tronquée)
 
-    double zi(size_t i) const;
+    double zi(size_t i) const;         // Donne la hauteur en fonction du découpage
+    virtual double rayon2(size_t i) const; //c'est ce qui défini le solide de révolution : c'est la distance au carré à l'axe ri en fonction de la hauteur zi. Il doit être redefini dans chaque classe --> A TRANSFORMER EN VIRTUELLE PURE
 
    public :
-    Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-        : Integrable(P, P_point, support, origine), masse_volumique(masse_volumique),hauteur_(hauteur), rayon_(rayon) {}
+    Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+        : Integrable(P, P_point, support, point_de_contact), masse_volumique(masse_volumique),hauteur_(hauteur), rayon_(rayon) {}
 
     virtual std::ostream& affiche_parametres(std::ostream& out) const override;
     //A terme, toupie sera certainement une classe virtuelle : on ne permet donc pas de la dessiner pour l'instant
-    virtual Vecteur fonction_f() const override; //à terme  =0; ?
-    virtual std::unique_ptr<Toupie> copie() const; // A terme, Integrable à la place de Toupie
+    virtual Vecteur fonction_f() const override;
+    virtual std::unique_ptr<Toupie> copie() const;
     std::unique_ptr<Toupie> clone() const;
     Vecteur w() const;
-    virtual double getHauteur() const; // pour l'instant
+    virtual double getHauteur() const;
     virtual double getRayon() const; // Pour l'instant
     void ajoute_position_CM();
     std::vector<Vecteur> getPositions_CM() const;
@@ -39,9 +40,8 @@ class Toupie : public Integrable { // Dans Toupie, le vecteur paramètre P est d
 
 
     //METHODES POUR LE CAS GENERAL
-    double distanceOG() const; // retourne la distance entre l'origine du solide de révolution et son centre de masse 
+    double distanceOG() const; // retourne la distance entre l'origine du solide de révolution et son centre de masse
     virtual Vecteur vecteurAG() const;
-    virtual double rayon2(size_t i) const; //c'est ce qui défini le solide de révolution : c'est la distance au carré à l'axe ri en fonction de la hauteur zi. Il doit être redefini dans chaque classe --> A TRANSFORMER EN VIRTUELLE PURE
     double masse() const;
     Matrice matrice_inertie() const; //Calcul le moment d'inertie I du cone simple
 
@@ -54,14 +54,14 @@ std::ostream& operator<<(std::ostream& sortie,Toupie const& toupie);
 
 //===============================CONE GENERAL===============================================
 
-class ConeGeneral: public Toupie{ // Cone simple avec la fonction génèrale !
+class ConeGeneral: public Toupie{                   // Cone simple avec la fonction génèrale !
    public: 
-    using Toupie :: Toupie; // COnstructeur du cone simple
-    virtual double rayon2(size_t i) const override; //c'est ce qui défini le solide de révolution : c'est la distance à l'axe ri en fonction de la hauteur zi
+    using Toupie :: Toupie;                         // Constructeur du cone simple
+    virtual double rayon2(size_t i) const override; // C'est ce qui défini le solide de révolution : c'est la distance à l'axe ri en fonction de la hauteur zi
     virtual Vecteur fonction_f() const override;
     virtual Vecteur vecteurAG() const override;
     std::unique_ptr<ConeGeneral> clone() const;
-    virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
+    virtual std::unique_ptr<Toupie> copie() const override;
 };
 
 //===============================CONE SIMPLE=================================================
@@ -73,19 +73,19 @@ class ConeSimple : public ConeGeneral {
 
     // CONSTRUCTION - COPIE - DESTRUCTION
 
-    ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const origine, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    : ConeGeneral(P, P_point, masse_volumique, hauteur, rayon, origine, support) {} // COnstructeur qui initialise l'origine à 0,0,0
+    ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    : ConeGeneral(P, P_point, masse_volumique, hauteur, rayon, point_de_contact, support) {} // COnstructeur qui initialise l'origine à 0,0,0
     virtual std::ostream& affiche_parametres(std::ostream& out) const override; // Affiche tous les paramètres d'une toupie
 
     std::unique_ptr<ConeSimple> clone() const;
-    virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
+    virtual std::unique_ptr<Toupie> copie() const override;
 
     //****Destructeur ?
 
     // MÉCANIQUE - GÉOMÉTRIE DU SOLIDE
 
     double masse() const;
-    Matrice matrice_inertie() const; //Calcule le moment d'inertie I du cone simple
+    Matrice matrice_inertie() const;            //Calcule le moment d'inertie I du cone simple au point de contact
     Vecteur moment_poids() const;
     virtual Vecteur vecteurAG() const override; //Dans RefG
     virtual Vecteur fonction_f() const override;
@@ -116,7 +116,7 @@ class Objet_en_chute_libre : public Toupie {
     using Toupie::Toupie;
     virtual Vecteur fonction_f() const override;
     virtual void dessine() override;
-    virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
+    virtual std::unique_ptr<Toupie> copie() const override;
     virtual double getHauteur() const override;
     virtual double getRayon() const override;
 };
@@ -125,24 +125,15 @@ class Objet_en_chute_libre : public Toupie {
 
 //===============================TOUPIE CHINOISE==================================================
 
-class ToupieChinoise: public Toupie{ // Cone simple avec la fonction génèrale !
+class ToupieChinoise: public Toupie{         // Cone simple avec la fonction générale !
    public: 
-    ToupieChinoise(Vecteur P, Vecteur P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    :Toupie(P,  P_point,    masse_volumique,    hauteur,    rayon,origine,  support){
-        /*P_point.augmente(origine.coeff(0)); //Ajoute Cx, la composante en x du centre de la toupie dans le ref O
-        P_point.augmente(origine.coeff(1)); //Ajoute Cy, la composante en y du centre de la toupie dans le ref O
-        std::cout << "P_point après construction: " << P_point << std::endl;
-       
-        P.augmente(0.0); //Permet d'avoir la bonne dimension de P
-        P.augmente(0.0); 
-        std::cout << "P après construction: " << P << std::endl;*/
-
-    }
+    ToupieChinoise(Vecteur P, Vecteur P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+        :Toupie(P,  P_point,    masse_volumique,    hauteur,    rayon, point_de_contact,  support) {}
     
     virtual Vecteur fonction_f() const override;
     virtual Vecteur vecteurAG() const override;
-    virtual double rayon2(size_t i) const override; //c'est ce qui défini le solide de révolution : c'est la distance à l'axe ri en fonction de la hauteur zi
+    virtual double rayon2(size_t i) const override; // C'est ce qui défini le solide de révolution : c'est la distance à l'axe ri en fonction de la hauteur zi
     std::unique_ptr<ToupieChinoise> clone() const;
     virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
-    Vecteur vecteurGC() const; //Retourne le vecteur GC DANS LE REF G
+    Vecteur vecteurGC() const; // Retourne le vecteur GC DANS LE REF G
 };

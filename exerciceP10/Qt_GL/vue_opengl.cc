@@ -13,9 +13,9 @@ QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
   double psi(a_dessiner.getP().coeff(0)*180.0/M_PI);  ///angles en degrés
   double theta(a_dessiner.getP().coeff(1)*180.0/M_PI);
   double phi(a_dessiner.getP().coeff(2)*180.0/M_PI);
-  double x0(a_dessiner.getOrigine().coeff(0));
-  double y0(a_dessiner.getOrigine().coeff(1));
-  double z0(a_dessiner.getOrigine().coeff(2));
+  double x0(a_dessiner.getPoint_de_conact().coeff(0));
+  double y0(a_dessiner.getPoint_de_conact().coeff(1));
+  double z0(a_dessiner.getPoint_de_conact().coeff(2));
 
   /*Vecteur CM_ref_absolu(a_dessiner.ref_G_to_O_point({0.0,0.0,0.0}));
   double x0(CM_ref_absolu.coeff(0));

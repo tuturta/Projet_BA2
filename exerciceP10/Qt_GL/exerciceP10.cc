@@ -10,7 +10,7 @@ using  namespace std;
 int main(int argc, char* argv[])
 {
   ConeSimple cone1({0.0,0.523599,0.0},      //P (psi-theta-phi)
-                   {0.0,0.0,60.0},    //P_point
+                   {0.0,0.0,80.0},    //P_point
                    0.1,                //Masse volumique
                    1.5,                //Hauteur
                    0.5,                //Rayon
@@ -31,11 +31,11 @@ int main(int argc, char* argv[])
                        {0.0,0.0,0.0});     //Origine
 
 
-  ToupieChinoise chinoise({0.0,0.0,0.30,0.0,0.0},
+  ToupieChinoise chinoise({0.0,0.11,0.0,0.0,0.0},
                        {50.0,0.0,0.0,0.0,0.0},
                        0.1,
-                       0.80,
-                       0.5,
+                       0.28,
+                       0.15,
                        {0.0,0.0,0.0});
 
 
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 
 
   systeme1.ajoute_toupie(chinoise);
-  //systeme1.ajoute_toupie(cone2);
+  //systeme1.ajoute_toupie(cone1);
   QApplication a(argc, argv);
   GLWidget w(systeme1);
 
