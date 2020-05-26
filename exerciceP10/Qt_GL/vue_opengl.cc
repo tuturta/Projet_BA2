@@ -14,17 +14,17 @@ QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
   double psi(a_dessiner.getP().coeff(0)*180.0/M_PI);  ///angles en degrés
   double theta(a_dessiner.getP().coeff(1)*180.0/M_PI);
   double phi(a_dessiner.getP().coeff(2)*180.0/M_PI);
-  double x0(a_dessiner.getOrigine().coeff(0));
-  double y0(a_dessiner.getOrigine().coeff(1));
-  double z0(a_dessiner.getOrigine().coeff(2));
+  double x0(a_dessiner.getPoint_de_conact().coeff(0));
+  double y0(a_dessiner.getPoint_de_conact().coeff(1));
+  double z0(a_dessiner.getPoint_de_conact().coeff(2));
 
 
   //matrice.translate(x0,y0,z0);
 
   if(a_dessiner.getP_point().dim() == 5){
-      std::cout << "POSITION DU CENTRE C: " << "( " << a_dessiner.getP_point().coeff(3) <<" , "
-                << a_dessiner.getP_point().coeff(4) << " , " <<  a_dessiner.getRayon() << " )" << std::endl;
-      matrice.translate(a_dessiner.getP_point().coeff(3),a_dessiner.getP_point().coeff(4),a_dessiner.getRayon());
+    std::cout << "mettre instructions point C dans vue open gl !!" << std::endl;
+  }else{
+      matrice.translate(x0,y0,z0);
   }
 
  //matrice.scale(1.5);
@@ -54,11 +54,11 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
   dessineRepere();
   //dessineSol();
   QMatrix4x4 matrice(matrice_dessin(a_dessiner));
-  dessineRepere(matrice);
+  std::cout << "dans dessine(cone)" << std::endl;
+  dessineRepere(matrice); //ref d'inertie
   cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
   dessineConeSimple(matrice,1.0,0.5,1.0); // violet
-  //dessineConeSimple(2.0,1.5,matrice);
 }
 
 // ======================================================================DESSINE(TOUPIE_CHINOISE)
@@ -79,7 +79,6 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
 void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
 {
   QMatrix4x4 matrice;
-  // Dessine le 4e cube
   matrice.setToIdentity();
     
   double psi(a_dessiner.getP().coeff(1)*180.0/M_PI);  ///angles en degrés
@@ -109,7 +108,8 @@ void VueOpenGL::dessine(Systeme const& a_dessiner)
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
     size_t t(a_dessiner.size()-1);
     if (t==0) {t+=1;}
-    dessineToupieChinoise(matrice,1.0,double(i/t),0.0);
+    //dessineToupieChinoise(matrice,1.0,double(i/t),0.0);
+    dessineConeSimple(matrice, 1.0,double(i/t),0.0);
     //dessineConeSimplebug(1.5,0.5,matrice);
     //dessine(*(a_dessiner.getToupie(i)));
     dessineTrace((a_dessiner.getToupie(i))->getPositions_CM());
@@ -119,9 +119,7 @@ void VueOpenGL::dessine(Systeme const& a_dessiner)
 
 void VueOpenGL::dessineTrace(std::vector<Vecteur> const& positions)
 {
-    QMatrix4x4 matrice;
-    matrice.setToIdentity();
-    prog.setUniformValue("vue_modele", matrice_vue * matrice);
+    prog.setUniformValue("vue_modele", matrice_vue*QMatrix4x4());
     glBegin(GL_POINTS);
     prog.setAttributeValue(CouleurId,1.0,0.0,1.0); //rouge
     for(auto point: positions) {
@@ -208,8 +206,7 @@ void VueOpenGL::translate(double x, double y, double z)
 {
   /* Multiplie la matrice de vue par LA GAUCHE.
    * Cela fait en sorte que la dernière modification apportée
-   * à la matrice soit appliquée en dernier (composition de fonctions).
-   */// ======================================================================DESSINE(CONE)
+   * à la matrice soit appliquée en dernier (composition de fonctions).*/
 
 
   QMatrix4x4 translation_supplementaire;
@@ -410,10 +407,10 @@ void VueOpenGL::dessineSol (QMatrix4x4 const& point_de_vue)
 
 }
 
-//========================================================================DESSINESOL
+//========================================================================DESSINE_TOUPIE_CHINOISE
 void VueOpenGL::dessineToupieChinoise (QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu)
 {
-   std:: cout << "=========================================================APPEL DESSINE TOUPIE CHINOISE" << std:: endl;
+   std:: cout << "=================APPEL DESSINE TOUPIE CHINOISE" << std:: endl;
   prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
   prog.setAttributeValue(CouleurId, rouge, vert, bleu);  // met la couleur
   sphere_tronquee.draw(prog, SommetId); // dessine la sphere tronquee

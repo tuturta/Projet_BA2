@@ -23,14 +23,16 @@ int main() {
             TextViewer ecran(cout); //mettre fichier si on veut écrire dans test.txt
     
        //================SYSTEME=============================================================//
-            IntegrateurEulerCromer integrateur;
+            IntegrateurEulerCromer integrateur_e;
+            IntegrateurNewmark  integrateur_n;
+            IntegrateurRungeKutta integrateur_rk;
             ConeSimple cone1({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
             ConeGeneral cone2({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
             ToupieChinoise ToupieChinoise({0.0,0.11,0.0,0.0,0.0},{50.0,0.0,0.0,0.0,0.0},0.1,0.02,0.15,{0.0,0.0,0.0}, &ecran);
             ToupieRoulante ToupieChinoiseG({0.0,0.11,0.0,0.0,0.0},{50.0,0.0,0.0,0.0,0.0},0.1,0.02,0.15,{0.0,0.0,0.0}, &ecran);
 
             Systeme systeme(&ecran);
-           // systeme.ajoute_toupie(cone1);
+            // systeme.ajoute_toupie(cone1);
             //systeme.ajoute_toupie(cone2);
             systeme.ajoute_toupie(ToupieChinoise);
             // systeme.ajoute_toupie(ToupieChinoiseG);
@@ -42,7 +44,7 @@ int main() {
                 t+=dt;
                 cout <<endl << "----------------------------------------------------" << endl;
                 cout << "Temps : " << t << "s" <<endl;
-                integrateur.evolue(systeme,dt);
+                integrateur_e.evolue(systeme,dt);
                 systeme.dessine(); 
                 
             }  

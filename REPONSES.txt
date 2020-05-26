@@ -1,9 +1,7 @@
 ﻿Réponse P1.1:
 
     Les vecteurs sont représentés par une classe.
-
     On a choisi de mettre en attribut seulement les composantes (x, y, z, …) du vecteur représentées dans un tableau dynamique (vector). Cela facilite la définition des méthodes qui effectuent des opérations sur les vecteurs et qui nécessitent très souvent des boucles sur les composantes du vecteurs.
-
     Pour le moment, on a choisi de mettre l’ensemble des méthodes en public et les attributs en private: 
     Méthodes : 
         augmente():
@@ -23,16 +21,16 @@
 
     Attributs:
 
-    tableau de double de la forme (x1, x2, …, xn) noté coordonnees.
+    tableau de double de la forme (x1, x2, …, xn) noté 'coordonnees'.
 
 
 Réponse P1.2:
 
-    On lance une exception pour les erreurs de dimension.
+    Nous lançons une exception pour les erreurs de dimension, qui délivre un message sur la méthode d'où l'erreur a été lancée.
 
 Réponse P4.1:
 
-    Nous n'ajoutons pas de constructeur de copie, celui par défaut convient pour l'instant puisquon veut seulement copier une à une les valeurs du tableau de coordonnees.
+    Nous n'ajoutons pas de constructeur de copie, celui par défaut convient pour l'instant puisque nous voulons seulement copier une à une les valeurs du tableau de coordonnees.
 
 Réponse P4.2:
 
@@ -54,14 +52,14 @@ Réponse P8.1:
 Réponse P8.2: 
     La bonne façon de faire une collection hétérogène est de représenter les données dans un tableaux de pointeurs. 
     Ceci permettra d'utiliser le polymorphisme pour chaque élèment du tableau.
-    Pour choisir le type de pointeurs, nous étudions les questions évoquéesen cours :
+    Pour choisir le type de pointeurs, nous étudions les questions évoquées en cours :
     - Qui est propriétaire des toupies ? Ce n'est pas le Syteme, les toupies doivent être gérées par la classe toupie.
     - Les toupies sont-elles partagées ? Non. /////REPRENDRE/ COMPLETER*************************************
 
 
 
 
-    Dans notre cas, l'avantage d'utiliser un tableaux de pointeurs de Toupie pour représenter un système est d'avoir, notamment, la bonne equation du mouvent pour chacune des toupies (car l'équation du mouvement est propre à chaque toupie car dépendant de la taille, masse, etc..).
+    Dans notre cas, l'avantage d'utiliser un tableaux de pointeurs de Toupie pour représenter un système est d'avoir, notamment, la bonne equation du mouvement pour chacune des toupies (car l'équation du mouvement est propre à chaque toupie car dépendant de la taille, masse, etc..).
 
 Réponse P8.3: 
 
@@ -77,5 +75,5 @@ Réponse P8.4:
 
 Réponse P10 :
 
-    Concernant la classe contenu, nous choississons pour le moment de ne pas la garder : notre contenu est en fai tla classe Dessinable préalablement crée. 
-    Toutefois, cette décision est remise en question par la suite et nous hésitons..///À SUIVRE !!
+    Concernant la classe contenu, nous choississons pour le moment de ne pas la garder : notre contenu est en fait la classe Dessinable préalablement crée. 
+    

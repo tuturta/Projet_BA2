@@ -15,7 +15,7 @@ int main() {
 
     }
     catch (Erreur& err) {
-        cerr << "une erreur est survenue. ";
+        cerr << err.message << endl;
     }
     return 0;
 }

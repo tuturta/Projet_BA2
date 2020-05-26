@@ -1,6 +1,6 @@
 CONFIG += c++11
 
-TARGET = exerciceP9
+TARGET = exerciceP9b
 
 LIBS += -L../general -lgeneral
 PRE_TARGETDEPS += ../general/libgeneral.a
@@ -8,10 +8,10 @@ PRE_TARGETDEPS += ../general/libgeneral.a
 INCLUDEPATH = ../general
 
 SOURCES += \
-    text_viewer.cc \
-   # exerciceP9b.cc \
+     text_viewer.cc \
+     exerciceP9b.cc \
    # exerciceP11.cc \
-    exerciceP12.cc
+   # exerciceP12.cc
 
 HEADERS += \
     text_viewer.h \
