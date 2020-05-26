@@ -33,8 +33,8 @@ unique_ptr<Toupie> Toupie::clone() const{
 unique_ptr<Toupie> Toupie::copie() const{
     return clone();
 }
-double Toupie::getHauteur() const{ std::cout << "toupie gethauteur" << std:: endl; return 2.0;} //pour l'instant
-double Toupie::getRayon() const{ return 2.0;}   //pour l'instant
+double Toupie::getHauteur() const{ return hauteur_;} //pour l'instant
+double Toupie::getRayon() const{ return rayon_;}   //pour l'instant
 
 void Toupie::ajoute_position_CM() {
     Vecteur CM_refG = {0.0,0.0,0.0};
@@ -477,7 +477,7 @@ double I3 ((M_PI/30.0)*masse_volumique*pow((2*rayon_-hauteur_),3)*(2*pow(rayon_,
 double I1 ((1.0/2.0)*I3 + ((M_PI/15.0)*masse_volumique*pow((2*rayon_-hauteur_),2)*(pow(rayon_,3)+ hauteur_*pow(rayon_,2) - 3*pow(hauteur_,2)*rayon_+3*pow(hauteur_,3))) -masse()*vecteurGC().norme2());
 cout << "I3: " << I3 << endl;
 cout << "I1: " << I1 << endl;
-return Matrice(I1,I1,I3);
+return (250*Matrice(I1,I1,I3));
 }
 
 Vecteur ToupieChinoise::fonction_f() const{
@@ -507,8 +507,8 @@ Vecteur ToupieChinoise::fonction_f() const{
     //Theta_point_point
     cout << "1er terme de theta_p_p: " << (sin(theta)/(I1+masse()*pow(rayon_,2)*(pow((alpha() - cos(theta)),2) + pow(sin(theta),2)))) << endl;
     P_p_p.set_coord(1,  (sin(theta)/(I1+masse()*pow(rayon_,2)*(pow((alpha() - cos(theta)),2) + pow(sin(theta),2))))
-                        *(pow(psi_p,2)*(-masse()*pow(rayon_,2))*(alpha()-cos(theta))*(1-alpha()*cos(theta)) + I1*cos(theta)) 
-                        + f1*psi_p*(masse()*pow(rayon_,2)*(alpha()*cos(theta) - 1) - I3) - masse()*pow(rayon_*theta_p,2)*alpha() + masse()*rayon_*alpha()*g.coeff(2)  );
+                        *(pow(psi_p,2)*(-masse()*pow(rayon_,2)*(alpha()-cos(theta))*(1-alpha()*cos(theta)) + I1*cos(theta))
+                        + f1*psi_p*(masse()*pow(rayon_,2)*(alpha()*cos(theta) - 1) - I3) - masse()*pow(rayon_*theta_p,2)*alpha() + masse()*rayon_*alpha()*g.coeff(2))  );
     
     //Phi_point_point
     P_p_p.set_coord(2,  psi_p*theta_p*sin(theta)-cos(theta)*f2 

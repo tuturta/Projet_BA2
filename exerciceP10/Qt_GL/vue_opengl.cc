@@ -18,21 +18,21 @@ QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
   double y0(a_dessiner.getOrigine().coeff(1));
   double z0(a_dessiner.getOrigine().coeff(2));
 
+
+  //matrice.translate(x0,y0,z0);
+
   if(a_dessiner.getP_point().dim() == 5){
-      Vecteur OA({a_dessiner.getP_point().coeff(3), a_dessiner.getP_point().coeff(4), 0.0}); //Dans le ref O /// A MODIFIER QUAND ON GENERALISERA LES 4 ET 5 EME PARAMETRES : en ce moment P4 = Cx et P5 = Py
-      Vecteur GB (a_dessiner.ref_G_to_O({0.0, 0.0, - a_dessiner.distanceBG()}));  // Dans le ref O
-      Vecteur OB(OA + a_dessiner.ref_G_to_O(a_dessiner.vecteurAG()) + GB);
-      std::cout << "Vecteur OB (Ref O): " << std::endl;
-      matrice.translate(OB.coeff(0),OB.coeff(1),OB.coeff(2));
-  }else{
-      matrice.translate(x0,y0,z0);
+      std::cout << "POSITION DU CENTRE C: " << "( " << a_dessiner.getP_point().coeff(3) <<" , "
+                << a_dessiner.getP_point().coeff(4) << " , " <<  a_dessiner.getRayon() << " )" << std::endl;
+      matrice.translate(a_dessiner.getP_point().coeff(3),a_dessiner.getP_point().coeff(4),a_dessiner.getRayon());
   }
 
- // matrice.scale(0.5);
+ //matrice.scale(1.5);
 
   matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
   matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0*/ ); //nutation THETA autour de l'axe nodal
   matrice.rotate(phi,0.0,0.0,1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)*/); //rotation propre PHI autour de Oz'
+
 
   return matrice;
 }
@@ -41,6 +41,7 @@ QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
 
 void VueOpenGL::dessine(Toupie const& a_dessiner)
 {
+    std::cout << "COUCOU JE SUIS UNE TOUPIE" << std::endl;
     dessineRepere();
     dessinePyramide(matrice_dessin(a_dessiner));
 
@@ -49,7 +50,7 @@ void VueOpenGL::dessine(Toupie const& a_dessiner)
 // ======================================================================DESSINE(CONE)
 void VueOpenGL::dessine(ConeSimple const& a_dessiner)
 {
-  std :: cout << "Appel Dessine(cone)" << std::endl;
+  std :: cout << "COUCOU JE SUIS UN CONE" << std::endl;
   dessineRepere();
   //dessineSol();
   QMatrix4x4 matrice(matrice_dessin(a_dessiner));
@@ -60,9 +61,10 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
   //dessineConeSimple(2.0,1.5,matrice);
 }
 
-// ======================================================================DESSINE(CONE)
+// ======================================================================DESSINE(TOUPIE_CHINOISE)
 /*void VueOpenGL::dessine(ToupieChinoise const& a_dessiner)
 {
+   std::cout << "COUCOU JE SUIS UNE TOUPIE" << std::endl;
   dessineRepere();
   //dessineSol();
   QMatrix4x4 matrice(matrice_dessin(a_dessiner));
@@ -71,8 +73,8 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
   dessineConeSimple(matrice,1.0,0.5,1.0); // violet
   //dessineConeSimple(2.0,1.5,matrice);
-}
-*/
+}*/
+
 // ======================================================================DESSINE(OBJ_EN_CHUTE_LIBRE)
 void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
 {
@@ -94,14 +96,15 @@ void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
 // ======================================================================DESSINE(SYSTEME)
 void VueOpenGL::dessine(Systeme const& a_dessiner)
 {
-  dessineRepere();
   dessineSol();
+  dessineRepere();
+
   QMatrix4x4 matrice;
   matrice.setToIdentity();
-
   for(size_t i(0) ; i < a_dessiner.size() ; ++i){
     matrice = matrice_dessin(*(a_dessiner.getToupie(i)));
-    sphere_tronquee.initialize(a_dessiner.getHauteur(i),a_dessiner.getRayon(i)); //établit le modèle du cône à dessiner.
+    dessine(a_dessiner.getT(i));
+    sphere_tronquee.initialize(a_dessiner.getHauteur(i),a_dessiner.getRayon(i));
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
     size_t t(a_dessiner.size()-1);
@@ -390,12 +393,17 @@ void VueOpenGL::dessineSol (QMatrix4x4 const& point_de_vue)
   prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
 
   glBegin(GL_QUADS);
+    double x0 (5.0);
+    double y0(5.0);
+    double z0(0.0);
+    double dx(5.0);
+    double dy(5.0);
 
    prog.setAttributeValue(CouleurId, 1.0, 1.0, 1.0); //Blanc
-   prog.setAttributeValue(SommetId, -10.0, -10.0, 0.0);
-   prog.setAttributeValue(SommetId, 10.0, -10.0, 0.0);
-   prog.setAttributeValue(SommetId, 10.0, 10.0, 0.0);
-   prog.setAttributeValue(SommetId, -10.0, 10.0, 0.0);
+   prog.setAttributeValue(SommetId, x0-dx,y0-dy, z0);
+   prog.setAttributeValue(SommetId, x0+dx, y0-dy, z0);
+   prog.setAttributeValue(SommetId, x0+dx, y0+dy, z0);
+   prog.setAttributeValue(SommetId, x0-dx, y0+dy, z0);
 
   glEnd();
 

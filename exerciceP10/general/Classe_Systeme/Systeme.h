@@ -30,7 +30,7 @@ class Systeme : public Dessinable {
     void setToupie(size_t i, Toupie const& autre);
     double getHauteur(size_t i) const;
     double getRayon(size_t i) const;
-
+    Toupie getT (size_t i) const {return *objets[i];}
     size_t size() const;
     //virtual std::unique_ptr<Dessinable> copieDessinable() const override;
 

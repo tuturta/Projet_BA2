@@ -2,8 +2,12 @@
 #include <cmath>
 #include "glsphere_tronquee.h"
 
-void GLSphere_Tronquee::initialize( double h, double r, GLuint slices, GLuint stacks)
+void GLSphere_Tronquee::initialize(double hauteur, double rayon, GLuint slices, GLuint stacks)
 {
+
+  hauteur = 0.02;
+  rayon = 0.15;
+
   QVector<GLfloat> positions;
 
   QVector<GLuint> indices0;
@@ -14,43 +18,44 @@ void GLSphere_Tronquee::initialize( double h, double r, GLuint slices, GLuint st
 
   positions.reserve(3 * size);
 
-  const double delta_h(h/double(stacks)); //pas de hauteur
-  const double beta(2.0*M_PI / double(slices)); //pas d'angle
+  const double alpha((M_PI/2.0 + asin(1.0-hauteur/rayon))/ double(stacks));
+  const double beta(2.0*M_PI / double(slices));
 
-  positions << 0.0 << 0.0 << 0.0;
 
-  for (GLuint i(0); i < stacks; ++i) {
+  positions << 0.0 << 0.0 << -rayon; // 1er point
+
+  for (GLuint i(1); i < stacks; ++i) {
     for (GLuint j(0); j < slices; ++j) {
-      float z = i*delta_h;
-      float r_actuel = sqrt(2*z*r - pow(z,2));
-      float y = r_actuel * sin(j*beta);
-      float x = r_actuel * cos(j*beta);
+      float r = rayon*sin(i*alpha);
+      float z = -rayon*cos(i*alpha); // Le moins permet de dessiner la sphère tronquée dans le bon sens (ie le côté rond vers les Z négatifs)
+      float y = sin(j*beta) * r;
+      float x = cos(j*beta) * r;
 
       positions << x << y << z;
     }
   }
 
-  positions << 0.0 << 0.0 << 0.0;
+  positions << 0.0 << 0.0 << rayon - hauteur; // dernier point
 
 
   indices0.reserve(slices+2);
   for (GLuint i(0); i <= slices; ++i)
-	indices0 << i;
+    indices0 << i;
   indices0 << 1;
 
   indices1.reserve((stacks-2) * 4 * slices);
   for (GLuint i(0); i < stacks-2; ++i) {
-	for (GLuint j(0); j < slices; ++j) {
-	  indices1 << 1+i*slices+j;
-	  indices1 << 1+(i+1)*slices+j;
-	  indices1 << 1+(i+1)*slices+(j+1)%slices;
-	  indices1 << 1+i*slices+(j+1)%slices;
-	}
+    for (GLuint j(0); j < slices; ++j) {
+      indices1 << 1+i*slices+j;
+      indices1 << 1+(i+1)*slices+j;
+      indices1 << 1+(i+1)*slices+(j+1)%slices;
+      indices1 << 1+i*slices+(j+1)%slices;
+    }
   }
 
   indices2.reserve(slices+2);
   for (GLuint i(1); i <= slices+1; ++i)
-	indices2 << size-i;
+    indices2 << size-i;
   indices2 << size-2;
 
   vbo_sz = 3 * size * sizeof(GLfloat);
