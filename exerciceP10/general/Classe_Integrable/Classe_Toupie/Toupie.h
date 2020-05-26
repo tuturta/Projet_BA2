@@ -123,7 +123,7 @@ class Objet_en_chute_libre : public Toupie {
 
 
 
-//===============================TOUPIE Roulante==================================================
+//===============================TOUPIE ROULANTE==================================================
 
 class ToupieRoulante: public Toupie{ // Cone simple avec la fonction génèrale !
    public: 
@@ -133,11 +133,13 @@ class ToupieRoulante: public Toupie{ // Cone simple avec la fonction génèrale 
     virtual Vecteur fonction_f() const override;
     virtual Vecteur vecteurAG() const override;
     virtual double rayon2(size_t i) const override; //c'est ce qui défini le solide de révolution : c'est la distance à l'axe ri en fonction de la hauteur zi
-    std::unique_ptr<ToupieRoulante> clone() const;
-    virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
     Vecteur vecteurGC() const; //Retourne le vecteur GC DANS LE REF G
     Vecteur vecteurOB() const; //vecteur entre l'origine du solide de révolution et l'origine du repère galiléen (REF O). Methode utile pour QtGL
-};
+    void update_A() const; //méthode pour mettre à jour la position du point de contact /!\ N'est adaptée qu'aux toupies chinoises, la méthode générale étant considérée trop ambitieuse pour ce projet
+
+    std::unique_ptr<ToupieRoulante> clone() const;
+    virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
+    };
 
 //===============================TOUPIE CHINOISE==================================================
 
@@ -146,6 +148,8 @@ class ToupieChinoise : public ToupieRoulante{ //Cas spécifique de toupie roulan
    public: 
     using ToupieRoulante::ToupieRoulante ; // Attention, ici la hauteur est en réalité h (cf p9): c'est la hauteur tranquée à la sphère de rayon R et non la hauteur de la toupie 
    
+    virtual std::ostream& affiche_parametres(std::ostream& out) const override; 
+
     Matrice matrice_inertie() const; //Calcul la matrice d'inertie dans le repère d'inertie ET AU POINT G
     virtual Vecteur fonction_f() const override;
     double masse() const; 

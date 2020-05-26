@@ -1,6 +1,6 @@
 CONFIG += c++11
 
-TARGET = exerciceP9
+TARGET = exerciceP9b
 
 LIBS += -L../general -lgeneral
 PRE_TARGETDEPS += ../general/libgeneral.a

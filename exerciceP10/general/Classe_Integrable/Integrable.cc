@@ -23,8 +23,8 @@ void Integrable::setP_point(Vecteur const& v){
     P_point=v;
 }
 
-void Integrable::setOrigine(Vecteur const& v){
-    origine=v;
+void Integrable::setPoint_de_contact(Vecteur const& v){
+    point_de_contact=v;
 }
 
 ostream& Integrable::affiche(ostream& sortie) const{

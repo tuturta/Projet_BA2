@@ -182,16 +182,36 @@ SEMAINE 12 :
    corriger std bad alloc //DONE
    fonction f() de Toupie Chinoise	//DONE
    Corriger fonction f() de toupie chinoise de sorte à considérer le déplacement du centre de masse
-   dessineToupieChinoise dans Gl widget
+   dessineToupieChinoise dans Gl widget //DONE
    essayer de rendre virtuelle la classe de toupie pour supprimer toutes les definitions de fonctions virtuelles dans toupie
 
 
 
 SEMAINE 13 : 
 
-[ ] Résolution de problèmes sur la toupie chinoise................
-[ ]  
+[V] Résolution de problèmes sur la toupie chinoise................30h
+[V] Clarification du code..........................................3h 
+[V] Graphisme sommaire pour la toupie chinoise.....................3h
+[V] Retouche sur la trace..........................................1h
+
+   Nous n'arrivons pas à obtenir les bons vecteurs P et P_point pour la 
+   toupie chinoise. Nous avons vérifié plusieurs fois l'écriture des 
+   formules et la cohérence des variables en jeu dans la fonction f, et 
+   tout semble en ordre. Pourtant, déja au premier tour nos valeurs diffèrent
+   de celles de Monsieur Chappelier. Nous pensons qu'il s'agit d'une erreur 
+   dans la fonction f car elle nous retourne, au premier tour, une accélération
+   de 194 rad/s^2 selon thêta, ce qui ne parait pas être le bon ordre de
+   grandeur du tout (logiquement, ce devrait être dans les -5 rad/s^2). Comme nous
+   n'avons pas accès à un fichier octave pour cette 
+   toupie, nous tournons en rond dans notre recherche d'erreur.
+   [edit] Il s'agissait en fait d'une parenthèse fermée au mauvais endroit! Elle nous
+   avait échappé malgré nos nombreuses relectures...
 
 
+SEMAINE 14 :
+
+[ ] Readme........................................................
+[ ] Finalisations fichiers........................................
+[ ] Finalisation fichier conception...............................
 
 

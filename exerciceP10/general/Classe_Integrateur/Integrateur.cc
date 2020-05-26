@@ -27,9 +27,10 @@ void IntegrateurEulerCromer::evolue(Systeme& S, const double dt) const {
     }
 }
 void IntegrateurNewmark::evolue(Toupie& T, const double dt) const {
-        Vecteur q(3);
-        Vecteur r(3);
-        Vecteur s(3); //initialise 3 vecteurs nuls à trois dimensions 
+        size_t dimension((T.getP()).dim());
+        Vecteur q(dimension);
+        Vecteur r(dimension);
+        Vecteur s(dimension); //initialise 3 vecteurs nuls de bonne dimension 
 
         s=T.copie()->fonction_f();
         Vecteur diff(T.getP()-q);

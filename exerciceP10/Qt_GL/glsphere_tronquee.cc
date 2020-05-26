@@ -14,13 +14,13 @@ void GLSphere_Tronquee::initialize( double h, double r, GLuint slices, GLuint st
 
   positions.reserve(3 * size);
 
-  const double delta_h(h/double(stacks)); //pas de hauteur
+  const double delta_h((2*r-h)/double(stacks)); //pas de hauteur
   const double beta(2.0*M_PI / double(slices)); //pas d'angle
 
   positions << 0.0 << 0.0 << 0.0;
 
-  for (GLuint i(0); i < stacks; ++i) {
-    for (GLuint j(0); j < slices; ++j) {
+  for (GLuint i(1); i <= stacks; ++i) {
+    for (GLuint j(1); j <= slices; ++j) {
       float z = i*delta_h;
       float r_actuel = sqrt(2*z*r - pow(z,2));
       float y = r_actuel * sin(j*beta);
@@ -29,9 +29,6 @@ void GLSphere_Tronquee::initialize( double h, double r, GLuint slices, GLuint st
       positions << x << y << z;
     }
   }
-
-  positions << 0.0 << 0.0 << 0.0;
-
 
   indices0.reserve(slices+2);
   for (GLuint i(0); i <= slices; ++i)

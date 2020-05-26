@@ -34,8 +34,8 @@ int main(int argc, char* argv[])
   ToupieRoulante flipflop({0.0,0.11,0.30,0.0,0.0},
                           {50.0,0.0,0.0,0.0,0.0},
                            0.1,
-                           4.48,
-                           2.4,
+                           0.02,
+                           0.15,
                            {0.0,0.0,0.0});
 
 
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
   Systeme systeme1(&support);
 
 
-  systeme1.ajoute_toupie(flipflop);
+  systeme1.ajoute_toupie(coneTrace);
   //systeme1.ajoute_toupie(cone2);
   QApplication a(argc, argv);
   GLWidget w(systeme1);
