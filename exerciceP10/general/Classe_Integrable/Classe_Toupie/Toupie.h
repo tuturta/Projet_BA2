@@ -38,6 +38,7 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     virtual void update_A(); // Mise à jour du point de contact 
     virtual Vecteur ref_G_to_O_point(Vecteur const& point) const override; 
     virtual void dessine() override;
+    std::ostream& affiche(std::ostream& sortie) const;
 
 
     //METHODES POUR LE CAS GENERAL
@@ -99,7 +100,6 @@ class ConeSimple : public ConeGeneral {
     double produitMixte_awL() const;    //Produit mixte a.(w^L) : c'est un invariant   
     
     // AFFICHAGE - DESSIN
-
     virtual void dessine() override;
 
 };
@@ -125,8 +125,17 @@ class Objet_en_chute_libre : public Toupie {
 
 class ToupieRoulante: public Toupie{ // Cone simple avec la fonction génèrale !
    public: 
-    ToupieRoulante(Vecteur P, Vecteur P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    :Toupie(P,  P_point,    masse_volumique,    hauteur,    rayon,origine,  support){}
+    ToupieRoulante(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    :Toupie(param,  D_param,    masse_volumique,    hauteur,    rayon,origine,  support){
+        P.augmente(0.0);
+        P.augmente(0.0);
+        P.augmente(0.0);
+
+        P_point.augmente(0.0); //Gx
+        P_point.augmente(vecteurGC().norme()*sin(P.coeff(1))); //Gy
+        P_point.augmente(getRayon()-vecteurGC().norme()*cos(P.coeff(1))); //Gz
+
+    } //on ajoute les paramètres de la position du centre de masse : ce n'est pas à l'utilisateur de le faire. /!\ TOUPIE CHINOISE UNIQUEMENT
     
     virtual Vecteur fonction_f() const override;
     virtual Vecteur vecteurAG() const override;
@@ -137,6 +146,10 @@ class ToupieRoulante: public Toupie{ // Cone simple avec la fonction génèrale 
 
     std::unique_ptr<ToupieRoulante> clone() const;
     virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie?
+
+    // AFFICHAGE / DESSIN :
+
+    virtual std::ostream& affiche_parametres(std::ostream& out) const override;
     };
 
 //===============================TOUPIE CHINOISE==================================================
@@ -144,10 +157,16 @@ class ToupieRoulante: public Toupie{ // Cone simple avec la fonction génèrale 
 
 class ToupieChinoise : public ToupieRoulante{ //Cas spécifique de toupie roulante
    public: 
-    using ToupieRoulante::ToupieRoulante ; // Attention, ici la hauteur est en réalité h (cf p9): c'est la hauteur tranquée à la sphère de rayon R et non la hauteur de la toupie 
-   
-    virtual std::ostream& affiche_parametres(std::ostream& out) const override; 
 
+    ToupieChinoise(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    : ToupieRoulante(param, D_param, masse_volumique, hauteur, rayon,origine, support){
+        P.pop_back(); // on enlève la 6ème dimension construite par toupie roulante
+        P_point.pop_back();
+        P_point.set_coord(3,0.0); // Cx
+        P_point.set_coord(4,0.0); // Cy
+
+    } // On ajoute les paramètres de position du centre C
+   
     Matrice matrice_inertie() const; //Calcul la matrice d'inertie dans le repère d'inertie ET AU POINT G
     virtual Vecteur fonction_f() const override;
     double masse() const; 
@@ -155,6 +174,11 @@ class ToupieChinoise : public ToupieRoulante{ //Cas spécifique de toupie roulan
     Vecteur vecteurGC() const; //Retourne le vecteur GC DANS LE REF G
     std::unique_ptr<ToupieChinoise> clone() const;
     virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
-    //virtual void dessine() override;
+
+    // AFFICHAGE / DESSIN :
+
+    virtual std::ostream& affiche_parametres(std::ostream& out) const override;
+    std::ostream& affiche(std::ostream& sortie) const;
+    virtual void dessine() override;
 
 };

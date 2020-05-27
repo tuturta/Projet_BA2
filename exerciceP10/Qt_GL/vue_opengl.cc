@@ -22,18 +22,24 @@ QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
   //matrice.translate(x0,y0,z0);
 
   if(a_dessiner.getP_point().dim() == 5){
-    std::cout << "mettre instructions point C dans vue open gl !!" << std::endl;
-    double Cx(a_dessiner.getP_point().coeff(3)), Cy(a_dessiner.getP_point().coeff(4)); //Pour toupie chinoise uniquement (cas ou P4_p = Cx et P5_p = Cy)
-    matrice.translate(Cx, Cy, a_dessiner.getRayon()); //Positionne la matrice de dessin au niveau du centre de la sphère car la sphère tronquée est dessinée à partir du centre
+    double Cx(a_dessiner.getP_point().coeff(3));
+    double Cy(a_dessiner.getP_point().coeff(4)); // Pour toupie chinoise uniquement, cas où P4_p = Cx et P5_p = Cy
+    matrice.translate(Cx, Cy, a_dessiner.getRayon()); // Positionne la matrice de dessin au niveau du centre de la sphère car la sphère tronquée est dessinée à partir du centre
 
-  }else{
-      matrice.translate(x0,y0,z0);
-  }
+  }else if (a_dessiner.getP_point().dim()== 6) {
+        Vecteur OG(a_dessiner.getP_point().coeff(3),a_dessiner.getP_point().coeff(4),a_dessiner.getP_point().coeff(5)); // OG dans le ref absolu
+        //std::cout << "OG  : " << OG << std::endl; // OG augmente....
+        Vecteur GC(0.0, 0.0, 3.0*pow(a_dessiner.getHauteur(),2)/(4.0*(a_dessiner.getRayon()+a_dessiner.getHauteur()))); // GC dans le ref relatif
+        Vecteur OC(OG+a_dessiner.ref_G_to_O(GC));
+        matrice.translate(OC.coeff(0),OC.coeff(1), OC.coeff(2));
+    } else {
+            matrice.translate(x0,y0,z0);
+        }
 
  //matrice.scale(1.5);
 
   matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
-  matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0*/ ); //nutation THETA autour de l'axe nodal
+  matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0*/ ); // nutation THETA autour de l'axe nodal
   matrice.rotate(phi,0.0,0.0,1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)*/); //rotation propre PHI autour de Oz'
 
 
@@ -66,9 +72,9 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
 }
 
 // ======================================================================DESSINE(TOUPIE_CHINOISE)
-/*void VueOpenGL::dessine(ToupieChinoise const& a_dessiner)
+void VueOpenGL::dessine(ToupieChinoise const& a_dessiner)
 {
-   std::cout << "COUCOU JE SUIS UNE TOUPIE" << std::endl;
+   std::cout << "COUCOU JE SUIS UNE TOUPIE chinoise" << std::endl;
   dessineRepere();
   //dessineSol();
   QMatrix4x4 matrice(matrice_dessin(a_dessiner));
@@ -76,8 +82,7 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
   sphere_tronquee.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
   dessineConeSimple(matrice,1.0,0.5,1.0); // violet
-  //dessineConeSimple(2.0,1.5,matrice);
-}*/
+}
 
 // ======================================================================DESSINE(OBJ_EN_CHUTE_LIBRE)
 void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)

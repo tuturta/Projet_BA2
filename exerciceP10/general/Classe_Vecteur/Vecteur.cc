@@ -7,11 +7,17 @@
 #include <cmath>
 #include <string>
 using namespace std;
-/// MÉTHODES
+
+// MÉTHODES
 
 void Vecteur::augmente(double valeur){
 	coeff_.push_back(valeur);
 }
+
+void Vecteur::pop_back() {
+    coeff_.pop_back();
+}
+
 void Vecteur::set_coord(size_t position, double valeur){ 
 	if (position<=dim()) {
         coeff_[position]=valeur; ///Position 0=x/psi,position 1=y/theta, position 2=z/phi

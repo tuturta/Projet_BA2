@@ -16,6 +16,7 @@ class TextViewer : public SupportADessin {
   virtual void dessine(Objet_en_chute_libre const& objet) override;
   virtual void dessine(Toupie const& objet) override;
   virtual void dessine(Systeme const& objet) override;
+  virtual void dessine(ToupieChinoise const& objet) override;
 
  private:
   std::ostream& flot;

@@ -17,7 +17,7 @@ class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a s
     // CONSTRUCTEUR:
 
     Integrable(Vecteur P, Vecteur P_point, SupportADessin* support, Vecteur point_de_contact = {0,0,0})
-    : Dessinable(support), P(P), P_point(P_point), point_de_contact(point_de_contact)  {}  // CONSTRUCTEUR PAR DEFAUT POUR LE SUPPORT ?
+        : Dessinable(support), P(P), P_point(P_point), point_de_contact(point_de_contact)  {}  // CONSTRUCTEUR PAR DEFAUT POUR LE SUPPORT ?
     
 
     // ACCESSEURS / SETTER
@@ -32,7 +32,7 @@ class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a s
 
     // AFFICHAGE
 
-    std::ostream& affiche(std::ostream& sortie) const;                     // Affiche seulement P et Ppoint
+    std::ostream& affiche(std::ostream& sortie) const;                     // Affiche seulement les angles d'euler, leur dérivée et le point de contact
     virtual std::ostream& affiche_parametres(std::ostream& out) const = 0; // Affiche tous les paramètres d'un intégrable avec du texte
 
     // MÉCANIQUE :

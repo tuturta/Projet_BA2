@@ -30,7 +30,7 @@ ostream& Systeme::affiche(ostream& out) const {
     unsigned int compteur(1);
     for(auto const& ptr_toupie : objets){
         if(ptr_toupie != nullptr){
-            out << "[TOUPIE " << compteur << ']';
+            out << "[TOUPIE " << compteur << ']' << endl ;
             ptr_toupie->affiche(out);
             ++compteur;
         }
