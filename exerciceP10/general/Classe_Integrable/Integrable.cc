@@ -17,7 +17,7 @@ Vecteur Integrable::getPoint_de_conact() const{
 
 void Integrable::setP(Vecteur const& v) {
     P=v;
-    P.modulo2pi();
+    for(size_t i; i<=3 ; ++i) { P.modulo2pi(i);   }
 }
 void Integrable::setP_point(Vecteur const& v){
     P_point=v;

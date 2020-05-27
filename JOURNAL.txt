@@ -3,20 +3,14 @@
  [V] Créer/configurer le repository  git/github etc..................5h    
  [V] lire le projet...............................................30min
 
-   -pas de difficultés particulières-   
-
 SEMAINE 2 :
  [V] Créer la classe vecteur.........................................3h
  [V] Créer le fichier réponse.....................................30min
  [V] Introduction OpenGL.............................................3h
  [V] Séparer les fichiers.........................................30min
 
-   -pas de difficultés particulières-   
-
 SEMAINE 3 :
  [V] Ajouter les exceptions/gestion d'erreurs, tester................3h
-
-    -pas de difficultés particulières-   
 
     A faire : creer un fichier erreur.h avec une structure (ou classe?) erreur afin de pouvoir gérer plus facilement les erreurs 
     (configurer un code unique,niveau,indication sur l'arret ou non du programme suite à l'erreur...)  
@@ -27,17 +21,12 @@ SEMAINE 4 :
  [V] Définition des opérateurs/Réagencement classe vecteur...........3h
  [V] Répondre aux questions..........................................1h
  [V] Création de la classe matrice et ses opérateurs.................5h
-   
-   -pas de difficultés particulières-
 
 SEMAINE 5 :
 
  [V] Ajout de la classe Toupie.......................................3h
  [V] Ajout de la classe Integrateur + test GNU plot..................3h
  [V] Ecriture du Makefile et correction des erreurs..................8h
-  
-   Quelques difficultés à adapter le makefile, mais nous finissons par 
-   mieux comprendre à force de se documenter sur internet
 
 SEMAINE 6 :
 
@@ -46,8 +35,6 @@ SEMAINE 6 :
  [V] Mise en place de l'espace de travail (Qt/OpenGl)................4h
  [V] Exercice P8.....................................................3h
  [V] Exercice P9a....................................................3h
-   
-   -pas de difficultés particulières-   
 
 SEMAINE 7 :
 
@@ -126,8 +113,7 @@ SEMAINE 10 :
 [V] Essai pour glwidget : template --> succès......................2h
 [V] Résolution problème chronomètre................................2h
 [V] Simplification glwidget : abandon du template..................2h
-[V] Exercice P11...................................................3h
-[V] Début P12......................................................4h
+[ ] Exercice P11...................................................
 
    Après avoir vu la video sur les template, nous réussissons à faire 
    de glWidget un modèle de classe qui fonctionne avec les Toupie et 
@@ -141,77 +127,12 @@ SEMAINE 10 :
    L'erreur du chronomètre était en fait basique, une division int/int 
    au lieu de int/double renvoyait 0 eu lieu du pas de temps voulu...
 
-SEMAINE 11 :
-
-[ ] Retour sur la trace/ les graphismes...........................20h
-[V] Cône général..................................................15h
-[V] Toupie générale................................................3h
-[V] Toupie chinoise................................................6h
-[V] Integrateur de Newmark.........................................2h
-
-   Nous remarquons que le dessin de nos toupies ne tourne en fait pas si 
-   bien ; la rotation propre est trop faible (un tour sur elle même pour 
-   un tour autour de la verticale). Pourtant nos valeurs du vecteur P sont 
-   correctes. En cherchant la raison de ce mauvais rendu graphique, nous 
-   clarifions une partie du code pour la rendre moins tortueuse (cela 
-   concernait l'ordre des angles dans le vecteur P). Suite à cette 
-   modification, nous retrouvons toujours les bonnes valeurs des angles 
-   mais cette fois la trace ne ressemble plus non plus à celle du professeur...
-   A ce jour, nous n'avons donc pas réussi à ré-obtenir une trace correcte ni 
-   des rotations (visuelles) correctes. 
-
-SEMAINE 12 : 
-
-[V] Retour sur la trace /les graphismes............................5h
-[ ] Toupie chinoise - résolution de problèmes......................6h
-[V] Integrateur Runge-Kutta........................................2h 
-
-   Malgré la consultation de deux assistants et du professeur, personne
-   ne comprend ce qu'il se passe dans notre problène de trace ni dans
-   celui des graphismes...
-
-   [edit:] Nous avons résolu le problème: il nous a suffi d'inverser
-   l'ordre des rotations d'euler (dans vue_opengl.cc, dans la méthode
-   matrice_dessin). Nous avions pourtant compris que les opérations sur 
-   les matrices openGL se faisaient "de bas en haut" (ex : si l'on 
-   voulait translater puis faire une rotation, il fallait écrire la
-   rotation puis, en dessous, la translation), donc nous ne savons pas
-   pourquoi ici il semble que ce soit l'inverse qui fonctionne...
-
-   A FAIRE:
-   corriger std bad alloc //DONE
-   fonction f() de Toupie Chinoise	//DONE
-   Corriger fonction f() de toupie chinoise de sorte à considérer le déplacement du centre de masse
-   dessineToupieChinoise dans Gl widget //DONE
-   essayer de rendre virtuelle la classe de toupie pour supprimer toutes les definitions de fonctions virtuelles dans toupie
 
 
-
-SEMAINE 13 : 
-
-[V] Résolution de problèmes sur la toupie chinoise................30h
-[V] Clarification du code..........................................3h 
-[V] Graphisme sommaire pour la toupie chinoise.....................3h
-[V] Retouche sur la trace..........................................1h
-
-   Nous n'arrivons pas à obtenir les bons vecteurs P et P_point pour la 
-   toupie chinoise. Nous avons vérifié plusieurs fois l'écriture des 
-   formules et la cohérence des variables en jeu dans la fonction f, et 
-   tout semble en ordre. Pourtant, déja au premier tour nos valeurs diffèrent
-   de celles de Monsieur Chappelier. Nous pensons qu'il s'agit d'une erreur 
-   dans la fonction f car elle nous retourne, au premier tour, une accélération
-   de 194 rad/s^2 selon thêta, ce qui ne parait pas être le bon ordre de
-   grandeur du tout (logiquement, ce devrait être dans les -5 rad/s^2). Comme nous
-   n'avons pas accès à un fichier octave pour cette 
-   toupie, nous tournons en rond dans notre recherche d'erreur.
-   [edit] Il s'agissait en fait d'une parenthèse fermée au mauvais endroit! Elle nous
-   avait échappé malgré nos nombreuses relectures...
-
-
-SEMAINE 14 :
-
-[ ] Readme........................................................
-[ ] Finalisations fichiers........................................
-[ ] Finalisation fichier conception...............................
-
-
+A FAIRE:
+corriger std bad alloc //DONE
+fonction f() de Toupie Chinoise	//DONE
+COrriger fonction f() de toupie chinoise de sorte à considérer le déplacement du centre de masse
+dessineToupieChinoise dans Gl widget
+essayer de rendre virtuelle la classe de toupie pour supprimer toutes les definitions de fonctions virtuelles dans toupie
+- reprendre toutes les méthodes et définir si elles doivent être publiques ou privées 

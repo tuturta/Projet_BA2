@@ -31,10 +31,11 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     virtual std::unique_ptr<Toupie> copie() const;
     std::unique_ptr<Toupie> clone() const;
     Vecteur w() const;
-    virtual double getHauteur() const;
-    virtual double getRayon() const; // Pour l'instant
+    double getHauteur() const;
+    double getRayon() const; // Pour l'instant
     void ajoute_position_CM();
     std::vector<Vecteur> getPositions_CM() const;
+    virtual void update_A(); // Mise à jour du point de contact 
     virtual Vecteur ref_G_to_O_point(Vecteur const& point) const override; 
     virtual void dessine() override;
 
@@ -89,8 +90,6 @@ class ConeSimple : public ConeGeneral {
     Vecteur moment_poids() const;
     virtual Vecteur vecteurAG() const override; //Dans RefG
     virtual Vecteur fonction_f() const override;
-    virtual double getHauteur() const override;
-    virtual double getRayon() const override;
     virtual Vecteur ref_G_to_O_point(Vecteur const& point) const override;
     //MECANIQUE - INVARIANTS DU MOUVEMENT
 
@@ -117,8 +116,7 @@ class Objet_en_chute_libre : public Toupie {
     virtual Vecteur fonction_f() const override;
     virtual void dessine() override;
     virtual std::unique_ptr<Toupie> copie() const override;
-    virtual double getHauteur() const override;
-    virtual double getRayon() const override;
+   
 };
 
 
@@ -133,12 +131,12 @@ class ToupieRoulante: public Toupie{ // Cone simple avec la fonction génèrale 
     virtual Vecteur fonction_f() const override;
     virtual Vecteur vecteurAG() const override;
     virtual double rayon2(size_t i) const override; //c'est ce qui défini le solide de révolution : c'est la distance à l'axe ri en fonction de la hauteur zi
-    Vecteur vecteurGC() const; //Retourne le vecteur GC DANS LE REF G
-    Vecteur vecteurOB() const; //vecteur entre l'origine du solide de révolution et l'origine du repère galiléen (REF O). Methode utile pour QtGL
-    void update_A() const; //méthode pour mettre à jour la position du point de contact /!\ N'est adaptée qu'aux toupies chinoises, la méthode générale étant considérée trop ambitieuse pour ce projet
+    Vecteur vecteurGC() const; //Retourne le vecteur GC dans le ref G /!\ N'est adaptée qu'aux toupies chinoises
+    //Vecteur vecteurOB() const; //vecteur entre l'origine du solide de révolution et l'origine du repère galiléen (REF O). Methode utile pour QtGL
+    void update_A(); //méthode pour mettre à jour la position du point de contact /!\ N'est adaptée qu'aux toupies chinoises, la méthode générale étant considérée trop ambitieuse pour ce projet
 
     std::unique_ptr<ToupieRoulante> clone() const;
-    virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
+    virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie?
     };
 
 //===============================TOUPIE CHINOISE==================================================
@@ -157,6 +155,6 @@ class ToupieChinoise : public ToupieRoulante{ //Cas spécifique de toupie roulan
     Vecteur vecteurGC() const; //Retourne le vecteur GC DANS LE REF G
     std::unique_ptr<ToupieChinoise> clone() const;
     virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
-
+    //virtual void dessine() override;
 
 };

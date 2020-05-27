@@ -38,7 +38,7 @@ class Vecteur
     double norme2() const;                               // Renvoie la norme au carré et permet d'éviter le temps de calcul de la racine
     double coeff(size_t x) const;                        // Renvoie la coordonnée à la position x sachant que la première coordonnée est à la position x = 0
     void correctif_0();                                  // On l'utilise pour éviter d'avoir des valeurs extremement petites à la place de vrais 0 après certaines opérations.
-    void modulo2pi();
+    void modulo2pi(size_t i);                            // Modifie le coeff i en sa valeur principale modulo 2pi
 
 
     private:

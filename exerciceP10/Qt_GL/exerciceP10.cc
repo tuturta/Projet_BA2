@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
   Systeme systeme1(&support);
 
 
-  systeme1.ajoute_toupie(coneTrace);
+  systeme1.ajoute_toupie(balancier);
   //systeme1.ajoute_toupie(cone2);
   QApplication a(argc, argv);
   GLWidget w(systeme1);

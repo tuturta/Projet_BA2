@@ -49,12 +49,10 @@ void Vecteur::correctif_0() {
 	 }
  }
 
-void Vecteur::modulo2pi() {
-    for (size_t i(0); i<dim() ; ++i) {
-        while (coeff(i)>=2.0*M_PI) {
-            set_coord(i,coeff(i)-2.0*M_PI);
-        }  // pour obtenir les angles modulo 2 pi
-    }
+void Vecteur::modulo2pi(size_t i) {
+    while (coeff(i)>=2.0*M_PI) {
+           set_coord(i,coeff(i)-2.0*M_PI);
+    }  // pour obtenir les angles modulo 2 pi
 }
 // DÉFINITIONS DES OPERATEURS:
 // --> EXTERNES

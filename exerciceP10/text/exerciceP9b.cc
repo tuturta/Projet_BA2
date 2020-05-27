@@ -3,6 +3,8 @@
 #include "../general/Classe_Vecteur/Vecteur.h"
 #include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../general/Classe_Systeme/Systeme.h"
+#include "../general/Classe_Integrateur/Integrateur.h"
+
 #include "text_viewer.h"
 #include "../general/erreurs.h"
 
@@ -34,7 +36,7 @@ int main() {
             Systeme systeme(&ecran);
             // systeme.ajoute_toupie(cone1);
             //systeme.ajoute_toupie(cone2);
-            systeme.ajoute_toupie(ToupieChinoise);
+            systeme.ajoute_toupie(ToupieChinoiseG);
             // systeme.ajoute_toupie(ToupieChinoiseG);
 
 

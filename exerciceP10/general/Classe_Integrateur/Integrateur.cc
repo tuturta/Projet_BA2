@@ -13,10 +13,8 @@ void IntegrateurEulerCromer::evolue(Toupie& T, const double dt) const {
         T.setP_point(T.getP_point() + dt*((T.copie())->fonction_f())); //PROBLEME : l'appel est fait directement à Toupie::fonction(); sans tenir compte du masquage de ObjetEnChuteLibre::fonction();
         T.setP(T.getP() + dt*((T.copie())->getP_point()));
         T.ajoute_position_CM(); // ajoute cette nouvelle position du CM ds le vector nécessaire pour la trace
+        T.copie()->update_A();
 
-        /*if(T.getP_point().dim() == 5){
-            T.setOrigine({T.getP_point().coeff(3), T.getP_point().coeff(4), 0.0}); //A MODIFIER : Si l'on est dans le cas ou P_p contient les valeurs de Cx et Cy, alors on actualise l'origine (ie coordonnées du points de contact dans le repère galiléen)
-        }*/
 }
 
 void IntegrateurEulerCromer::evolue(Systeme& S, const double dt) const {
@@ -47,7 +45,7 @@ void IntegrateurNewmark::evolue(Toupie& T, const double dt) const {
         } while (diff.norme()>=eps);
 
         T.ajoute_position_CM(); // ajoute cette nouvelle position du CM dans le vector nécessaire pour la trace
-
+        T.copie()->update_A();
 }
 
 void IntegrateurNewmark::evolue(Systeme& S, const double dt) const {
@@ -95,7 +93,7 @@ void IntegrateurRungeKutta::evolue(Toupie& T, const double dt) const {
         T.setP_point(P_point_temp+dt/6.0*(k1_p+2*k2_p+2*k3_p+k4_p));
 
         T.ajoute_position_CM(); // ajoute cette nouvelle position du CM dans le vector nécessaire pour la trace
-        
+        T.copie()->update_A();        
 }
 
 void IntegrateurRungeKutta::evolue(Systeme& S, const double dt) const {
