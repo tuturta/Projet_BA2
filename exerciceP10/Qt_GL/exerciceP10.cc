@@ -31,25 +31,32 @@ int main(int argc, char* argv[])
                        {0.0,0.0,0.0});     //Origine
 
 
-  ToupieChinoise flipflop({0.0,0.11,0.0,0.0,0.0},
-                          {50.0,0.0,0.0,0.0,0.0},
-                           0.1,
-                           0.02,
-                           0.15,
-                           {0.0,0.0,0.0});
+  Toupie flipflop({0.0,0.11,0.0},
+                  {50.0,0.0,0.0},
+                  0.1,
+                  0.02,
+                  0.15,
+                  {0.0,0.0,0.0});
 
-  ToupieChinoise balancier( {0.0,0.75,0.0,0.0,0.0},
-                            {0.0,0.0,0.0,0.0,0.0},
+  ToupieChinoise balancier( {0.0,0.75,0.0},
+                            {0.0,0.0,0.0},
                             0.1,
                             0.02,
                             0.15,
                             {0.0,0.0,0.0});
 
+  ToupieRoulante roulante({0.0,0.11,0.0},
+                          {50.0,0.0,0.0},
+                          0.1,
+                          0.02,
+                          0.15,
+                          {0.0,0.0,0.0});
+
   TextViewer support(cout);
   Systeme systeme1(&support);
 
 
-  systeme1.ajoute_toupie(balancier);
+  systeme1.ajoute_toupie(roulante);
   //systeme1.ajoute_toupie(cone2);
   QApplication a(argc, argv);
   GLWidget w(systeme1);

@@ -10,11 +10,10 @@ using namespace std;
 
 
 void IntegrateurEulerCromer::evolue(Toupie& T, const double dt) const {
-        cout << "EuleurCromer avec P= " << T.getP() << " et P_p= " << T.getP_point() << endl;
-        T.setP_point(T.getP_point() + dt*((T.copie())->fonction_f())); //PROBLEME : l'appel est fait directement à Toupie::fonction(); sans tenir compte du masquage de ObjetEnChuteLibre::fonction();
+        T.setP_point(T.getP_point() + dt*((T.copie())->fonction_f()));
         T.setP(T.getP() + dt*((T.copie())->getP_point()));
         T.ajoute_position_CM(); // ajoute cette nouvelle position du CM ds le vector nécessaire pour la trace
-        T.copie()->update_A();
+        T.copie()->update_A(); // mise à jour des coordonnées du point de contact
 
 }
 

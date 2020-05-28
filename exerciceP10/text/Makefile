@@ -13,13 +13,8 @@ SRC = exerciceP$(NB_EXO).cc text_viewer.cc \
 	../general/constantes.cc \
 
 
-
-
 OBJ = $(SRC:.cc=.o)
 EXEC = exerciceP$(NB_EXO)
 
-all: $(EXEC)
 
-$(EXEC): $(OBJ)
-	$(CXX) -o $@ $(OBJ) $(LBLIBS)
 

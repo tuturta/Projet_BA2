@@ -14,8 +14,8 @@ using namespace std;
 // METHODES
 
 ostream& Toupie::affiche_parametres(ostream& out) const {
-    out << "Paramètre : " << P << endl;
-    out << "Dérivée : " << P_point << endl;
+    out << "Angles Ω = " << P.coeff(0) << " " << P.coeff(1) << " " << P.coeff(2) << endl; //on affiche seulement les angles
+    out << "Dérivées Ω' = " << P_point.coeff(0) << " " << P_point.coeff(1) << " " << P_point.coeff(2) << endl;
     out << "Masse volumique (kg m-3) : " << masse_volumique << endl;
     return out;
 }
@@ -46,7 +46,13 @@ void Toupie::update_A() {
 
 void Toupie::dessine() {
     support->dessine(*this);
-} // Qu'est ce qu'on en fait ?
+}
+
+std::ostream& Toupie::affiche(std::ostream& sortie) const {
+    Integrable::affiche(sortie);
+    sortie << "G = " << positions_CM.back() << endl;
+    return sortie;
+}
 
 Vecteur Toupie::moment_poids() const{
     Vecteur poids(masse()*g); //dans le ref absolu
@@ -177,7 +183,7 @@ double Toupie::LA3() const{
 //METHODES:
 
 ostream& ConeSimple::affiche_parametres(ostream& out) const {
-    out << "CONIQUE SIMPLE " << endl;
+    out << " CONIQUE SIMPLE " << endl;
     Toupie::affiche_parametres(out);
     out << "Hauteur (m) : " << hauteur_ << endl;
     out << "Rayon   (m) : " << rayon_ << endl;
@@ -185,7 +191,7 @@ ostream& ConeSimple::affiche_parametres(ostream& out) const {
     return out;
 }
 
-double ConeSimple::masse() const{ //masse calculé grace a la formule p8
+double ConeSimple::masse() const{ //masse calculée grace a la formule p8
     return (1.0/3.0)*M_PI*masse_volumique*pow(rayon_,2)*hauteur_;
 }
 
@@ -217,10 +223,8 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi
     double psi_P(P_point.coeff(0));
     double theta_P(P_point.coeff(1));
     double phi_P(P_point.coeff(2));
-    //cout << "P=" << P << endl;
+
     //1.CALCUL DE w dans RG (repère d'inertie)
-    //cout << "MA_G = " << moment_poids() << endl;
-    //cout << "w_G = " << w() << endl;
 
     //2.CALCUL DE W_POINT: (dans Repère d'inertie)
     Vecteur w_point(3);
@@ -239,10 +243,6 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi
         P_point_point.set_coord(0, (w_point.coeff(1) - psi_P*theta_P*cos(theta)) / sin(theta) ); //Modification psi point point : formule (2) p6
         P_point_point.set_coord(2, w_point.coeff(2) - P_point_point.coeff(0)*cos(theta) + psi_P*theta_P*sin(theta)); //Modification phi point point formule (2) p6
     }
-
-    std::cout << "DDpsi =" << P_point_point.coeff(0) << std::endl;
-    std::cout << "DDtheta =" << P_point_point.coeff(1) << std::endl;
-    std::cout << "DDphi =" << P_point_point.coeff(2) << std::endl;
 
     //4.CALCUL DE G:
     //Pour le moment on le fait pas car on considère qu'il n'y a pas de glissement Va = 0
@@ -344,6 +344,15 @@ double ConeGeneral::rayon2(size_t i) const {
 
 //=============================CLASSE TOUPIE ROULANTE===================================//
 
+ostream& ToupieRoulante::affiche_parametres(ostream& out) const {
+    out << " TOUPIE ROULANTE " << endl;
+    Toupie::affiche_parametres(out);
+    out << "Position G : " << P_point.coeff(3) << " " << P_point.coeff(4) << " " << P_point.coeff(5) << endl;
+    out << "Hauteur tronquée (m) : " << hauteur_ << endl;
+    out << "Rayon (m) : " << rayon_ << endl;
+    out << "Point de contact (A) : " << point_de_contact << endl;
+    return out;
+}
 
 Vecteur ToupieRoulante::fonction_f() const{
     //cout << "--APPEL ToupieRoulante::fonction_f()--" <<endl;
@@ -393,8 +402,6 @@ Vecteur ToupieRoulante::fonction_f() const{
         P_point_point.set_coord(2, w_point.coeff(2) - P_point_point.coeff(0)*cos(theta) + psi_P*theta_P*sin(theta)); //Modification phi point point formule (2) p6
     }
 
-    //cout << "P point point en sortie de  f() : " << P_point_point << endl;
-
     //5.CALCUL DE LA POSITION DE G:
 
     Vecteur vg( -ref_G_to_O(vecteurAG())^w() ); //Vg=AG^w dans un solide
@@ -410,7 +417,7 @@ Vecteur ToupieRoulante::fonction_f() const{
     //nous nous contentons donc de fournir la position du point de contact d'une toupie
     //chinoise à chaque instant, car c'est la seule chose qui nous manque pour la dessiner
     //-->méthode extérieure pour actualiser
-    
+    //cout << "FIN APPEL ToupieRoulante::fonction_f()" << endl;
     return P_point_point;
 }
 
@@ -455,13 +462,25 @@ unique_ptr<Toupie> ToupieRoulante::copie() const{
 //=============================CLASSE TOUPIE CHINOISE===================================//
 
 ostream& ToupieChinoise::affiche_parametres(ostream& out) const {
-    out << " CHINOISE " << endl;
+    out << " TOUPIE CHINOISE " << endl;
     Toupie::affiche_parametres(out);
+    out << "Centre C en : " << P_point.coeff(3) << " " << P_point.coeff(4) << endl;
     out << "Hauteur tronquée (m) : " << hauteur_ << endl;
     out << "Rayon (m) : " << rayon_ << endl;
     out << "Point de contact (A) : " << point_de_contact << endl;
     return out;
 }
+
+std::ostream& ToupieChinoise::affiche(std::ostream& sortie) const {
+    Toupie::affiche(sortie);
+    sortie << "Centre C = " << P_point.coeff(3) << " " << P_point.coeff(4) << endl;
+    return sortie;
+}
+
+void ToupieChinoise::dessine() {
+    support->dessine(*this);
+}
+
 
 double ToupieChinoise::masse() const{
     return (M_PI*masse_volumique*((4.0/3.0)*pow(rayon_,3) - hauteur_*hauteur_*(rayon_-(1.0/3.0)*hauteur_)));
@@ -532,43 +551,19 @@ Vecteur ToupieChinoise::fonction_f() const{
     // Cy: composante en y du milieu C de la sphère dans le repère O
     P_p_p.set_coord(4,  -rayon_*(theta_p*cos(psi)+phi_p*sin(psi)*sin(theta)));
 
-    //cout << "Vecteur P_p_p: " << P_p_p << endl;
     return P_p_p;
     
 }
 
 unique_ptr<ToupieChinoise> ToupieChinoise::clone() const{
-    return unique_ptr<ToupieChinoise>(new ToupieChinoise(*this));
+    unique_ptr<ToupieChinoise> clone(new ToupieChinoise(*this));
+    return clone;
 }
 unique_ptr<Toupie> ToupieChinoise::copie() const{
     return clone();
 }
 
 
-// INVARIANTS :
-
-/*
-double ConeSimple::energie_totale() const{
-    Vecteur La(matrice_inertie_A()*w());
-    Vecteur g_(g);
-    ref_O_to_G(g_); // Le centre de masse est exprimé dans le ref G donc on doit exprimer aussi g_ dans G avant de faire le produit scalaire (sachant que la constante g est exprimé de base dans le ref galiléen O)
-    return (w()*La)/2.0 - masse()*(g_*vecteurAG());
-}
-
-double ConeSimple::LAz() const{        
-    Vecteur La(matrice_inertie_A()*w());
-    ref_G_to_O(La);                     //Change la base du moment cinétique au point A (noté LA): Referentiel Inertie G --> Referentiel Galiléen O
-    return La.coeff(2);                 // Retourne la composante z de LA exprimé dans cette nouvelle base
-}
-
-double ConeSimple::LA3() const{        
-   return (matrice_inertie_A()*w()).coeff(2);        //La matrice d'inertie étant exprimé dans le ref inertiel G, cela renvoie LA3 : 3eme composante du Moment cinétique au point A
-}
-
-double ConeSimple::produitMixte_awL() const{
-    return (w()^(matrice_inertie_A()*w())).coeff(2);
-}
-*/
 
 
 double ToupieChinoise::distanceBG() const{

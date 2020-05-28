@@ -28,7 +28,8 @@ void Integrable::setPoint_de_contact(Vecteur const& v){
 }
 
 ostream& Integrable::affiche(ostream& sortie) const{
-    sortie <<"paramètre : " << P << " ; dérivée : " << P_point << endl;
+    sortie << "Ω = " << P.coeff(0) << " " << P.coeff(1) << " " << P.coeff(2) << " ; Ω' = " << P_point.coeff(0) << " " << P_point.coeff(1) << " " << P_point.coeff(2) << endl;
+    sortie << "A = " << point_de_contact << endl;
     return sortie;
 }
 
