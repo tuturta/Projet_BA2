@@ -1,6 +1,8 @@
 CXX = g++
 CXXFLAGS = -Wall -std=c++11 -pedantic -Wall
-SRC = exerciceP9b.cc text_viewer.cc \
+
+NB_EXO = 9b
+SRC = exerciceP$(NB_EXO).cc text_viewer.cc \
 	../general/Classe_Integrable/Classe_Toupie/Toupie.cc \
 	../general/Classe_Integrateur/Integrateur.cc \
 	../general/erreurs.cc \
@@ -14,7 +16,7 @@ SRC = exerciceP9b.cc text_viewer.cc \
 
 
 OBJ = $(SRC:.cc=.o)
-EXEC = exerciceP9b
+EXEC = exerciceP$(NB_EXO)
 
 all: $(EXEC)
 

@@ -17,35 +17,50 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     double masse_volumique;
     double hauteur_;                   // hauteur du solide de révolution
     double rayon_;                     // Rayon de la base du cône / rayon de la sphère (tronquée)
-
     double zi(size_t i) const;         // Donne la hauteur en fonction du découpage
-    virtual double rayon2(size_t i) const; //c'est ce qui défini le solide de révolution : c'est la distance au carré à l'axe ri en fonction de la hauteur zi. Il doit être redefini dans chaque classe --> A TRANSFORMER EN VIRTUELLE PURE
 
    public :
     Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
         : Integrable(P, P_point, support, point_de_contact), masse_volumique(masse_volumique),hauteur_(hauteur), rayon_(rayon) {}
 
-    virtual std::ostream& affiche_parametres(std::ostream& out) const override;
-    //A terme, toupie sera certainement une classe virtuelle : on ne permet donc pas de la dessiner pour l'instant
-    virtual Vecteur fonction_f() const override;
+
+    //METHODES COMMUNES A TOUTES LES TOUPIES (INDEPENDANTES DE LA GEOMETRIE DE LA TOUPIE)
+
+        //Grandeur physiques: 
+    Vecteur ref_G_to_O_point(Vecteur const& point) const; 
+    Vecteur w() const;                          // Ref O
+    Matrice matrice_inertie_A() const;          //Applique le théorème d'Huygens-Steiner pour translater la matrice d'inertie du point G au point A (en restant dans le ref G)
+    Vecteur moment_poids() const;               //Calcul le moment du poids au point A
+    Vecteur LA() const;                         // Renvoie le moment d'inertie au point A dans le ref G
+    Vecteur vecteurOG() const;                  // Défini à partir de OA et AG, dans le ref O
+    
+        
+        //Invariants du mouvement: 
+    double energie_totale() const;      //Energie mécanique totale du cone : c'est un invariant
+    double LAz() const;                 // Composante z du moment cinétique au point A exprimé dans le référentiel galliléen O : c'est un invariant
+    double LA3() const;                 // Composante 3 du moment cinétique au point A exprimé dans le référentiel inertiel G : c'est un invariant
+    double produitMixte_awL() const;    //Produit mixte a.(w^L) : c'est un invariant   
+    
+        //Autres:
     virtual std::unique_ptr<Toupie> copie() const;
     std::unique_ptr<Toupie> clone() const;
-    Vecteur w() const;
+    virtual void dessine() override;
+    void update_A(); // Mise à jour du point de contact 
     double getHauteur() const;
-    double getRayon() const; // Pour l'instant
+    double getRayon() const;                    
     void ajoute_position_CM();
     std::vector<Vecteur> getPositions_CM() const;
-    virtual void update_A(); // Mise à jour du point de contact 
-    virtual Vecteur ref_G_to_O_point(Vecteur const& point) const override; 
-    virtual void dessine() override;
 
+    // METHODES QUI DEPEND DE LA GEOMETRIE DE LA TOUPIE (--> METHODES VIRTUELLES):
 
-    //METHODES POUR LE CAS GENERAL
-    double distanceBG() const; // retourne la distance entre l'origine du solide de révolution et son centre de masse 
-    virtual Vecteur vecteurAG() const;
-    double masse() const;
-    Matrice matrice_inertie() const; //Calcul la matrice d'inertie du solide de révolution dans le repère d'inertie et au point A 
-
+    virtual Matrice matrice_inertie_G() const; //Calcul la matrice d'inertie du solide de révolution dans le repère d'inertie et au centre de masse G
+    virtual double rayon2(size_t i) const; //c'est ce qui défini le solide de révolution : c'est la distance au carré à l'axe ri en fonction de la hauteur zi. Il doit être redefini dans chaque classe --> A TRANSFORMER EN VIRTUELLE PURE
+    virtual Vecteur vecteurAG() const;      //Dans le ref A
+    virtual Vecteur vecteurOA() const;      //Dans le ref O
+    virtual Vecteur fonction_f() const override;
+    virtual std::ostream& affiche_parametres(std::ostream& out) const override;
+    virtual double masse() const;
+    virtual double distanceBG() const; // retourne la distance entre l'origine du solide de révolution et son centre de masse
 
 
 };
@@ -76,30 +91,20 @@ class ConeSimple : public ConeGeneral {
 
     ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
     : ConeGeneral(P, P_point, masse_volumique, hauteur, rayon, point_de_contact, support) {} // COnstructeur qui initialise l'origine à 0,0,0
-    virtual std::ostream& affiche_parametres(std::ostream& out) const override; // Affiche tous les paramètres d'une toupie
-
+    
     std::unique_ptr<ConeSimple> clone() const;
     virtual std::unique_ptr<Toupie> copie() const override;
 
-    //****Destructeur ?
-
     // MÉCANIQUE - GÉOMÉTRIE DU SOLIDE
 
-    double masse() const;
-    Matrice matrice_inertie() const;            //Calcule le moment d'inertie I du cone simple au point de contact
-    Vecteur moment_poids() const;
+    virtual double masse() const override;
+    virtual Matrice matrice_inertie_G() const override;           //Calcul la matrice d'inertie du cone simple dans le repère d'inertie et au centre de masse G 
     virtual Vecteur vecteurAG() const override; //Dans RefG
     virtual Vecteur fonction_f() const override;
-    virtual Vecteur ref_G_to_O_point(Vecteur const& point) const override;
-    //MECANIQUE - INVARIANTS DU MOUVEMENT
 
-    double energie_totale() const;      //Energie mécanique totale du cone : c'est un invariant
-    double LAz() const;                 // Composante z du moment cinétique au point A exprimé dans le référentiel galliléen O : c'est un invariant
-    double LA3() const;                 // Composante 3 du moment cinétique au point A exprimé dans le référentiel inertiel G : c'est un invariant
-    double produitMixte_awL() const;    //Produit mixte a.(w^L) : c'est un invariant   
-    
     // AFFICHAGE - DESSIN
-
+    
+    virtual std::ostream& affiche_parametres(std::ostream& out) const override; // Affiche tous les paramètres d'une toupie
     virtual void dessine() override;
 
 };
@@ -131,8 +136,7 @@ class ToupieRoulante: public Toupie{ // Cone simple avec la fonction génèrale 
     virtual Vecteur fonction_f() const override;
     virtual Vecteur vecteurAG() const override;
     virtual double rayon2(size_t i) const override; //c'est ce qui défini le solide de révolution : c'est la distance à l'axe ri en fonction de la hauteur zi
-    Vecteur vecteurGC() const; //Retourne le vecteur GC dans le ref G /!\ N'est adaptée qu'aux toupies chinoises
-    //Vecteur vecteurOB() const; //vecteur entre l'origine du solide de révolution et l'origine du repère galiléen (REF O). Methode utile pour QtGL
+    virtual Vecteur vecteurGC() const; //Retourne le vecteur GC dans le ref G /!\ N'est adaptée qu'aux toupies chinoises
     void update_A(); //méthode pour mettre à jour la position du point de contact /!\ N'est adaptée qu'aux toupies chinoises, la méthode générale étant considérée trop ambitieuse pour ce projet
 
     std::unique_ptr<ToupieRoulante> clone() const;
@@ -148,13 +152,16 @@ class ToupieChinoise : public ToupieRoulante{ //Cas spécifique de toupie roulan
    
     virtual std::ostream& affiche_parametres(std::ostream& out) const override; 
 
-    Matrice matrice_inertie() const; //Calcul la matrice d'inertie dans le repère d'inertie ET AU POINT G
+    virtual Matrice matrice_inertie_G() const override; //Calcul la matrice d'inertie dans le repère d'inertie ET AU POINT G
     virtual Vecteur fonction_f() const override;
-    double masse() const; 
+    virtual double masse() const override; 
     double alpha() const; // Cf fiigure de la sphère tronquée p9 du complément mathématique
-    Vecteur vecteurGC() const; //Retourne le vecteur GC DANS LE REF G
+    virtual Vecteur vecteurGC() const; //Retourne le vecteur GC DANS LE REF G
     std::unique_ptr<ToupieChinoise> clone() const;
     virtual std::unique_ptr<Toupie> copie() const override; // A terme, Integrable à la place de Toupie
     //virtual void dessine() override;
+
+    virtual double distanceBG() const; // retourne la distance entre l'origine du solide de révolution et son centre de masse
+    virtual Vecteur vecteurOA() const;      //Dans le ref O
 
 };

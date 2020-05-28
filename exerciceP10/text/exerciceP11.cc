@@ -12,11 +12,11 @@ using namespace std;
 int main() {
     const double dt(0.01); // Pas de temps
     double t(0.0); // Initialise le temps à 0
-    unsigned int nombre_de_tour(500);
+    unsigned int nombre_de_tour(50);
     try{
         //================SUPPORT TEXTUEL======================================================//
         ofstream fichier;
-        fichier.open("testInvariants.txt");
+        fichier.open("testInvariantsTC.txt");
         if (fichier.fail()) {
             //gérer l'erreur
         } else  {
@@ -24,9 +24,10 @@ int main() {
     
        //================SYSTEME=============================================================//
             IntegrateurEulerCromer integrateur;
-            ConeSimple cone1({0.523599,0.0,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
+            ConeSimple cone1({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
             fichier << "#Temps:  Energie totale:             LAz:             LAa:         a.(w^L):" <<endl;   
             for(size_t i(1); i<=nombre_de_tour ;++i){
+                cout << cone1 << endl;
                 fichier << setw(7) << t 
                         << setw(17) << cone1.energie_totale() 
                         << setw(17) << cone1.LAz() 

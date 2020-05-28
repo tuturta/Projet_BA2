@@ -30,26 +30,29 @@ double Toupie::getHauteur() const{ return hauteur_;}
 double Toupie::getRayon() const{ return rayon_;}
 
 void Toupie::ajoute_position_CM() {
-    cout << "APPEL Toupie::ajoute_positionCM()" << endl;
-    Vecteur CM_refG = {0.0,0.0,0.0};
-    positions_CM.push_back(ref_G_to_O_point(CM_refG));
+    positions_CM.push_back(vecteurOG());
 }
 
 std::vector<Vecteur> Toupie::getPositions_CM() const {
     return positions_CM;
 }
 Vecteur Toupie::ref_G_to_O_point(Vecteur const& point) const {
-    //pour l'instant comme pour le cone //dépend de la géométrie !
     return (S().inv()*point + point_de_contact +ref_G_to_O(vecteurAG()));
-} //Qu'est-ce qu'on en fait ?
+} 
 
-void Toupie::update_A() {} // ne fait rien pour une toupie en général, car on ne connait pas sa géométrie. Mais nécéssaire pour que son appel dans integrateur soit bien défini
+void Toupie::update_A() {
+    point_de_contact = vecteurOA();
+} 
 
 void Toupie::dessine() {
     support->dessine(*this);
 } // Qu'est ce qu'on en fait ?
 
-
+Vecteur Toupie::moment_poids() const{
+    Vecteur poids(masse()*g); //dans le ref absolu
+    poids=ref_O_to_G(poids);
+    return vecteurAG()^poids;
+}
 
 // POUR LE CAS GENERAL : 
 
@@ -71,6 +74,7 @@ double Toupie::rayon2(size_t i) const {  //TEMPORAIRE, DOIT ETRE REDEFINI DANS C
     return pow(((zi(i)/hauteur_)*rayon_),2);
 }
 
+
 double Toupie::distanceBG() const{ // où O est l'origine du solide de construction et G le centre de masse
     double somme1(0.0), somme2(0.0);
     for(size_t i(1) ; i <= N; ++i){
@@ -85,32 +89,30 @@ Vecteur Toupie::vecteurAG() const{ // TEMPORAIRE POUR PAS QUE LA TOUPIE SOIT VIR
     return {0.0,0.0, distanceBG()};
 }
 
-Matrice Toupie::matrice_inertie() const {   // Matrice d'inertie au point A dans G calculé grace à la formule de Huygens-Steiner
-    //cout << "APPEL Toupie::matrice_inertie()" << endl;
-    Vecteur AG(vecteurAG()); // Vecteur AG dans le ref G
-    //cout << "AG: " << AG << endl;
-    Matrice delta ( { pow(AG.coeff(1),2) + pow(AG.coeff(2),2) ,       -AG.coeff(0)*AG.coeff(1)          ,        -AG.coeff(0)*AG.coeff(2)        },
-                    {       -AG.coeff(0)*AG.coeff(1)          , pow(AG.coeff(0),2) + pow(AG.coeff(2),2) ,         -AG.coeff(1)*AG.coeff(2)       }, 
-                    {       -AG.coeff(0)*AG.coeff(2)          ,       -AG.coeff(1)*AG.coeff(2)          , pow(AG.coeff(0),2) + pow(AG.coeff(1),2)});
+Matrice Toupie::matrice_inertie_G() const {   // Matrice d'inertie au point A dans G calculé grace à la formule de Huygens-Steiner  
     
     double ri2(0.0); //représente ri^ (le rayon du solide de révolution à la hauteur zo). OPTIMISATION: RI2 permet d'éviter au programme à calculer 2 fois ri ^2 pour les deux sommes
     double somme1(0.0),somme2(0.0);
     for(size_t i(1) ; i <= N; ++i){
         ri2 = rayon2(i); //Pour éviter de calculer 2fois le rayon au carré
-        // cout << "Z" << i << " = " << zi(i) << endl;
-        //cout << "R" << i << " = " << ri2 << endl;
         somme1 += ri2*ri2;                  //Somme des ri^4 
         somme2 += pow(zi(i),2)* ri2;
     }
-
-    //cout << "masse() " << masse() << endl;
     double I3 (M_PI/2.0 * masse_volumique*somme1*hauteur_/N);
-    //cout << "I3 :" << I3 << endl;
     double I1 (1.0/2.0*I3 + M_PI*masse_volumique*hauteur_/N*somme2 - masse()*pow(vecteurAG().norme(),2)); 
-    //cout << "I1: " << I1 << endl;
     Matrice IG (I1, I1, I3);
-    //cout << "retour matrice inertie()" << (IG+masse()*delta) << endl;
-    return (IG + masse()*delta);
+    return IG;
+
+}
+
+Matrice Toupie::matrice_inertie_A() const { 
+    cout << "appel matrice inertie toupie" << endl;
+    Vecteur AG(vecteurAG()); // Vecteur AG dans le ref G
+    Matrice delta ( { pow(AG.coeff(1),2) + pow(AG.coeff(2),2) ,       -AG.coeff(0)*AG.coeff(1)          ,        -AG.coeff(0)*AG.coeff(2)        },
+                    {       -AG.coeff(0)*AG.coeff(1)          , pow(AG.coeff(0),2) + pow(AG.coeff(2),2) ,         -AG.coeff(1)*AG.coeff(2)       }, 
+                    {       -AG.coeff(0)*AG.coeff(2)          ,       -AG.coeff(1)*AG.coeff(2)          , pow(AG.coeff(0),2) + pow(AG.coeff(1),2)});
+
+    return (matrice_inertie_G() + masse()*delta);
 }
 
 Vecteur Toupie::w() const{
@@ -126,6 +128,18 @@ Vecteur Toupie::w() const{
     return w;
 }
 
+Vecteur Toupie::LA() const {
+    return matrice_inertie_A()*w();
+}
+
+Vecteur Toupie:: vecteurOG() const{
+    return (vecteurOA() + ref_G_to_O(vecteurAG()));
+}
+
+Vecteur Toupie:: vecteurOA() const{         //Pour le moment
+    return Vecteur({0.0,0.0,0.0}); 
+}
+
 Vecteur Toupie::fonction_f() const{
     //cout << "--APPEL Toupie::fonction_f()--" << endl;
     return 2*P;
@@ -136,6 +150,26 @@ Vecteur Toupie::fonction_f() const{
 ostream& operator<<(std::ostream& sortie, Toupie const& toupie) {
     return toupie.affiche_parametres(sortie);
 }
+
+//INVARIANTS :
+
+double Toupie::produitMixte_awL() const{
+    return (w()^(matrice_inertie_G()*w())).coeff(2);
+}
+
+double Toupie::energie_totale() const{
+    return ((w()*LA())/2.0 - masse()*(vecteurOG()*g));
+}
+
+double Toupie::LAz() const{                            
+    return ref_G_to_O(LA()).coeff(2);                 // Retourne la composante z de LA exprimé dans cette nouvelle base  //Change la base du moment cinétique au point A (noté LA): Referentiel Inertie G --> Referentiel Galiléen O
+}
+
+double Toupie::LA3() const{        
+   return LA().coeff(2);        //La matrice d'inertie étant exprimé dans le ref inertiel G, cela renvoie LA3 : 3eme composante du Moment cinétique au point A
+}
+
+
 
 
 //=============================CLASSE CONE SIMPLE===================================//
@@ -154,9 +188,11 @@ ostream& ConeSimple::affiche_parametres(ostream& out) const {
 double ConeSimple::masse() const{ //masse calculé grace a la formule p8
     return (1.0/3.0)*M_PI*masse_volumique*pow(rayon_,2)*hauteur_;
 }
-Matrice ConeSimple::matrice_inertie() const { // Matrice d'inertie calculé grace a la formule p8
+
+
+Matrice ConeSimple::matrice_inertie_G() const { // Matrice d'inertie calculé grace a la formule p8
     double I1, I3;
-    I1 = masse()*((3.0/20.0)*pow(rayon_,2) + (3.0/5.0)*pow(hauteur_,2));
+    I1 = (3.0*masse()/20)*(pow(rayon_,2)+ 1.0/4.0*pow(hauteur_,2));
     I3 = (3.0/10.0)*masse()*pow(rayon_,2);
     return Matrice(I1, I1, I3);
 }
@@ -169,21 +205,8 @@ unique_ptr<Toupie> ConeSimple::copie() const{
 }
 
 
-Vecteur ConeSimple::moment_poids() const{
-    Vecteur poids(masse()*g); //dans le ref absolu
-    poids=ref_O_to_G(poids);
-    return vecteurAG()^poids;
-}
-
 Vecteur ConeSimple::vecteurAG() const{ // Centre de masse dans le ref d'inertie G vu depuis le point de contact
     return {0,0, (3.0/4.0)*hauteur_};
-}
-Vecteur ConeSimple::ref_G_to_O_point(Vecteur const& point) const {
-    double L(vecteurAG().norme());
-    double theta(P.coeff(1));
-    double psi(P.coeff(0));
-    Vecteur point_G ={L*sin(theta)*sin(psi), -L*sin(theta)*cos(psi),L*cos(theta)}; //ref absolu
-    return (S().inv()*point + point_G);
 }
 
 
@@ -203,7 +226,7 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi
     Vecteur w_point(3);
     Vecteur we(w());
     we.set_coord(2,we.coeff(2) - phi_P); //rotation du repère (ne prend pas en compte la rotation propre de la toupie
-    w_point = matrice_inertie().inv()*(moment_poids()-(we^(matrice_inertie()*w())));
+    w_point = matrice_inertie_A().inv()*(moment_poids()-(we^(matrice_inertie_A()*w())));
     std::cout << "Dw_G= " << w_point << std::endl; //1er tour bon après non
 
     //3.CALCUL DE P_POINT_POINT: 
@@ -217,37 +240,14 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi
         P_point_point.set_coord(2, w_point.coeff(2) - P_point_point.coeff(0)*cos(theta) + psi_P*theta_P*sin(theta)); //Modification phi point point formule (2) p6
     }
 
-    //std::cout << "DDpsi =" << P_point_point.coeff(0) << std::endl;
-    //std::cout << "DDtheta =" << P_point_point.coeff(1) << std::endl;
-    //std::cout << "DDphi =" << P_point_point.coeff(2) << std::endl;
+    std::cout << "DDpsi =" << P_point_point.coeff(0) << std::endl;
+    std::cout << "DDtheta =" << P_point_point.coeff(1) << std::endl;
+    std::cout << "DDphi =" << P_point_point.coeff(2) << std::endl;
 
     //4.CALCUL DE G:
     //Pour le moment on le fait pas car on considère qu'il n'y a pas de glissement Va = 0
 
     return P_point_point;
-}
-
-// INVARIANTS :
-
-double ConeSimple::energie_totale() const{
-    Vecteur La(matrice_inertie()*w());
-    Vecteur g_(g);
-    ref_O_to_G(g_); // Le centre de masse est exprimé dans le ref G donc on doit exprimer aussi g_ dans G avant de faire le produit scalaire (sachant que la constante g est exprimé de base dans le ref galiléen O)
-    return (w()*La)/2.0 - masse()*(g_*vecteurAG());
-}
-
-double ConeSimple::LAz() const{        
-    Vecteur La(matrice_inertie()*w());
-    ref_G_to_O(La);                     //Change la base du moment cinétique au point A (noté LA): Referentiel Inertie G --> Referentiel Galiléen O
-    return La.coeff(2);                 // Retourne la composante z de LA exprimé dans cette nouvelle base
-}
-
-double ConeSimple::LA3() const{        
-   return (matrice_inertie()*w()).coeff(2);        //La matrice d'inertie étant exprimé dans le ref inertiel G, cela renvoie LA3 : 3eme composante du Moment cinétique au point A
-}
-
-double ConeSimple::produitMixte_awL() const{
-    return (w()^(matrice_inertie()*w())).coeff(2);
 }
 
 
@@ -296,13 +296,13 @@ Vecteur ConeGeneral::fonction_f() const{
 
     //2.Calcul de IA avec Huygens-Steiner
 
-    //methode matrice_inertie()
+    //methode matrice_inertie_A()
 
     //3.CALCUL DE W_POINT: (dans Repère d'inertie)
     Vecteur w_point(3);
     Vecteur we(w());
     we.set_coord(2,we.coeff(2) - phi_P); //rotation du repère (ne prend pas en compte la rotation propre de la toupie
-    w_point = matrice_inertie().inv()*(MA-(we^(matrice_inertie()*w())));
+    w_point = matrice_inertie_A().inv()*(MA-(we^(matrice_inertie_A()*w())));
     //std::cout << "Dw_G= " << w_point << std::endl; //1er tour bon après non
     
     //4.CALCUL DE P_POINT_POINT: 
@@ -349,7 +349,6 @@ Vecteur ToupieRoulante::fonction_f() const{
     //cout << "--APPEL ToupieRoulante::fonction_f()--" <<endl;
     
     //Lisibilité:
-    double psi(P.coeff(0));
     double theta(P.coeff(1));
     double psi_P(P_point.coeff(0));
     double theta_P(P_point.coeff(1));
@@ -371,16 +370,16 @@ Vecteur ToupieRoulante::fonction_f() const{
 
     //2.Calcul de IA avec Huygens-Steiner
 
-       //methode matrice_inertie()
-    Matrice IA(matrice_inertie());
+       //methode matrice_inertie_A()
+    Matrice IA(matrice_inertie_A());
     
     //3.CALCUL DE W_POINT: (dans Repère d'inertie)
     
     Vecteur w_point(3);
     Vecteur we(w());
     we.set_coord(2,we.coeff(2) - phi_P); //rotation du repère (ne prend pas en compte la rotation propre de la toupie
-    w_point = matrice_inertie().inv()*(MA-(we^(matrice_inertie()*w())));
-    // cout << "matrice inertie.inv() " << (matrice_inertie().inv()) << endl;
+    w_point = matrice_inertie_A().inv()*(MA-(we^(matrice_inertie_A()*w())));
+    // cout << "matrice inertie.inv() " << (matrice_inertie_A().inv()) << endl;
     //cout << "Dw_G= " << w_point << endl;
     
     //4.CALCUL DE P_POINT_POINT: 
@@ -476,8 +475,8 @@ Vecteur ToupieChinoise::vecteurGC() const{
     return {0.0, 0.0, rayon_*alpha()};
 }
 
-Matrice ToupieChinoise::matrice_inertie() const{
-    //cout << "APPEL Toupiechinoise::matrice_inertie()" << endl;
+Matrice ToupieChinoise::matrice_inertie_G() const{
+    //cout << "APPEL Toupiechinoise::matrice_inertie_A()" << endl;
     
     double I3 ((M_PI/30.0)*masse_volumique*pow((2.0*rayon_-hauteur_),3)*(2.0*pow(rayon_,2)+3.0*hauteur_*rayon_+3.0*pow(hauteur_,2)));
     double I1 ((1.0/2.0)*I3 + ((M_PI/15.0)*masse_volumique*pow((2.0*rayon_-hauteur_),2)*(pow(rayon_,3)+ hauteur_*pow(rayon_,2) - 3.0*pow(hauteur_,2)*rayon_+3.0*pow(hauteur_,3))) -masse()*vecteurGC().norme2());
@@ -486,14 +485,18 @@ Matrice ToupieChinoise::matrice_inertie() const{
 
 Vecteur ToupieChinoise::fonction_f() const{   
     //cout << "APPEL ToupieChinoise::fonction_f()" << endl;
-    
+    cout << "Energie totale: " << energie_totale() << endl
+         << "LA_z = " << LAz() << endl
+         << "LA3 = " << LA3() << endl
+         << "produit mixte = " << produitMixte_awL() << endl;
+
     double psi(P.coeff(0));
     double theta(P.coeff(1));
     double psi_p(P_point.coeff(0));
     double theta_p(P_point.coeff(1));
     double phi_p(P_point.coeff(2));
-    double I1((matrice_inertie()*Vecteur({1.0,0.0,0.0})).coeff(0));
-    double I3((matrice_inertie()*Vecteur({0.0,0.0,1.0})).coeff(2));
+    double I1((matrice_inertie_G()*Vecteur({1.0,0.0,0.0})).coeff(0));
+    double I3((matrice_inertie_G()*Vecteur({0.0,0.0,1.0})).coeff(2));
     double f1(phi_p + psi_p*cos(theta));    
     double f3( I1*I3 +masse()*pow(rayon_,2)*I1*pow(sin(theta),2) + masse()*pow(rayon_,2)*I3*pow( (alpha()-cos(theta)),2 ) );
     double f2( (theta_p/sin(theta))*f1* (I3*(I3 + masse()*pow(rayon_,2)* (1.0-alpha()*cos(theta))))/f3 -(2.0*psi_p*theta_p)/tan(theta) );
@@ -546,23 +549,33 @@ unique_ptr<Toupie> ToupieChinoise::copie() const{
 
 /*
 double ConeSimple::energie_totale() const{
-    Vecteur La(matrice_inertie()*w());
+    Vecteur La(matrice_inertie_A()*w());
     Vecteur g_(g);
     ref_O_to_G(g_); // Le centre de masse est exprimé dans le ref G donc on doit exprimer aussi g_ dans G avant de faire le produit scalaire (sachant que la constante g est exprimé de base dans le ref galiléen O)
     return (w()*La)/2.0 - masse()*(g_*vecteurAG());
 }
 
 double ConeSimple::LAz() const{        
-    Vecteur La(matrice_inertie()*w());
+    Vecteur La(matrice_inertie_A()*w());
     ref_G_to_O(La);                     //Change la base du moment cinétique au point A (noté LA): Referentiel Inertie G --> Referentiel Galiléen O
     return La.coeff(2);                 // Retourne la composante z de LA exprimé dans cette nouvelle base
 }
 
 double ConeSimple::LA3() const{        
-   return (matrice_inertie()*w()).coeff(2);        //La matrice d'inertie étant exprimé dans le ref inertiel G, cela renvoie LA3 : 3eme composante du Moment cinétique au point A
+   return (matrice_inertie_A()*w()).coeff(2);        //La matrice d'inertie étant exprimé dans le ref inertiel G, cela renvoie LA3 : 3eme composante du Moment cinétique au point A
 }
 
 double ConeSimple::produitMixte_awL() const{
-    return (w()^(matrice_inertie()*w())).coeff(2);
+    return (w()^(matrice_inertie_A()*w())).coeff(2);
 }
 */
+
+
+double ToupieChinoise::distanceBG() const{
+    return (rayon_*(1.0-alpha()) );
+}
+
+
+Vecteur ToupieChinoise::vecteurOA() const{
+    return {P_point.coeff(3), P_point.coeff(4), 0.0};
+}

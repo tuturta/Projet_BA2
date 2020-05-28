@@ -36,7 +36,7 @@ int main() {
             Systeme systeme(&ecran);
             // systeme.ajoute_toupie(cone1);
             //systeme.ajoute_toupie(cone2);
-            systeme.ajoute_toupie(ToupieChinoiseG);
+            systeme.ajoute_toupie(ToupieChinoise);
             // systeme.ajoute_toupie(ToupieChinoiseG);
 
 
@@ -48,7 +48,7 @@ int main() {
                 cout << "Temps : " << t << "s" <<endl;
                 integrateur_e.evolue(systeme,dt);
                 systeme.dessine(); 
-                
+
             }  
         }
     }
