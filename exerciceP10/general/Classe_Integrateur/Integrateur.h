@@ -1,33 +1,31 @@
 #pragma once
 #include "../Classe_Integrable/Classe_Toupie/Toupie.h"
-#include "../Classe_Systeme/Systeme.h"
-
-//ESSAI ARTHUR *****************************************
-//#include "../dessinable.h"
-
+#include <memory>
 
 class Integrateur{
    public:
     virtual void evolue(Toupie& T, const double dt) const = 0;
-    virtual void evolue(Systeme& S, const double dt) const = 0;
-
+    virtual std::unique_ptr<Integrateur> copie() =0;
 };
 
 class IntegrateurEulerCromer : public Integrateur {
-    public :
+   public :
     virtual void evolue(Toupie& T, const double dt) const override;
-    virtual void evolue(Systeme& S, const double dt) const override;
+    virtual std::unique_ptr<Integrateur> copie() override;
+    std::unique_ptr<IntegrateurEulerCromer> clone();
+
 };
 
 class IntegrateurNewmark : public Integrateur {
-    public :
+   public :
     virtual void evolue(Toupie& T, const double dt) const override;
-    virtual void evolue(Systeme& S, const double dt) const override;
-
+    virtual std::unique_ptr<Integrateur> copie() override;
+    std::unique_ptr<IntegrateurNewmark> clone();
 };
 
 class IntegrateurRungeKutta : public Integrateur {
-    public :
+   public :
     virtual void evolue(Toupie& T, const double dt) const override;
-    virtual void evolue(Systeme& S, const double dt) const override;
+    virtual std::unique_ptr<Integrateur> copie() override;
+    std::unique_ptr<IntegrateurRungeKutta> clone();
 };

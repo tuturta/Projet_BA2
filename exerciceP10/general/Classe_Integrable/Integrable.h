@@ -6,21 +6,25 @@
 #include "../support_a_dessin.h"
 #include "../Classe_Matrice/Matrice.h"
 
-class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a ses paramètres à chaque pas de temps)
+// =============== CLASSE INTEGRABLE =================(Abstraite)
+
+class Integrable : public Dessinable{ // Un intégrable est dessinable ( On a ses paramètres à chaque pas de temps, donc on peut dessiner le mouvement d'un point )
+   
+   // ATTRIBUTS : 
+   
    protected : 
-    Vecteur P; // Vecteur de paramètres psi-theta-phi
-    Vecteur P_point; // Dérivée temporelle des degrés de liberté
-    Vecteur point_de_contact;
+    Vecteur P;                // Paramètres psi-theta-phi + autres paramètres supplémentaires si plus de 3 degrés de liberté
+    Vecteur P_point;          // Dérivée temporelle des degrés de liberté
+    Vecteur point_de_contact; // (Ref O) 
+
+
+   // CONSTRUCTEUR :
 
    public:
-
-    // CONSTRUCTEUR:
-
     Integrable(Vecteur P, Vecteur P_point, SupportADessin* support, Vecteur point_de_contact = {0,0,0})
-        : Dessinable(support), P(P), P_point(P_point), point_de_contact(point_de_contact)  {}  // CONSTRUCTEUR PAR DEFAUT POUR LE SUPPORT ?
-    
+        : Dessinable(support), P(P), P_point(P_point), point_de_contact(point_de_contact)  {}
 
-    // ACCESSEURS / SETTER
+   // MANIPULATEURS :
 
     Vecteur getP() const;
     Vecteur getP_point() const;
@@ -33,16 +37,16 @@ class Integrable : public Dessinable{ // Car Un integrable est dessinable(on a s
     // AFFICHAGE
 
     std::ostream& affiche(std::ostream& sortie) const;                     // Affiche seulement les angles d'euler, leur dérivée et le point de contact
-    virtual std::ostream& affiche_parametres(std::ostream& out) const = 0; // Affiche tous les paramètres d'un intégrable avec du texte
+    virtual std::ostream& affiche_parametres(std::ostream& out) const = 0; // Affichage complet des paramètres : il faut que chaque toupie puisse fournir ces données
 
     // MÉCANIQUE :
 
-    virtual Vecteur fonction_f() const = 0;        // Equation du mouvement
-    Vecteur ref_O_to_G(Vecteur const& vect) const; // Méthodes pour changer un vecteur de référentiel
-    Vecteur ref_G_to_O(Vecteur const& vect) const; //
-    virtual Vecteur ref_G_to_O_point(Vecteur const& point) const =0; // On veut obliger les toupies à avoir une méthode de changement de ref pour les points, mais on ne peut les définir qu'en connaissant leur CM
+    virtual Vecteur fonction_f() const = 0;                          // Calcul des dérivées secondes : chaque toupie à géométrie connue doit fournir un résultat adapté
+    Vecteur ref_O_to_G(Vecteur const& vect) const;                   // Changement de référentiel, O vers G (pour les Vecteurs)
+    Vecteur ref_G_to_O(Vecteur const& vect) const;                   // Changement de référentiel, G vers O (pour les Vecteurs)
+    virtual Vecteur ref_G_to_O_point(Vecteur const& point) const =0; // Changement de référentiel, G vers O, (Points) : chaque toupie à géométrie connue doit fournir cette méthode
 
-    Matrice S() const; // Matrice de transition de RG vers RO
+    Matrice S() const; // Matrice de transition de Ref G vers Ref O
 
 };
 

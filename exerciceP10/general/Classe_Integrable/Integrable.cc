@@ -17,7 +17,7 @@ Vecteur Integrable::getPoint_de_conact() const{
 
 void Integrable::setP(Vecteur const& v) {
     P=v;
-    for(size_t i; i<=3 ; ++i) { P.modulo2pi(i);   }
+    for(size_t i(0); i<=2 ; ++i) { P.modulo2pi(i);   }
 }
 void Integrable::setP_point(Vecteur const& v){
     P_point=v;
@@ -28,8 +28,8 @@ void Integrable::setPoint_de_contact(Vecteur const& v){
 }
 
 ostream& Integrable::affiche(ostream& sortie) const{
-    sortie << "Ω = " << P.coeff(0) << " " << P.coeff(1) << " " << P.coeff(2) << " ; Ω' = " << P_point.coeff(0) << " " << P_point.coeff(1) << " " << P_point.coeff(2) << endl;
-    sortie << "A = " << point_de_contact << endl;
+    sortie << "Ω = ("      << P.coeff(0)       << ", " << P.coeff(1)         << ", " << P.coeff(2) 
+           << ") ; Ω' = (" << P_point.coeff(0) << ", " << P_point.coeff(1)   << ", " << P_point.coeff(2) << ")" << endl;
     return sortie;
 }
 

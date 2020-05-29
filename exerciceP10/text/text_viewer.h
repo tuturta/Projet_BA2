@@ -12,11 +12,10 @@ class TextViewer : public SupportADessin {
   {}
   virtual ~TextViewer() {}
   //Les methodes sont à modifier histoire que leurs sorties puissent être lu par gnu plot
-  virtual void dessine(ConeSimple const& objet) override;
+  virtual void dessine(ConeGeneral const& objet) override;
   virtual void dessine(Objet_en_chute_libre const& objet) override;
   virtual void dessine(Toupie const& objet) override;
-  virtual void dessine(Systeme const& objet) override;
-  virtual void dessine(ToupieChinoise const& objet) override;
+  virtual void dessine(ToupieChinoiseGenerale const& objet) override;
 
  private:
   std::ostream& flot;

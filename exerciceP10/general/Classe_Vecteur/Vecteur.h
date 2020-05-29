@@ -12,7 +12,7 @@ class Vecteur
 
     Vecteur(double x, double y, double z): coeff_({x,y,z}) { correctif_0(); } // Vecteur 3D
     Vecteur(size_t dim) : coeff_(dim,0.0) {}                                  // Vecteur nul de la dimension voulue
-    Vecteur (std::initializer_list<double> const& list) {                     //Permet d'initialiser le vecteur avec des valeurs
+    Vecteur (std::initializer_list<double> const& list) {                     // Initialiser le vecteur avec une liste de valeurs
 		for (auto i : list) { coeff_.push_back(i);
 		correctif_0(); } 
 	}

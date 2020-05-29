@@ -4,26 +4,33 @@
 #include <iostream>
 
 class Matrice {
-private :
-    std::array< Vecteur,3 > lignes;
+
+   // ATTRIBUTS : 
+
+   private :
+    std::array< Vecteur,3 > lignes; // Une matrice est un tableau formé de 3 vecteurs
+
+   // CONSTRUCTEURS :
+
+   public :
+    Matrice (Vecteur const& c1 = {1,0,0}, Vecteur const& c2 = {0,1,0}, Vecteur const& c3 = {0,0,1}) 
+    : lignes({c1,c2, c3}) { correctif_0(); } // Initialise ligne par ligne et vérifie les 0, renvoie la matrice identité par defaut
+    
+    Matrice (double const& a1, double const& a2, double const& a3) 
+    : lignes({Vecteur(a1,0.0,0.0),Vecteur(0.0,a2,0.0),Vecteur(0.0,0.0,a3)}) {} // Matrice diagonale
+
+
+   // MÉTHODES :
+   private : 
     void correctif_0();
-public :
+   public :
+    std::ostream& affiche(std::ostream& sortie) const; // Affichage d'une matrice
+    Matrice transp() const;                            // Transposée de la matrice
+    double det() const;                                // Déterminant de la matrice
+    Matrice inv() const;                               // Inverse de la matrice 
+   
+   // OPÉRATEURS INTERNES :
 
-    // CONSTRUCTEURS :
-
-    Matrice (Vecteur const& c1 = {1,0,0}, Vecteur const& c2 = {0,1,0}, Vecteur const& c3 = {0,0,1}) : lignes({c1,c2, c3}) { correctif_0();
-    } // initialise ligne par ligne et vérifie les 0, renvoie la matrice identite par defaut
-    Matrice (double const& a1, double const& a2, double const& a3) : lignes({Vecteur(a1,0.0,0.0),Vecteur(0.0,a2,0.0),Vecteur(0.0,0.0,a3)}) {} //initialise une matrice diagonale
-
-    // GETTER/SETTER si besoin :
-
-    // MÉTHODES :
-
-    std::ostream& affiche(std::ostream& sortie) const;
-    Matrice transp() const; // renvoie la transposée de la matrice
-    double det() const; 
-    Matrice inv() const;
-    // Opérateurs internes
     Matrice& operator+=(Matrice const& autre);
     Matrice& operator-=(Matrice const& autre);
     Matrice& operator*=(Matrice const& autre);
@@ -31,6 +38,7 @@ public :
     Vecteur operator*=(Vecteur const& v);
     
 };
+
 // OPÉRATEURS EXTERNES :
 std::ostream& operator<<(std::ostream& out, Matrice const& matrice);
 const Matrice operator+(Matrice M1, Matrice const& M2); // Addition de deux matrices

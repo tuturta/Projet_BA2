@@ -119,9 +119,9 @@ void GLWidget::keyPressEvent(QKeyEvent* event)
 void GLWidget::timerEvent(QTimerEvent* event)
 {
   Q_UNUSED(event);
-
   double dt = chronometre.restart()/1000.0;
-  integrateur.evolue(contenu,dt);
+  std::cout << contenu << std::endl;
+  contenu.evolue(dt);
   //pause();
   update();
 }

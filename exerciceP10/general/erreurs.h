@@ -3,5 +3,4 @@
 
 struct Erreur {
     std::string message;
-    int code;
 };

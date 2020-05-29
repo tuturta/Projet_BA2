@@ -24,7 +24,7 @@ int main() {
             TextViewer ecran(cout); //mettre fichier si on veut écrire dans test.txt
     
        //================SYSTEME=============================================================//
-            IntegrateurEulerCromer integrateur;
+            IntegrateurEulerCromer integrateur_e;
             ConeSimple cone1({0.523599,0.0,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
             ConeGeneral cone2({0.523599, 0.0,0.0}, {0,0.0,60.0} ,0.1, 1.5, 0.5, {0.0,0.0,0.0}, &ecran);
             Systeme systeme(&ecran);
@@ -36,7 +36,7 @@ int main() {
                 t+=dt;
                 cout <<endl << "----------------------------------------------------" << endl;
                 cout << "Temps : " << t << "s" <<endl;
-                integrateur.evolue(systeme,dt);
+                systeme.evolue(dt);
                 systeme.dessine();       
             }  
         }

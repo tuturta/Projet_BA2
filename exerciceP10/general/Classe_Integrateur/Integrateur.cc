@@ -2,9 +2,10 @@
 #include "../Classe_Integrable/Integrable.h"
 #include "../Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../Classe_Vecteur/Vecteur.h" // Pour les produits entre vecteurs
-#include "../Classe_Systeme/Systeme.h"
 #include "../constantes.h"
+
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
@@ -13,17 +14,11 @@ void IntegrateurEulerCromer::evolue(Toupie& T, const double dt) const {
         T.setP_point(T.getP_point() + dt*((T.copie())->fonction_f()));
         T.setP(T.getP() + dt*((T.copie())->getP_point()));
         T.ajoute_position_CM(); // ajoute cette nouvelle position du CM ds le vector nécessaire pour la trace
-        T.copie()->update_A(); // mise à jour des coordonnées du point de contact
+        T.update_A(); // mise à jour des coordonnées du point de contact
+        cout << "EULERCROMER" << endl;
 
 }
 
-void IntegrateurEulerCromer::evolue(Systeme& S, const double dt) const {
-    for(size_t i(0) ; i < S.size() ; ++i){
-            unique_ptr<Toupie> temp(S.getToupie(i));
-            evolue(*temp,dt);
-            S.setToupie(i, *temp);
-    }
-}
 void IntegrateurNewmark::evolue(Toupie& T, const double dt) const {
         size_t dimension((T.getP()).dim());
         Vecteur q(dimension);
@@ -45,16 +40,11 @@ void IntegrateurNewmark::evolue(Toupie& T, const double dt) const {
         } while (diff.norme()>=eps);
 
         T.ajoute_position_CM(); // ajoute cette nouvelle position du CM dans le vector nécessaire pour la trace
-        T.copie()->update_A();
-}
+        T.update_A();
 
-void IntegrateurNewmark::evolue(Systeme& S, const double dt) const {
-        for(size_t i(0) ; i < S.size() ; ++i){
-            unique_ptr<Toupie> temp(S.getToupie(i));
-            evolue(*temp,dt);
-            S.setToupie(i, *temp);
-        }
-}  ///un moyen de pas faire du copié-coller ?...
+                cout << "Newmark" << endl;
+
+}
 
 void IntegrateurRungeKutta::evolue(Toupie& T, const double dt) const {
 
@@ -93,15 +83,32 @@ void IntegrateurRungeKutta::evolue(Toupie& T, const double dt) const {
         T.setP_point(P_point_temp+dt/6.0*(k1_p+2*k2_p+2*k3_p+k4_p));
 
         T.ajoute_position_CM(); // ajoute cette nouvelle position du CM dans le vector nécessaire pour la trace
-        T.copie()->update_A();        
+        T.update_A();  
+
+        cout << "RK" << endl;
+      
 }
 
-void IntegrateurRungeKutta::evolue(Systeme& S, const double dt) const {
-        for(size_t i(0) ; i < S.size() ; ++i){
-            unique_ptr<Toupie> temp(S.getToupie(i));
-            evolue(*temp,dt);
-            S.setToupie(i, *temp);
-        }
-} ///copié-collé.../
+// COPIE POLYMORPHIQUE :
 
+unique_ptr<Integrateur> IntegrateurEulerCromer::copie() {
+        return clone();
+}
+unique_ptr<IntegrateurEulerCromer> IntegrateurEulerCromer::clone() {
+        return unique_ptr<IntegrateurEulerCromer>(new IntegrateurEulerCromer(*this));
+}
+
+unique_ptr<Integrateur> IntegrateurNewmark::copie() {
+        return clone();
+}
+unique_ptr<IntegrateurNewmark> IntegrateurNewmark::clone() {
+        return unique_ptr<IntegrateurNewmark>(new IntegrateurNewmark(*this));
+}
+
+unique_ptr<Integrateur> IntegrateurRungeKutta::copie() {
+        return clone();
+}
+unique_ptr<IntegrateurRungeKutta> IntegrateurRungeKutta::clone() {
+        return unique_ptr<IntegrateurRungeKutta>(new IntegrateurRungeKutta(*this));
+}
 

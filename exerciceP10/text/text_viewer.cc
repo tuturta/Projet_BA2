@@ -1,22 +1,20 @@
 #include <iostream> // pour endl
 #include "text_viewer.h"
 #include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
-#include "../general/Classe_Systeme/Systeme.h"
 #include "../general/Classe_Integrable/Integrable.h"
 
-   void TextViewer::dessine(ConeSimple const& objet){
+   void TextViewer::dessine(ConeGeneral const& objet){
      objet.affiche(flot);
    }
    void TextViewer::dessine(Objet_en_chute_libre const& objet){
      objet.affiche(flot);
    }
    void TextViewer::dessine(Toupie const& objet){
+     std::cout << "toupie textV" << std::endl;
      objet.affiche(flot);
    } 
-   void TextViewer::dessine(Systeme const& objet) {
-     objet.affiche(flot);
-   }
-   void TextViewer::dessine(ToupieChinoise const& objet) {
+   void TextViewer::dessine(ToupieChinoiseGenerale const& objet) {
+       std::cout << "toupie chinoise textV" << std::endl;
        objet.affiche(flot);
      }
 

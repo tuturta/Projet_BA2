@@ -11,12 +11,13 @@
 
 class VueOpenGL : public SupportADessin {
  public:
+
+
   // méthode(s) de dessin (héritée(s) de SupportADessin)
-  virtual void dessine(ConeSimple const& objet) override;
-  virtual void dessine(Objet_en_chute_libre const& objet) override;
-  virtual void dessine(Toupie const& objet) override;
-  virtual void dessine(Systeme const& objet) override;
-  virtual void dessine(ToupieChinoise const& objet) override;
+    virtual void dessine(ConeGeneral const& objet) override;
+    virtual void dessine(Objet_en_chute_libre const& objet) override;
+    virtual void dessine(Toupie const& objet) override;
+    virtual void dessine(ToupieChinoiseGenerale const& objet) override;
 
 
   // méthodes de (ré-)initialisation
@@ -30,7 +31,7 @@ class VueOpenGL : public SupportADessin {
   // Méthodes set
   void translate(double x, double y, double z);
   void rotate(double angle, double dir_x, double dir_y, double dir_z);
-  
+
   // méthode utilitaire offerte pour simplifier
   void dessineToupie(QMatrix4x4 const& point_de_vue = QMatrix4x4());
   void dessineConeSimple(QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu);
@@ -38,7 +39,7 @@ class VueOpenGL : public SupportADessin {
   void dessineToupieChinoise (QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu) ;
   void dessineRepere(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
   void dessineSol(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
-  QMatrix4x4 matrice_dessin(Toupie const& a_dessiner) const;
+  void matrice_dessin(QMatrix4x4& matrice, Toupie const& a_dessiner) const;
   void dessineTrace( std::vector<Vecteur> const& positions);
 
 //test

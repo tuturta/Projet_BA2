@@ -22,14 +22,14 @@ void GLCone::initialize( double h, double r, GLuint slices, GLuint stacks)
 
   positions << 0.0 << 0.0 << 0.0;
 
-  for (GLuint i(1); i < stacks; ++i) {
+  for (GLuint i(1); i < stacks; ++i) {    // Calcul des points formant la surface du cône 
 	for (GLuint j(0); j < slices; ++j) {
       float z = i*delta_h;
       float r_actuel = (r*z/h);
       float y = r_actuel * sin(j*beta);
       float x = r_actuel * cos(j*beta);
 
-	  positions << x << y << z;
+	  positions << x << y << z;            // On les stocke dans 'positions'
 	}
   }
 

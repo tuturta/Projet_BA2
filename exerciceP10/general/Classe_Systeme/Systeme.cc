@@ -3,7 +3,7 @@
 #include "../Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../Classe_Integrateur/Integrateur.h"
 #include "../support_a_dessin.h"
-//#include "../Classe_Integrable/Integrable.h"
+#include "../Classe_Integrable/Integrable.h"
 
 
 
@@ -13,7 +13,7 @@ ostream& Systeme::affiche_parametres(ostream& out) const {
     out << "Le système est constitué des " << objets.size() << " toupies suivantes :" << endl;
     for (size_t i(0); i<objets.size(); ++i) {
         if(objets[i]!=nullptr) {
-            out << "=====Toupie " << i+1  << " :" << endl; 
+            out << "===== Toupie " << i+1  << " :" << endl; 
             objets[i]->affiche_parametres(out);
             out << endl;
         }
@@ -26,7 +26,7 @@ ostream& operator<<(ostream& out, Systeme const& S) {
 } 
 
 
-ostream& Systeme::affiche(ostream& out) const {
+ostream& Systeme::affiche(ostream& out) const {  //PAS SUR QUE CA SOIT UTILE
     unsigned int compteur(1);
     for(auto const& ptr_toupie : objets){
         if(ptr_toupie != nullptr){
@@ -45,7 +45,18 @@ void Systeme::ajoute_toupie(Toupie const& nouvelle){
 size_t Systeme::size() const{ return objets.size(); }
 
 void Systeme::dessine() {
-    support->dessine(*this);
+
+    cout << "appel Systeme::dessine()" << endl;
+    unsigned int compteur(1);
+    for (auto const& ptr_toupie : objets){
+        if(ptr_toupie != nullptr){
+            ptr_toupie->dessine();
+            ++compteur;
+        }
+        else{
+            // ERREUR NULLPTR
+        }
+    } 
 }
 
 unique_ptr<Systeme> Systeme::clone() const{
@@ -64,4 +75,17 @@ double Systeme::getHauteur(size_t i) const{
 }
 double Systeme::getRayon(size_t i) const{
     return objets[i]->getRayon();
+}
+
+void Systeme::setSupport(SupportADessin* nouveau_support) {
+    support = nouveau_support;
+    for(auto const& ptr_toupie : objets){
+        ptr_toupie->setSupport(nouveau_support);
+    }
+}
+
+void Systeme::evolue(const double dt) {
+    for(auto const& ptr_toupie : objets) {
+        integrateur->evolue(*ptr_toupie, dt);;
+    }
 }

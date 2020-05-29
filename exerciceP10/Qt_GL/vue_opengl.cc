@@ -8,44 +8,17 @@
 #include <iostream>
 
 // ======================================================================MATRICE DESSIN
-QMatrix4x4 VueOpenGL::matrice_dessin(Toupie const& a_dessiner) const{
-  QMatrix4x4 matrice;
-  matrice.setToIdentity();
+void VueOpenGL::matrice_dessin(QMatrix4x4& matrice, Toupie const& a_dessiner) const{
   double psi(a_dessiner.getP().coeff(0)*180.0/M_PI);  ///angles en degrés
   double theta(a_dessiner.getP().coeff(1)*180.0/M_PI);
   double phi(a_dessiner.getP().coeff(2)*180.0/M_PI);
-  double x0(a_dessiner.getPoint_de_conact().coeff(0));
-  double y0(a_dessiner.getPoint_de_conact().coeff(1));
-  double z0(a_dessiner.getPoint_de_conact().coeff(2));
 
+  matrice.rotate(psi,0.0 , 0.0 , 1.0 ); // précession PSI autour de Oz
+  matrice.rotate(theta ,1.0, 0.0, 0.0 ); // nutation THETA autour de l'axe nodal
+  matrice.rotate(phi,0.0,0.0,1.0 ); //rotation propre PHI autour de Oz'
 
-  //matrice.translate(x0,y0,z0);
-
-  if(a_dessiner.getP_point().dim() == 5){
-    double Cx(a_dessiner.getP_point().coeff(3));
-    double Cy(a_dessiner.getP_point().coeff(4)); // Pour toupie chinoise uniquement, cas où P4_p = Cx et P5_p = Cy
-    matrice.translate(Cx, Cy, a_dessiner.getRayon()); // Positionne la matrice de dessin au niveau du centre de la sphère car la sphère tronquée est dessinée à partir du centre
-
-  }else if (a_dessiner.getP_point().dim()== 6) {
-        Vecteur OG(a_dessiner.getP_point().coeff(3),a_dessiner.getP_point().coeff(4),a_dessiner.getP_point().coeff(5)); // OG dans le ref absolu
-        //std::cout << "OG  : " << OG << std::endl; // OG augmente....
-        Vecteur GC(0.0, 0.0, 3.0*pow(a_dessiner.getHauteur(),2)/(4.0*(a_dessiner.getRayon()+a_dessiner.getHauteur()))); // GC dans le ref relatif
-        Vecteur OC(OG+a_dessiner.ref_G_to_O(GC));
-        matrice.translate(OC.coeff(0),OC.coeff(1), OC.coeff(2));
-    } else {
-            matrice.translate(x0,y0,z0);
-        }
-
- //matrice.scale(1.5);
-
-  matrice.rotate(psi,0.0 , 0.0 , 1.0); // précession PSI autour de Oz
-  matrice.rotate(theta ,1.0, 0.0, 0.0 /*cos(psi) , sin(psi) , 0*/ ); // nutation THETA autour de l'axe nodal
-  matrice.rotate(phi,0.0,0.0,1.0/*sin(theta)*sin(psi), -sin(theta)*cos(psi), cos(theta)*/); //rotation propre PHI autour de Oz'
-
-
-
-  return matrice;
 }
+
 
 // ======================================================================DESSINE(TOUPIE)
 
@@ -53,17 +26,23 @@ void VueOpenGL::dessine(Toupie const& a_dessiner)
 {
     std::cout << "COUCOU JE SUIS UNE TOUPIE" << std::endl;
     dessineRepere();
-    dessinePyramide(matrice_dessin(a_dessiner));
 
 }
 
 // ======================================================================DESSINE(CONE)
-void VueOpenGL::dessine(ConeSimple const& a_dessiner)
+void VueOpenGL::dessine(ConeGeneral const& a_dessiner)
 {
+  QMatrix4x4 matrice;
+  matrice.setToIdentity();
+  double xA(a_dessiner.getPoint_de_conact().coeff(0));
+  double yA(a_dessiner.getPoint_de_conact().coeff(1));
+  double zA(a_dessiner.getPoint_de_conact().coeff(2));
+  matrice.translate(xA,yA,zA);  //On se place au niveau du point de contact, c'est de là que se dessine le cône
+  matrice_dessin(matrice, a_dessiner);
+
   std :: cout << "COUCOU JE SUIS UN CONE" << std::endl;
   dessineRepere();
-  //dessineSol();
-  QMatrix4x4 matrice(matrice_dessin(a_dessiner));
+  dessineSol();
   std::cout << "dans dessine(cone)" << std::endl;
   dessineRepere(matrice); //ref d'inertie
   cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
@@ -72,16 +51,24 @@ void VueOpenGL::dessine(ConeSimple const& a_dessiner)
 }
 
 // ======================================================================DESSINE(TOUPIE_CHINOISE)
-void VueOpenGL::dessine(ToupieChinoise const& a_dessiner)
+void VueOpenGL::dessine(ToupieChinoiseGenerale const& a_dessiner)
 {
-   std::cout << "COUCOU JE SUIS UNE TOUPIE chinoise" << std::endl;
+  QMatrix4x4 matrice;
+  matrice.setToIdentity();
+  double Cx(a_dessiner.vecteurOC().coeff(0));
+  double Cy(a_dessiner.vecteurOC().coeff(1));
+  double Cz(a_dessiner.vecteurOC().coeff(2));
+  matrice.translate(Cx,Cy,Cz);                  //On place le repère au centre de la sphère (le dessin de la sphère se fait par le centre)
+  matrice_dessin(matrice, a_dessiner);          //On effectue les rotations nécessaire pour que la toupie chinoise se dessine avec la bonne inclinaison
+
+  std::cout << "COUCOU JE SUIS UNE TOUPIE chinoise" << std::endl;
   dessineRepere();
-  //dessineSol();
-  QMatrix4x4 matrice(matrice_dessin(a_dessiner));
+  dessineSol();
   dessineRepere(matrice);
+  std::cout << "lalalaalla" << std::endl;
   sphere_tronquee.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
-  dessineConeSimple(matrice,1.0,0.5,1.0); // violet
+  dessineToupieChinoise(matrice,1.0,0.5,1.0); // violet
 }
 
 // ======================================================================DESSINE(OBJ_EN_CHUTE_LIBRE)
@@ -102,7 +89,7 @@ void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
   dessineToupie(matrice);
 }
 // ======================================================================DESSINE(SYSTEME)
-void VueOpenGL::dessine(Systeme const& a_dessiner)
+/*void VueOpenGL::dessine(Systeme const& a_dessiner)
 {
   dessineSol();
   dessineRepere();
@@ -124,7 +111,7 @@ void VueOpenGL::dessine(Systeme const& a_dessiner)
     dessineRepere(matrice);
     dessineTrace((a_dessiner.getToupie(i))->getPositions_CM());
   }
-}
+}*/
 // ======================================================================DESSINETRACE
 
 void VueOpenGL::dessineTrace(std::vector<Vecteur> const& positions)

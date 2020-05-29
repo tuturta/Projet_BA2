@@ -22,14 +22,16 @@ void Vecteur::set_coord(size_t position, double valeur){
 	if (position<=dim()) {
         coeff_[position]=valeur; ///Position 0=x/psi,position 1=y/theta, position 2=z/phi
 	}else{
-		Erreur Err = {"DIMENSIONS! (set_coord)",1}; //Erreur de dim, code 1, niveau 1, n'arrette pas le programme
+                Erreur Err = {"DIMENSIONS(set_coord)"}; //Erreur de dim, code 1, niveau 1, n'arrette pas le programme
 		throw Err;
 	}
 }
 ostream& Vecteur::affiche(ostream& out) const {
+	out << "( ";
 	for(auto x : coeff_) {
 		out << x << " ";
 	}
+	out << ")";
 	return out;
 }
 size_t Vecteur::dim() const {
@@ -93,7 +95,7 @@ const Vecteur operator^(Vecteur v, Vecteur const& w){
 // --> INTERNES
 Vecteur& Vecteur::operator+=(Vecteur const& autre){
 	if (dim()!=autre.dim()) {
-		Erreur Err = {"DIMENSIONS! (op+=)",1};
+                Erreur Err = {"DIMENONS! (op+=)"};
 		throw Err;
 	}
 	for (size_t i(0); i<dim(); ++i) {
@@ -104,7 +106,7 @@ Vecteur& Vecteur::operator+=(Vecteur const& autre){
 }
 double Vecteur::operator*(Vecteur const& autre){
 	if(dim()!=autre.dim()) {
-		Erreur Err= {"DIMENSIONS!(op*)",1};
+                Erreur Err= {"DIMSIONS!(op*)"};
 		throw Err;
 	} else {
         double x(0);
@@ -123,14 +125,14 @@ Vecteur& Vecteur::operator*=(double a) {
 }
 Vecteur& Vecteur::operator/=(double a) {
 	if ( a< 1e-8 ) {
-		Erreur err={"Division par 0", 1};
+                Erreur err={"Dsion par 0"};
 		throw err;
 	}
 	return *this*=1/a;
 }
 Vecteur& Vecteur::operator-=(Vecteur const& autre){
 	if(dim() != autre.dim()) {
-		Erreur Err = {"DIMENSIONS! (op-=)",1};
+                Erreur Err = {"DIMENONS! (op-=)"};
 		throw Err;
 	}
 	for(size_t i(0) ; i<dim() ; ++i){
@@ -141,7 +143,7 @@ Vecteur& Vecteur::operator-=(Vecteur const& autre){
 }
 Vecteur& Vecteur::operator^=(Vecteur const& autre){
 	if(dim() != autre.dim() or dim() != 3) {
-		Erreur Err = {"DIMENSIONS! (op^=)",1};
+                Erreur Err = {"DIMENONS! (op^=)"};
 		throw Err;
 	}
 	double temp0, temp1, temp2;
@@ -161,7 +163,7 @@ Vecteur Vecteur::operator~() const{
 bool Vecteur::operator==(Vecteur const& autre) const{
 	bool retour(true);
 	if(dim() != autre.dim()) {
-		Erreur Err = {"DIMENSIONS! (op==)", 1};
+                Erreur Err = {"DIMENNS! (op==)"};
 		throw Err;
 	}
 	for(size_t i(0) ; i < dim() ; ++i){

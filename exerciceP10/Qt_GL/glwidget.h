@@ -3,7 +3,7 @@
 
 #include <QOpenGLWidget>        // Classe pour faire une fenêtre OpenGL
 #include <QTime>                // Classe pour gérer le temps
-
+#include <iostream>
 
 #include "vue_opengl.h"
 #include "../general/Classe_Integrateur/Integrateur.h"
@@ -11,42 +11,46 @@
 
 class GLWidget : public QOpenGLWidget
 {
-public:
-  GLWidget(Systeme const& a_dessiner, QWidget* parent = nullptr)
-    : QOpenGLWidget(parent), contenu(a_dessiner)
-    {contenu.setSupport(&vue); }
-  virtual ~GLWidget() {}
-private:
+
+  // CONSTRUCTEUR :
+  
+  public:
+    GLWidget(Systeme const& a_dessiner, QWidget* parent = nullptr)
+      : QOpenGLWidget(parent), contenu(a_dessiner)
+      {contenu.setSupport(&vue);
+      std::cout << "constructeur GLwidget" << std::endl;}
+    virtual ~GLWidget() {}
+
+  // MÉTHODES : 
+
+  private:
   // Les 3 méthodes clés de la classe QOpenGLWidget à réimplémenter
-  virtual void initializeGL()                  override;
-  virtual void resizeGL(int width, int height) override;
-  virtual void paintGL()                       override;
+   virtual void initializeGL()                  override;
+   virtual void resizeGL(int width, int height) override;
+   virtual void paintGL()                       override;
 
   // Méthodes de gestion d'évènements
-  virtual void keyPressEvent(QKeyEvent* event) override;
-  virtual void timerEvent(QTimerEvent* event)  override;
-  virtual void mousePressEvent(QMouseEvent* event) override;
-  virtual void mouseMoveEvent(QMouseEvent* event)  override;
+   virtual void keyPressEvent(QKeyEvent* event) override;
+   virtual void timerEvent(QTimerEvent* event)  override;
+   virtual void mousePressEvent(QMouseEvent* event) override;
+   virtual void mouseMoveEvent(QMouseEvent* event)  override;
 
   // Méthodes de gestion interne
-  void pause();
+   void pause();
 
   // Vue : ce qu'il faut donner au contenu pour qu'il puisse se dessiner sur la vue
-  VueOpenGL vue;
+   VueOpenGL vue;
 
   // Timer
-  int timerId;
+   int timerId;
   // pour faire évoluer les objets avec le bon "dt"
-  QTime chronometre;
+   QTime chronometre;
 
   // objets à dessiner, faire évoluer
-  Systeme contenu;
-
-  // Integrateur pour faire évoluer la toupie :
-  IntegrateurRungeKutta integrateur;
+   Systeme contenu;
 
   // position de la souris
-    QPoint lastMousePosition;
+   QPoint lastMousePosition;
 };
 
 #endif // GLWIDGET_H
