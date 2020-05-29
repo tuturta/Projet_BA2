@@ -24,7 +24,7 @@ void VueOpenGL::matrice_dessin(QMatrix4x4& matrice, Toupie const& a_dessiner) co
 
 void VueOpenGL::dessine(Toupie const& a_dessiner)
 {
-    std::cout << "COUCOU JE SUIS UNE TOUPIE" << std::endl;
+    //std::cout << "COUCOU JE SUIS UNE TOUPIE" << std::endl;
     dessineRepere();
 
 }
@@ -40,10 +40,10 @@ void VueOpenGL::dessine(ConeGeneral const& a_dessiner)
   matrice.translate(xA,yA,zA);  //On se place au niveau du point de contact, c'est de là que se dessine le cône
   matrice_dessin(matrice, a_dessiner);
 
-  std :: cout << "COUCOU JE SUIS UN CONE" << std::endl;
+  //std :: cout << "COUCOU JE SUIS UN CONE" << std::endl;
   dessineRepere();
   dessineSol();
-  std::cout << "dans dessine(cone)" << std::endl;
+  //std::cout << "dans dessine(cone)" << std::endl;
   dessineRepere(matrice); //ref d'inertie
   cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
@@ -61,7 +61,7 @@ void VueOpenGL::dessine(ToupieChinoiseGenerale const& a_dessiner)
   matrice.translate(Cx,Cy,Cz);                  //On place le repère au centre de la sphère (le dessin de la sphère se fait par le centre)
   matrice_dessin(matrice, a_dessiner);          //On effectue les rotations nécessaire pour que la toupie chinoise se dessine avec la bonne inclinaison
 
-  std::cout << "COUCOU JE SUIS UNE TOUPIE chinoise" << std::endl;
+  //std::cout << "COUCOU JE SUIS UNE TOUPIE chinoise" << std::endl;
   dessineRepere();
   dessineSol();
   dessineRepere(matrice);
@@ -407,7 +407,7 @@ void VueOpenGL::dessineSol (QMatrix4x4 const& point_de_vue)
 //========================================================================DESSINE_TOUPIE_CHINOISE
 void VueOpenGL::dessineToupieChinoise (QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu)
 {
-   std:: cout << "=================APPEL DESSINE TOUPIE CHINOISE" << std:: endl;
+   //std:: cout << "=================APPEL DESSINE TOUPIE CHINOISE" << std:: endl;
   prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
   prog.setAttributeValue(CouleurId, rouge, vert, bleu);  // met la couleur
   sphere_tronquee.draw(prog, SommetId); // dessine la sphere tronquee

@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
   IntegrateurRungeKutta integrateur_rk;
 
   ConeSimple cone1({0.0,0.523599,0.0},      //P (psi-theta-phi)
-                   {0.0,0.0,80.0},    //P_point
+                   {0.0,0.0,60.0},    //P_point
                    0.1,                //Masse volumique
                    1.5,                //Hauteur
                    0.5,                //Rayon
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
   Systeme systeme1(&integrateur_e);
 
 
-  systeme1.ajoute_toupie(coneTrace);
+  systeme1.ajoute_toupie(cone1);
   //systeme1.ajoute_toupie(cone2);
   //systeme1.ajoute_toupie(cone1);
   QApplication a(argc, argv);

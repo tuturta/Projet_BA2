@@ -3,11 +3,13 @@
 #include <memory>
 #include <vector>
 #include <cmath>
+#include <exception>
 #include "../../../text/text_viewer.h"
 #include "../Integrable.h"
 #include "../../Classe_Matrice/Matrice.h"
 #include "../../Classe_Vecteur/Vecteur.h"
 #include "../../support_a_dessin.h"
+#include "../../erreurs.h"
 
 // =============================== TOUPIE ==================================
 class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P est défini comme étant les angles d'Euler dans l'ordre (psi, theta, phi)
@@ -25,7 +27,12 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
    
    public :
     Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact = {0.0,0.0,0.0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-        : Integrable(P, P_point, support, point_de_contact), masse_volumique(masse_volumique),hauteur_(hauteur), rayon_(rayon) {}
+        : Integrable(P, P_point, support, point_de_contact), masse_volumique(masse_volumique),hauteur_(hauteur), rayon_(rayon) {
+            if ((hauteur<0.0) or (rayon<eps) or (masse_volumique<eps)) {
+                Erreur err = {"Votre objet doit avoir un sens physique!"};
+                throw err; 
+            }
+        }
 
 
    // METHODES COMMUNES A TOUTES LES TOUPIES (INDEPENDANTES DE LA GEOMETRIE DE LA TOUPIE)
@@ -82,7 +89,13 @@ std::ostream& operator<<(std::ostream& sortie,Toupie const& toupie); // Surcharg
 
 class ConeGeneral: public Toupie{   
    public: 
-    using Toupie :: Toupie;                        
+    ConeGeneral(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact = {0.0,0.0,0.0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+            : Toupie(P, P_point,masse_volumique,hauteur,rayon,point_de_contact, support) {
+            if (hauteur<eps) {
+                Erreur err = {"Un cône doit avoir une hauteur strictement positive!"};
+                throw err; 
+            }
+        }
    private :
     virtual double rayon2(size_t i) const override;  // Redéfinition pour un cône du rayon2 défini plus haut
     std::unique_ptr<ConeGeneral> clone() const;
@@ -103,9 +116,10 @@ class ConeSimple : public ConeGeneral {
 
     // CONSTRUCTION - COPIE - DESTRUCTION
 
-    ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    : ConeGeneral(P, P_point, masse_volumique, hauteur, rayon, point_de_contact, support) {} // Constructeur qui initialise par défaut le point de contact à (0,0,0) ainsi qu'un support textuel
-    
+    //ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    //: ConeGeneral(P, P_point, masse_volumique, hauteur, rayon, point_de_contact, support) {} // Constructeur qui initialise par défaut le point de contact à (0,0,0) ainsi qu'un support textuel
+    using ConeGeneral::ConeGeneral;
+
    private :
     std::unique_ptr<ConeSimple> clone() const;
    public :
@@ -144,8 +158,8 @@ class Objet_en_chute_libre : public Toupie {
 // =============================== TOUPIE ROULANTE ===================================
 // BUT : Retrouver une toupie chinoise avec une méthode plus générale
 
-/*
-class ToupieRoulante: public Toupie{
+
+/*class ToupieRoulante: public Toupie{
 
     public:
 
@@ -164,16 +178,6 @@ class ToupieRoulante: public Toupie{
 
 
 };*/
-
-
-
-
-
-
-
-
-
-
 
 
 class ToupieChinoiseGenerale: public Toupie{

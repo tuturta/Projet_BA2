@@ -46,7 +46,7 @@ size_t Systeme::size() const{ return objets.size(); }
 
 void Systeme::dessine() {
 
-    cout << "appel Systeme::dessine()" << endl;
+    //cout << "appel Systeme::dessine()" << endl;
     unsigned int compteur(1);
     for (auto const& ptr_toupie : objets){
         if(ptr_toupie != nullptr){

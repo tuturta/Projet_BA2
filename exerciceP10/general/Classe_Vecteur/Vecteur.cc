@@ -58,8 +58,12 @@ void Vecteur::correctif_0() {
  }
 
 void Vecteur::modulo2pi(size_t i) {
-    while (coeff(i)>=2.0*M_PI) {
-           set_coord(i,coeff(i)-2.0*M_PI);
+    while (abs(coeff(i))>=2.0*M_PI) {
+        if(coeff(i)>0.0) {
+            coeff_[i] = coeff_[i] - 2*M_PI;
+        } else {
+            coeff_[i] = coeff_[i] + 2*M_PI;
+        }
     }  // pour obtenir les angles modulo 2 pi
 }
 // DÉFINITIONS DES OPERATEURS:

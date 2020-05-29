@@ -36,7 +36,7 @@ class Integrable : public Dessinable{ // Un intégrable est dessinable ( On a se
 
     // AFFICHAGE
 
-    std::ostream& affiche(std::ostream& sortie) const;                     // Affiche seulement les angles d'euler, leur dérivée et le point de contact
+    std::ostream& affiche(std::ostream& sortie) const;                     // Affiche seulement les angles d'euler, et leur dérivées
     virtual std::ostream& affiche_parametres(std::ostream& out) const = 0; // Affichage complet des paramètres : il faut que chaque toupie puisse fournir ces données
 
     // MÉCANIQUE :

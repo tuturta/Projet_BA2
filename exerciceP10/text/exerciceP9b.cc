@@ -14,7 +14,7 @@ using namespace std;
 int main() {
     const double dt(0.01); // Pas de temps
     double t(0.0);         // Initialise le temps à 0
-    unsigned int nombre_de_tour(10);
+    unsigned int nombre_de_tour(600);
     try{
         //================SUPPORT TEXTUEL======================================================//
         ofstream fichier;
@@ -25,19 +25,46 @@ int main() {
             TextViewer ecran(cout); //mettre fichier si on veut écrire dans test.txt
     
        //================SYSTEME=============================================================//
-            IntegrateurEulerCromer integrateur_e;
+            IntegrateurEulerCromer integrateur_e; // Diverge très rapidement
             IntegrateurNewmark  integrateur_n;
             IntegrateurRungeKutta integrateur_rk;
 
-            ConeSimple cone1({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
-            ConeGeneral cone2({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
-            ToupieChinoise Toupiechinoise({0.0,0.11,0.0},{50.0,0.0,0.0},0.1,0.02,0.15,{0.0,0.0,0.0}, &ecran);
-            ToupieChinoiseGenerale ToupieChinoiseG({0.0,0.11,0.0},{50.0,0.0,0.0},0.1,0.02,0.15,{0.0,0.0,0.0}, &ecran);
+            ConeSimple cone1({0.0,0.523599,0.0}, // Angles d'Euler
+                             {0.0,0.0,60.0},     // Leurs dérivées
+                             0.1,                // Masse volumique
+                             1.5,                // Hauteur
+                             0.5,                // Rayon
+                             {0.0,0.0,0.0},      // Point de contact
+                             &ecran);            // Support
+
+            ConeGeneral cone2({0.0,0.523599,0.0},
+                              {0.0,0.0,60.0},
+                              0.1,
+                              1.5,
+                              0.5,
+                              {0.0,0.0,0.0},
+                              &ecran);
+
+            ToupieChinoise Toupiechinoise({0.0,0.11,0.0},
+                                          {50.0,0.0,0.0},
+                                          0.1,
+                                          0.02,
+                                          0.15,
+                                          {0.0,0.0,0.0},
+                                          &ecran);
+
+            ToupieChinoiseGenerale ToupieChinoiseG({0.0,0.11,0.0},
+                                                   {50.0,0.0,0.0},
+                                                   0.1,
+                                                   0.02,
+                                                   0.15,
+                                                   {0.0,0.0,0.0},
+                                                   &ecran);
 
             Systeme systeme(&integrateur_e, &ecran);
-            //systeme.ajoute_toupie(cone1);
+            systeme.ajoute_toupie(cone1);
             //systeme.ajoute_toupie(cone2);
-            systeme.ajoute_toupie(Toupiechinoise);
+            //systeme.ajoute_toupie(Toupiechinoise);
             //systeme.ajoute_toupie(ToupieChinoiseG);
 
             cout << systeme << endl;

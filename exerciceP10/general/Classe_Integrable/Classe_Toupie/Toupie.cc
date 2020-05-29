@@ -77,7 +77,7 @@ double Toupie::masse() const{
 }
 
 double Toupie::zi(size_t i) const{
-    return (2.0*i-1)*hauteur_/(2.0*N);
+    return (2.0*i-1.0)*hauteur_/(2.0*N);
 }
 
 double Toupie::rayon2(size_t i) const {  //TEMPORAIRE, DOIT ETRE REDEFINI DANS CHAQUE CLASSE
@@ -222,6 +222,9 @@ Vecteur ConeSimple::vecteurAG() const{ // Centre de masse dans le ref d'inertie 
 
 Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi-theta-phi
     //cout << "-----appel ConeSimple::fonction()-----" << endl;
+    //cout << "AVANT P=" << P << endl;
+
+
     //Pour la lisibilité :
     double theta(P.coeff(1));
     double psi_P(P_point.coeff(0));
@@ -250,7 +253,6 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi
 
     //4.CALCUL DE G:
     //Pour le moment on le fait pas car on considère qu'il n'y a pas de glissement Va = 0
-
     return P_point_point;
 }
 
