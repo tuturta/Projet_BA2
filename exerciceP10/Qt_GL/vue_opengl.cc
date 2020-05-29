@@ -6,9 +6,10 @@
 #include "../general/Classe_Vecteur/Vecteur.h"
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 // ======================================================================MATRICE DESSIN
-void VueOpenGL::matrice_dessin(QMatrix4x4& matrice, Toupie const& a_dessiner) const{
+void VueOpenGL::matrice_inertie(QMatrix4x4& matrice, Toupie const& a_dessiner) const{
   double psi(a_dessiner.getP().coeff(0)*180.0/M_PI);  ///angles en degrés
   double theta(a_dessiner.getP().coeff(1)*180.0/M_PI);
   double phi(a_dessiner.getP().coeff(2)*180.0/M_PI);
@@ -32,46 +33,73 @@ void VueOpenGL::dessine(Toupie const& a_dessiner)
 // ======================================================================DESSINE(CONE)
 void VueOpenGL::dessine(ConeGeneral const& a_dessiner)
 {
-  QMatrix4x4 matrice;
-  matrice.setToIdentity();
-  double xA(a_dessiner.getPoint_de_conact().coeff(0));
-  double yA(a_dessiner.getPoint_de_conact().coeff(1));
-  double zA(a_dessiner.getPoint_de_conact().coeff(2));
-  matrice.translate(xA,yA,zA);  //On se place au niveau du point de contact, c'est de là que se dessine le cône
-  matrice_dessin(matrice, a_dessiner);
+   //On initialise la matrice de dessin
+   QMatrix4x4 matrice;
+   matrice.setToIdentity();
 
-  std :: cout << "COUCOU JE SUIS UN CONE" << std::endl;
-  dessineRepere();
-  dessineSol();
-  std::cout << "dans dessine(cone)" << std::endl;
-  dessineRepere(matrice); //ref d'inertie
-  cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
-  dessineConeSimple(matrice,1.0,0.5,1.0); // violet
+   //Coordonnées du point de contact
+   double xA(a_dessiner.getPoint_de_conact().coeff(0));
+   double yA(a_dessiner.getPoint_de_conact().coeff(1));
+   double zA(a_dessiner.getPoint_de_conact().coeff(2));
+
+
+
+
+  dessineSol();      //On dessine le sol
+  dessineRepere();   //On dessine le repère d'inertie
+
+
+  //On se place au niveau du point de contact, c'est de là que se dessine le cône:
+  matrice.translate(xA,yA,zA);
+
+
+  //On se place dans repère d'inertie:
+  matrice_inertie(matrice, a_dessiner);
+
+
+  //On dessine la trace de la toupie et son centre de masse et son repère d'inertie:
+  dessineTrace(a_dessiner.getPositions_CM());
+  dessineCM(a_dessiner);
+  //dessineRepere(matrice);                                            //On dessine le repère d'inertie
+
+  //On dessine le cone:
+  cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon());   //établit le modèle du cône à dessiner.
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);                        // passe en mode "fil de fer"
+  dessineConeSimple(matrice,a_dessiner.getColor());
 }
 
-// ======================================================================DESSINE(TOUPIE_CHINOISE)
+// ======================DESSINE(TOUPIE_CHINOISE)=============================
 void VueOpenGL::dessine(ToupieChinoiseGenerale const& a_dessiner)
 {
+
+  dessineRepere();      //Dessine le repère O
+  dessineSol();         //Marce pas pour le moment, surement un problème de shader
+
+
+  //On place le repère du dessin au centre de la sphère(point à partir duquel s'effectue le dessin)
   QMatrix4x4 matrice;
   matrice.setToIdentity();
   double Cx(a_dessiner.vecteurOC().coeff(0));
   double Cy(a_dessiner.vecteurOC().coeff(1));
   double Cz(a_dessiner.vecteurOC().coeff(2));
-  matrice.translate(Cx,Cy,Cz);                  //On place le repère au centre de la sphère (le dessin de la sphère se fait par le centre)
-  matrice_dessin(matrice, a_dessiner);          //On effectue les rotations nécessaire pour que la toupie chinoise se dessine avec la bonne inclinaison
+  matrice.translate(Cx,Cy,Cz);
 
-  std::cout << "COUCOU JE SUIS UNE TOUPIE chinoise" << std::endl;
-  dessineRepere();
-  dessineSol();
-  dessineRepere(matrice);
-  std::cout << "lalalaalla" << std::endl;
+  //On se place dans repère d'inertie
+  matrice_inertie(matrice, a_dessiner);
+
+
+  //On dessine la trace de la toupie et son centre de masse et son repère d'inertie
+  dessineTrace(a_dessiner.getPositions_CM());
+  dessineCM(a_dessiner);
+  //dessineRepere(matrice);
+
+  //On dessine la sphère tronquée dans le repère du dessin
   sphere_tronquee.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
-  dessineToupieChinoise(matrice,1.0,0.5,1.0); // violet
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);                                 // passe en mode "fil de fer"
+  dessineToupieChinoise(matrice,a_dessiner.getColor());
 }
 
-// ======================================================================DESSINE(OBJ_EN_CHUTE_LIBRE)
+// ======================DESSINE(OBJET EN ...)=============================
 void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
 {
   QMatrix4x4 matrice;
@@ -86,48 +114,28 @@ void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
   matrice.rotate(psi,0.0 , 0.0 , 1.0);    // précession PSI autour de Oz
 
   matrice.scale(0.5);
-  dessineToupie(matrice);
+  dessineCube(matrice);
 }
-// ======================================================================DESSINE(SYSTEME)
-/*void VueOpenGL::dessine(Systeme const& a_dessiner)
-{
-  dessineSol();
-  dessineRepere();
 
-  QMatrix4x4 matrice;
-  matrice.setToIdentity();
-  for(size_t i(0) ; i < a_dessiner.size() ; ++i){
-    matrice = matrice_dessin(*(a_dessiner.getToupie(i)));
-    //dessine(a_dessiner.getT(i));
-    sphere_tronquee.initialize(a_dessiner.getHauteur(i),a_dessiner.getRayon(i));
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // passe en mode "fil de fer"
-    size_t t(a_dessiner.size()-1);
-    if (t==0) {t+=1;}
-    dessineToupieChinoise(matrice,1.0,double(i/t),0.0);
-   // dessineConeSimple(matrice, 1.0,double(i/t),0.0);
-    //dessineConeSimplebug(1.5,0.5,matrice);
-    //dessine(*(a_dessiner.getToupie(i)));
-    dessineRepere(matrice);
-    dessineTrace((a_dessiner.getToupie(i))->getPositions_CM());
-  }
-}*/
-// ======================================================================DESSINETRACE
+// ============================DESSINETRACE=================================
 
 void VueOpenGL::dessineTrace(std::vector<Vecteur> const& positions)
 {
+    std::cout << "dessin de la trace, dernier point" << positions.back() << std::endl;
+
     prog.setUniformValue("vue_modele", matrice_vue*QMatrix4x4());
     glBegin(GL_POINTS);
-    prog.setAttributeValue(CouleurId,1.0,0.0,1.0); //rouge
+    prog.setAttributeValue(CouleurId,1.0,0.0,0.0); //rouge
     for(auto point: positions) {
         prog.setAttributeValue(SommetId,point.coeff(0),point.coeff(1), point.coeff(2));
+
     }
 
     glEnd();
 
 }
 
-// ======================================================================INITIALISATION
+// ============================INITIALISATION=================================
 void VueOpenGL::init()
 {
   /* Initialise notre vue OpenGL.
@@ -180,6 +188,7 @@ void VueOpenGL::init()
    */
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
   glClearDepth(1.0f);                   // Set background depth to farthest
+  dessineSol();
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
 
@@ -220,8 +229,8 @@ void VueOpenGL::rotate(double angle, double dir_x, double dir_y, double dir_z)
   matrice_vue = rotation_supplementaire * matrice_vue;
 }
 
-// =====================================================================DESSINETOUPIE ? ->CUBE -> A ENLEVER ?
-void VueOpenGL::dessineToupie (QMatrix4x4 const& point_de_vue)
+// =====================================================================dessineCube ? ->CUBE -> A ENLEVER ?
+void VueOpenGL::dessineCube (QMatrix4x4 const& point_de_vue)
 {
   prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
 
@@ -300,14 +309,7 @@ void VueOpenGL::dessineConeSimplebug( double hauteur, double rayon, const QMatri
 
 
 }
-/*******************************************************************************/
 
-void VueOpenGL::dessineConeSimple (QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu)
-{
-  prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
-  prog.setAttributeValue(CouleurId, rouge, vert, bleu);  // met la couleur
-  cone.draw(prog, SommetId); // dessine le cône
-}
 
 //===========================================================================DESSINEPYRAMIDE
 
@@ -405,10 +407,55 @@ void VueOpenGL::dessineSol (QMatrix4x4 const& point_de_vue)
 }
 
 //========================================================================DESSINE_TOUPIE_CHINOISE
-void VueOpenGL::dessineToupieChinoise (QMatrix4x4 const& point_de_vue, double rouge, double vert, double bleu)
+void VueOpenGL::dessineToupieChinoise (QMatrix4x4 const& point_de_vue, Couleur couleur)
 {
-   std:: cout << "=================APPEL DESSINE TOUPIE CHINOISE" << std:: endl;
   prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
-  prog.setAttributeValue(CouleurId, rouge, vert, bleu);  // met la couleur
+  prog.setAttributeValue(CouleurId, ColorTranslate(couleur)[0], ColorTranslate(couleur)[1], ColorTranslate(couleur)[2]);  // met la couleur
   sphere_tronquee.draw(prog, SommetId); // dessine la sphere tronquee
+}
+
+void VueOpenGL::dessineConeSimple (QMatrix4x4 const& point_de_vue, Couleur couleur)
+{
+  prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
+  prog.setAttributeValue(CouleurId, ColorTranslate(couleur)[0], ColorTranslate(couleur)[1], ColorTranslate(couleur)[2]);  // met la couleur
+  cone.draw(prog, SommetId); // dessine le cone simple
+}
+
+RVBColor VueOpenGL::ColorTranslate(Couleur color) const{
+    
+    switch(color){
+        case blanc  : return {1.0, 1.0, 1.0};
+        case noir   : return {0.0, 0.0, 0.0};
+        case rouge  : return {1.0, 0.0, 0.0};
+        case jaune  : return {1.0, 1.0, 0.0};
+        case bleu   : return {0.0, 0.0, 1.0};
+        case vert   : return {0.0, 1.0, 0.0};
+        case violet : return {0.5, 0.0, 0.5};
+        case orange : return {0.9, 0.5, 0.0};
+
+    }
+
+    return {1.0, 1.0, 1.0};
+
+}
+
+
+
+void VueOpenGL::dessineCM(Toupie const& a_dessiner, QMatrix4x4 const& point_de_vue){
+    prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
+
+    glBegin(GL_LINES);
+    double x(a_dessiner.vecteurOG().coeff(0));
+    double y(a_dessiner.vecteurOG().coeff(1));
+    double z(a_dessiner.vecteurOG().coeff(2));
+    double delta(0.05);
+
+    prog.setAttributeValue(CouleurId, 1.0, 0.0, 1.0); //Magenta
+    prog.setAttributeValue(SommetId, x, y, z+delta);
+    prog.setAttributeValue(SommetId, x, y, z-delta);
+
+    prog.setAttributeValue(SommetId, x, y+delta, z);
+    prog.setAttributeValue(SommetId, x, y-delta, z);
+    glEnd();
+
 }

@@ -1,9 +1,13 @@
 #ifndef DESSINABLE_H
 #define DESSINABLE_H
-#include <memory>
+
+#include <array>
+
+enum Couleur {blanc, noir, rouge, jaune, bleu, vert, violet, orange};
+typedef std::array<double,3> RVBColor;
+
 
 class SupportADessin;
-
 
 class Dessinable {
  public:

@@ -23,7 +23,7 @@ public:
    : vbo(QGLBuffer::VertexBuffer), ibo(QGLBuffer::IndexBuffer)
  {}
 
-  void initialize(double h = 1.5 , double r = 0.5, GLuint slices = 55, GLuint stacks = 55); // Méthode qui initialise le modèle d'un cône
+  void initialize(double h = 1.5 , double r = 0.5, GLuint slices = 25, GLuint stacks = 25); // Méthode qui initialise le modèle d'un cône
 
   void draw(QOpenGLShaderProgram& program, int attributeLocation); // Pour dessiner
 

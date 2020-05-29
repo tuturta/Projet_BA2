@@ -10,61 +10,88 @@ using  namespace std;
 int main(int argc, char* argv[])
 {
 
-  VueOpenGL vue;
   IntegrateurEulerCromer integrateur_e;
   IntegrateurNewmark integrateur_n;
   IntegrateurRungeKutta integrateur_rk;
 
+
   ConeSimple cone1({0.0,0.523599,0.0},      //P (psi-theta-phi)
-                   {0.0,0.0,80.0},    //P_point
+                   {0.0,0.0,60.0},    //P_point
                    0.1,                //Masse volumique
                    1.5,                //Hauteur
                    0.5,                //Rayon
-                   {0.0,0.0,0.0},      //Origine
-                   &vue);
+                   {3.0,3.0,0.0},       //Origine
+                   vert);
 
-  ConeSimple cone2({0.0, 0.785398,0.0}, //P (psi-theta-phi)
-                   {0,0.0,40.0},          //P_point
+  ConeGeneral cone1G({0.0, 0.523599,0.0}, //P (psi-theta-phi)
+                   {0.0,0.0,60.0},          //P_point
                    0.1,                   //Masse Volumique
                    1.5,                   //Hauteur
                    0.5,                   //Rayon
-                   {0.0,1.0,0.0});        //Origine dans le ref absolu
+                   {0.0,0.0,0.0},
+                   bleu);        //Origine dans le ref absolu
+
+  //Toupie avec trace en fleur
 
   ConeSimple coneTrace({0.0,0.4,0.0},      //P (psi-theta-phi)
                        {0.0,0.0,70.0},    //P_point
                        0.1,                //Masse volumique
-                       2.0,                //Hauteur
-                       0.9,                //Rayon
-                       {1.0,0.0,0.0});     //Origine
+                       1.0,                //Hauteur
+                       0.45,                //Rayon
+                       {0.0,0.0,0.0},       //Origine
+                       jaune);
 
+//Toupies roulantes qui tournent
 
   ToupieChinoise flipflop({0.0,0.11,0.0},
                   {50.0,0.0,0.0},
                   0.1,
-                  0.02,
-                  0.15,
-                  {0.0,0.0,0.0});
+                  0.08,
+                  0.6,
+                  {5.0,0.0,0.0},
+                  vert         );
+
+  ToupieChinoiseGenerale flipflopG({0.0,0.11,0.0},
+                          {50.0,0.0,0.0},
+                          0.1,
+                          0.08,
+                          0.6,
+                          {0.0,5.0,0.0},
+                          bleu);
+
+
+  //Balanciers:
 
   ToupieChinoise balancier( {0.0,0.75,0.0},
                             {0.0,0.0,0.0},
                             0.1,
-                            0.02,
-                            0.15,
-                            {0.0,0.0,0.0});
+                            0.08,
+                            0.6,
+                            {3.0,0.0,0.0},
+                            vert);
 
-  ToupieChinoiseGenerale roulante({0.0,0.11,0.0},
-                          {50.0,0.0,0.0},
-                          0.1,
-                          0.02,
-                          0.15,
-                          {0.0,0.0,0.0});
+  ToupieChinoiseGenerale balancierG ( {0.0,0.75,0.0},
+                            {0.0,0.0,0.0},
+                            0.1,
+                            0.08,
+                            0.6,
+                            {0.0,3.0,0.0},
+                            bleu);
 
-  Systeme systeme1(&integrateur_e);
 
 
-  systeme1.ajoute_toupie(coneTrace);
-  //systeme1.ajoute_toupie(cone2);
-  //systeme1.ajoute_toupie(cone1);
+  Systeme systeme1(&integrateur_rk);
+
+
+  systeme1.ajoute_toupie(cone1);
+  systeme1.ajoute_toupie(cone1G);
+  //systeme1.ajoute_toupie(coneTrace);
+  //systeme1.ajoute_toupie(balancier);
+  //systeme1.ajoute_toupie(balancierG);
+  //systeme1.ajoute_toupie(flipflop);
+ // systeme1.ajoute_toupie(flipflopG);
+
+
   QApplication a(argc, argv);
   GLWidget w(systeme1);
 

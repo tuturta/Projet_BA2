@@ -9,6 +9,7 @@
 #include "../../Classe_Vecteur/Vecteur.h"
 #include "../../support_a_dessin.h"
 
+
 // =============================== TOUPIE ==================================
 class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P est défini comme étant les angles d'Euler dans l'ordre (psi, theta, phi)
 
@@ -19,13 +20,14 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     double masse_volumique;
     double hauteur_;                   // Hauteur du solide de révolution
     double rayon_;                     // Rayon de la base du cône / rayon de la sphère (tronquée)
+    Couleur couleur_;
     double zi(size_t i) const;         // Donne la hauteur en fonction du découpage
 
    // CONSTRUCTEUR
    
    public :
-    Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact = {0.0,0.0,0.0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-        : Integrable(P, P_point, support, point_de_contact), masse_volumique(masse_volumique),hauteur_(hauteur), rayon_(rayon) {}
+    Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+        : Integrable(P, P_point, support, point_de_contact), masse_volumique(masse_volumique),hauteur_(hauteur), rayon_(rayon), couleur_(couleur) {ajoute_position_CM();} //Initialise la premiere position du centre de masse
 
 
    // METHODES COMMUNES A TOUTES LES TOUPIES (INDEPENDANTES DE LA GEOMETRIE DE LA TOUPIE)
@@ -52,12 +54,13 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     virtual std::ostream& affiche(std::ostream& sortie) const;   // Affichage des angles, dérivées et G
     virtual void dessine() override;                             // Dessin lié au support   
     void update_A();                                             // Mise à jour du point de contact 
-    Vecteur ref_G_to_O_point(Vecteur const& point) const;        // Changement de référentiel de G vers O
+    Vecteur ref_G_to_O_point(Vecteur const& point)const override;// Changement de référentiel de G vers O
     void ajoute_position_CM();                                   // Pour garder en mémoire les positions du centre de masse
     std::vector<Vecteur> getPositions_CM() const;                // Accesseur des positions du centre de masse 
     double getHauteur() const;                                   // Accesseur hauteur du solide de révolution   
     double getRayon() const;                                     // Accesseur rayon du cône à sa base / sphère tronquée
     void setSupport(SupportADessin* nouveau_support);            // Permet de modifier le support dans le constructeur de GLWidget
+    Couleur getColor() const;                                    // Renvoie la couleur de la toupie
 
     // METHODES QUI DEPEND DE LA GEOMETRIE DE LA TOUPIE (--> METHODES VIRTUELLES):
 
@@ -91,6 +94,8 @@ class ConeGeneral: public Toupie{
     virtual Vecteur fonction_f() const override;            // Calcul général des dérivées secondes pour un cône
     virtual Vecteur vecteurAG() const override;             // (Ref G)
     virtual void dessine() override;
+    virtual Vecteur vecteurOA() const override;           // (Ref O)
+
 
 };
 
@@ -103,8 +108,8 @@ class ConeSimple : public ConeGeneral {
 
     // CONSTRUCTION - COPIE - DESTRUCTION
 
-    ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    : ConeGeneral(P, P_point, masse_volumique, hauteur, rayon, point_de_contact, support) {} // Constructeur qui initialise par défaut le point de contact à (0,0,0) ainsi qu'un support textuel
+    ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    : ConeGeneral(P, P_point, masse_volumique, hauteur, rayon, point_de_contact, couleur, support) {} // Constructeur qui initialise par défaut le point de contact à (0,0,0) ainsi qu'un support textuel
     
    private :
     std::unique_ptr<ConeSimple> clone() const;
@@ -181,8 +186,8 @@ class ToupieChinoiseGenerale: public Toupie{
    // CONSTRUCTION - COPOIE - DESTRUCTION 
    
    public: 
-    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    :Toupie(param, D_param, masse_volumique, hauteur, rayon, origine, support){
+    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    :Toupie(param, D_param, masse_volumique, hauteur, rayon, point_de_contact, couleur, support){
         P.augmente(0.0);
         P.augmente(0.0);
         P.augmente(0.0);
@@ -222,8 +227,8 @@ class ToupieChinoise : public ToupieChinoiseGenerale{
 
    public: 
 
-    ToupieChinoise(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    : ToupieChinoiseGenerale(param, D_param, masse_volumique, hauteur, rayon,origine, support){
+    ToupieChinoise(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine, Couleur couleur= blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    : ToupieChinoiseGenerale(param, D_param, masse_volumique, hauteur, rayon, origine,couleur, support){
         P.pop_back(); // On enlève la 6ème dimension construite par toupie roulante
         P_point.pop_back();
         P_point.set_coord(3,origine.coeff(0)); // Cx
