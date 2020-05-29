@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
                    0.1,                //Masse volumique
                    1.5,                //Hauteur
                    0.5,                //Rayon
-                   {3.0,3.0,0.0},       //Origine
+                   {0.0,0.0,0.0},       //Origine
                    vert);
 
   ConeGeneral cone1G({0.0, 0.523599,0.0}, //P (psi-theta-phi)
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
                    0.1,                   //Masse Volumique
                    1.5,                   //Hauteur
                    0.5,                   //Rayon
-                   {0.0,0.0,0.0},
+                   {1.0,0.0,0.0},
                    bleu);        //Origine dans le ref absolu
 
   //Toupie avec trace en fleur
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
                        0.1,                //Masse volumique
                        1.0,                //Hauteur
                        0.45,                //Rayon
-                       {0.0,0.0,0.0},       //Origine
+                       {0.0,1.0,0.0},       //Origine
                        jaune);
 
 //Toupies roulantes qui tournent
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
                   0.1,
                   0.08,
                   0.6,
-                  {5.0,0.0,0.0},
+                  {3.0,0.0,0.0},
                   vert         );
 
   ToupieChinoiseGenerale flipflopG({0.0,0.11,0.0},
@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
                           0.1,
                           0.08,
                           0.6,
-                          {0.0,5.0,0.0},
+                          {0.0,3.0,0.0},
                           bleu);
 
 
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
                             0.1,
                             0.08,
                             0.6,
-                            {3.0,0.0,0.0},
+                            {5.0,0.0,0.0},
                             vert);
 
   ToupieChinoiseGenerale balancierG ( {0.0,0.75,0.0},
@@ -75,8 +75,8 @@ int main(int argc, char* argv[])
                             0.1,
                             0.08,
                             0.6,
-                            {0.0,3.0,0.0},
-                            bleu);
+                            {0.0,7.0,0.0},
+                            violet);
 
 
 
@@ -85,17 +85,15 @@ int main(int argc, char* argv[])
 
   systeme1.ajoute_toupie(cone1);
   systeme1.ajoute_toupie(cone1G);
-  //systeme1.ajoute_toupie(coneTrace);
-  //systeme1.ajoute_toupie(balancier);
-  //systeme1.ajoute_toupie(balancierG);
-  //systeme1.ajoute_toupie(flipflop);
- // systeme1.ajoute_toupie(flipflopG);
+  systeme1.ajoute_toupie(coneTrace);
+  systeme1.ajoute_toupie(balancier);
+  systeme1.ajoute_toupie(balancierG);
+  systeme1.ajoute_toupie(flipflop);
+  systeme1.ajoute_toupie(flipflopG);
 
 
   QApplication a(argc, argv);
   GLWidget w(systeme1);
-
   w.show();
   return a.exec();
-  //return 0;
 }

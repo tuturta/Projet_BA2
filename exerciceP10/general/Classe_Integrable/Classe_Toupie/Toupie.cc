@@ -7,6 +7,8 @@
 #include "../../Classe_Vecteur/Vecteur.h"
 #include "../../Classe_Matrice/Matrice.h"
 #include "../../support_a_dessin.h"
+#include "../../erreurs.h"
+
 using namespace std;
 
 //=============================CLASSE TOUPIE===================================// 
@@ -39,6 +41,14 @@ std::vector<Vecteur> Toupie::getPositions_CM() const {
 Vecteur Toupie::ref_G_to_O_point(Vecteur const& point) const {
     return (S().inv()*point + point_de_contact +ref_G_to_O(vecteurAG()));
 } 
+
+Vecteur Toupie::getPoint_de_conact() const{
+    return point_de_contact;
+}
+
+void Toupie::setPoint_de_contact(Vecteur const& v){
+    point_de_contact=v;
+}
 
 void Toupie::update_A() {
     point_de_contact = vecteurOA();
@@ -81,7 +91,7 @@ double Toupie::zi(size_t i) const{
 }
 
 double Toupie::rayon2(size_t i) const {  //TEMPORAIRE, DOIT ETRE REDEFINI DANS CHAQUE CLASSE
-    return pow(((zi(i)/hauteur_)*rayon_),2);
+    return pow(((zi(i)/hauteur_)*rayon_),2); // /!\ division par 0 si h=0.0!!!!
 }
 
 
@@ -91,11 +101,11 @@ double Toupie::distanceBG() const{ // où O est l'origine du solide de construct
                 somme1 += rayon2(i) * zi(i); 
                 somme2 += rayon2(i);
     }
-    return somme1/somme2;
+    return somme1/somme2; // On est assurés que N>0 et rayon>0, donc somme2 !=0
 }
 
 Vecteur Toupie::vecteurAG() const{ // TEMPORAIRE POUR PAS QUE LA TOUPIE SOIT VIRTUELLE
-    cout << "appel vecteur AG de toupie" << endl;
+    //cout << "appel vecteur AG de toupie" << endl;
 
     return {0.0,0.0, distanceBG()};
 }
@@ -143,12 +153,12 @@ Vecteur Toupie::LA() const {
 }
 
 Vecteur Toupie:: vecteurOG() const{
-    cout << "Vecteur OG = " <<(vecteurOA() + ref_G_to_O(vecteurAG())) <<  endl;
+    //cout << "Vecteur OG = " <<(vecteurOA() + ref_G_to_O(vecteurAG())) <<  endl;
     return (vecteurOA() + ref_G_to_O(vecteurAG()));
 }
 
 Vecteur Toupie:: vecteurOA() const{         //Pour le moment
-    cout << "appel vecteur OA toupie" << endl;
+    //cout << "appel vecteur OA toupie" << endl;
     return point_de_contact;
 }
 
@@ -209,7 +219,7 @@ double ConeSimple::masse() const{ //masse calculée grace a la formule p8
 
 Matrice ConeSimple::matrice_inertie_G() const { // Matrice d'inertie calculé grace a la formule p8
     double I1, I3;
-    I1 = (3.0*masse()/20)*(pow(rayon_,2)+ 1.0/4.0*pow(hauteur_,2));
+    I1 = (3.0*masse()/20.0)*(pow(rayon_,2)+ 1.0/4.0*pow(hauteur_,2));
     I3 = (3.0/10.0)*masse()*pow(rayon_,2);
     return Matrice(I1, I1, I3);
 }
@@ -229,8 +239,6 @@ Vecteur ConeSimple::vecteurAG() const{ // Centre de masse dans le ref d'inertie 
 
 Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi-theta-phi
     //cout << "-----appel ConeSimple::fonction()-----" << endl;
-    //cout << "AVANT P=" << P << endl;
-
 
     //Pour la lisibilité :
     double theta(P.coeff(1));
@@ -268,6 +276,10 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi
 //============================CLASSE OBJ CHUTE==========================================//
 
 void Objet_en_chute_libre::dessine() {
+    if(support == nullptr) {
+        Erreur err = {"Le support à dessin n'est pas défini"};
+        throw err;
+    }
     support->dessine(*this);
 }
 
@@ -297,7 +309,7 @@ Vecteur ConeGeneral::fonction_f() const{
     //1.CALCUL DE w et MA dans RG (repère d'inertie)
         
         //Methode w()
-    Vecteur MA(masse()*(g.norme())*(distanceBG()*sin(theta)),0,0); // On considère que seul le poids agit sur la toupie, on néglige les autres forces  
+    Vecteur MA(masse()*(g.norme())*(distanceBG()*sin(theta)), 0.0, 0.0); // On considère que seul le poids agit sur la toupie, on néglige les autres forces  
     //cout << "MA_G = " << MA << endl;
     //cout << "w_G = " << w() << endl;
 
@@ -350,10 +362,14 @@ unique_ptr<Toupie> ConeGeneral::copie() const{
 }
 
 double ConeGeneral::rayon2(size_t i) const {
-    return pow((zi(i)/hauteur_ *rayon_),2);
+    return pow((zi(i)/hauteur_ *rayon_),2); // On s'est assuré que hauteur_ !=0
 }
 
 void ConeGeneral::dessine() {
+    if(support == nullptr) {
+        Erreur err = {"Le support à dessin n'est pas défini"};
+        throw err;
+    }
     support->dessine(*this);
 } 
 //=============================CLASSE TOUPIE ROULANTE===================================//
@@ -459,11 +475,15 @@ unique_ptr<Toupie> ToupieChinoiseGenerale::copie() const{
 // Méthode virtuelle dessinable
 
 void ToupieChinoiseGenerale::dessine() {
+    if(support == nullptr) {
+        Erreur err = {"Le support à dessin n'est pas défini"};
+        throw err;
+    }
     support->dessine(*this);
 } 
 
 std::ostream& ToupieChinoiseGenerale::affiche(std::ostream& sortie) const {
-    sortie << "[TOUPIE CHINOISE GENERALE]" << endl;
+    sortie << "[TOUPIE CHINOISE GÉNÉRALE]" << endl;
     Toupie::affiche(sortie);
     sortie << "C : (" << P_point.coeff(3) << ", " << P_point.coeff(4) << ", " << rayon_ << ")" << endl;
     return sortie;

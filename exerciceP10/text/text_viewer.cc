@@ -10,11 +10,9 @@
      objet.affiche(flot);
    }
    void TextViewer::dessine(Toupie const& objet){
-     std::cout << "toupie textV" << std::endl;
      objet.affiche(flot);
    } 
    void TextViewer::dessine(ToupieChinoiseGenerale const& objet) {
-       std::cout << "toupie chinoise textV" << std::endl;
        objet.affiche(flot);
      }
 

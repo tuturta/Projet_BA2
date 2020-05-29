@@ -35,7 +35,7 @@ double Matrice::det() const {
 }
 
 Matrice Matrice::inv() const{
-    Matrice retour(0,0,0);
+    Matrice retour(0.0,0.0,0.0);
     if(det() > eps){ //Determinant différent de 0 ie matrice inversible
         retour.lignes[0].set_coord(0,lignes[1].coeff(1)*lignes[2].coeff(2) - lignes[1].coeff(2)*lignes[2].coeff(1));
         retour.lignes[0].set_coord(1,lignes[0].coeff(2)*lignes[2].coeff(1) - lignes[0].coeff(1)*lignes[2].coeff(2));

@@ -15,24 +15,18 @@ class Integrable : public Dessinable{ // Un intégrable est dessinable ( On a se
    protected : 
     Vecteur P;                // Paramètres psi-theta-phi + autres paramètres supplémentaires si plus de 3 degrés de liberté
     Vecteur P_point;          // Dérivée temporelle des degrés de liberté
-    Vecteur point_de_contact; // (Ref O) 
 
 
-   // CONSTRUCTEUR :
+   // CONSTRUCTEUR - DESTRUCTEUR
 
    public:
-    Integrable(Vecteur P, Vecteur P_point, SupportADessin* support, Vecteur point_de_contact = {0,0,0})
-        : Dessinable(support), P(P), P_point(P_point), point_de_contact(point_de_contact)  {}
-
+    Integrable(Vecteur P, Vecteur P_point, SupportADessin* support) : Dessinable(support), P(P), P_point(P_point) {}
    // MANIPULATEURS :
 
     Vecteur getP() const;
     Vecteur getP_point() const;
-    Vecteur getPoint_de_conact() const;
     void setP(Vecteur const& autre);
     void setP_point(Vecteur const& autre);
-    void setPoint_de_contact(Vecteur const& autre);
-
 
     // AFFICHAGE
 

@@ -4,13 +4,14 @@
 #include "glwidget.h"
 
 
-double t(0.0);
+double t(0.0); // à enlever !!!
 // ======================================================================
 
 void GLWidget::initializeGL()
 {
   vue.init();
   timerId = startTimer(20);
+  std::cout << "initializeGL fin" << std::endl;
 }
 
 // ======================================================================
@@ -121,7 +122,7 @@ void GLWidget::keyPressEvent(QKeyEvent* event)
 void GLWidget::timerEvent(QTimerEvent* event)
 {
   Q_UNUSED(event);
-  chronometre.restart()/1000.0;
+  double dt(chronometre.restart()/500.0);
   t += dt;
   std::cout << "=====Temps: " << t << std::endl;
   std::cout << contenu << std::endl;

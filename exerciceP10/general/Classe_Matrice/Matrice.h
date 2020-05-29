@@ -2,6 +2,7 @@
 #include "../Classe_Vecteur/Vecteur.h"
 #include <array>
 #include <iostream>
+#include "../erreurs.h"
 
 class Matrice {
 
@@ -14,7 +15,13 @@ class Matrice {
 
    public :
     Matrice (Vecteur const& c1 = {1,0,0}, Vecteur const& c2 = {0,1,0}, Vecteur const& c3 = {0,0,1}) 
-    : lignes({c1,c2, c3}) { correctif_0(); } // Initialise ligne par ligne et vérifie les 0, renvoie la matrice identité par defaut
+    : lignes({c1,c2, c3}) { 
+        if( (c1.dim()!=3) or (c2.dim()!=3) or (c3.dim()!=3) ) {
+            Erreur err = {"Les matrices ne peuvent pas être de dimension autre que 3x3"};
+            throw err;
+        }
+        correctif_0();
+     } // Initialise ligne par ligne et vérifie les 0, renvoie la matrice identité par defaut
     
     Matrice (double const& a1, double const& a2, double const& a3) 
     : lignes({Vecteur(a1,0.0,0.0),Vecteur(0.0,a2,0.0),Vecteur(0.0,0.0,a3)}) {} // Matrice diagonale

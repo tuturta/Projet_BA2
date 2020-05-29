@@ -25,7 +25,6 @@ void VueOpenGL::matrice_inertie(QMatrix4x4& matrice, Toupie const& a_dessiner) c
 
 void VueOpenGL::dessine(Toupie const& a_dessiner)
 {
-    //std::cout << "COUCOU JE SUIS UNE TOUPIE" << std::endl;
     dessineRepere();
 
 }
@@ -54,9 +53,9 @@ void VueOpenGL::dessine(ConeGeneral const& a_dessiner)
   //On se place dans repère d'inertie:
   matrice_inertie(matrice, a_dessiner);
 
-
   //On dessine la trace de la toupie et son centre de masse et son repère d'inertie:
   dessineTrace(a_dessiner.getPositions_CM());
+
   dessineCM(a_dessiner);
   //dessineRepere(matrice);                                            //On dessine le repère d'inertie
 
@@ -119,8 +118,6 @@ void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
 
 void VueOpenGL::dessineTrace(std::vector<Vecteur> const& positions)
 {
-    std::cout << "dessin de la trace, dernier point" << positions.back() << std::endl;
-
     prog.setUniformValue("vue_modele", matrice_vue*QMatrix4x4());
     glBegin(GL_POINTS);
     prog.setAttributeValue(CouleurId,1.0,0.0,0.0); //rouge

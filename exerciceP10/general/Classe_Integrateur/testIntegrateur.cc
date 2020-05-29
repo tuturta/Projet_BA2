@@ -22,7 +22,7 @@ int main () {
     }else{
         try{
             TextViewer ecran(cout);
-            Objet_en_chute_libre toupie({0.0,1.0,0.0},{1.0,2.0,0.0},2.1, {0.0,0.0,0.0},&ecran);
+            Objet_en_chute_libre toupie({0.0,1.0,0.0},{1.0,2.0,0.0},2.1, 0.0, 0.0, {0.0,0.0,0.0}, blanc,&ecran);
             IntegrateurEulerCromer integrateur_e;
             IntegrateurNewmark integrateur_n;
             IntegrateurRungeKutta integrateur_rk;

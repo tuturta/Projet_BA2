@@ -16,27 +16,28 @@
 // =============================== TOUPIE ==================================
 class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P est défini comme étant les angles d'Euler dans l'ordre (psi, theta, phi)
 
-   // ATTRIBUTS PRIVÉS :
+   // ATTRIBUTS PROTÉGÉS :
 
    protected : 
-    std::vector<Vecteur> positions_CM; // Coordonnées du CM depuis le début de la simulation, dans le repère absolu
     double masse_volumique;
+    Vecteur point_de_contact;          // Coordonnées du point de contact, actualisées à chaque évolution
     double hauteur_;                   // Hauteur du solide de révolution
     double rayon_;                     // Rayon de la base du cône / rayon de la sphère (tronquée)
     Couleur couleur_;
     double zi(size_t i) const;         // Donne la hauteur en fonction du découpage
+    std::vector<Vecteur> positions_CM; // Coordonnées du CM depuis le début de la simulation, dans le repère absolu
 
-   // CONSTRUCTEUR
+   // CONSTRUCTION - COPIE -DESTRUCTION
    
    public :
-    Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur const& couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-        : Integrable(P, P_point, support, point_de_contact), masse_volumique(masse_volumique),hauteur_(hauteur), rayon_(rayon), couleur_(couleur) {
+
+    Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, Vecteur const& point_de_contact, double hauteur, double rayon, Couleur const& couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+        : Integrable(P, P_point, support), masse_volumique(masse_volumique), point_de_contact(point_de_contact), hauteur_(hauteur), rayon_(rayon), couleur_(couleur) {
             if ((hauteur < 0.0) or (rayon < eps) or (masse_volumique < eps)) {
                 Erreur err = {"Votre objet doit avoir un sens physique!"};
                 throw err; 
             }
         }
-
 
    // METHODES COMMUNES A TOUTES LES TOUPIES (INDEPENDANTES DE LA GEOMETRIE DE LA TOUPIE)
 
@@ -61,6 +62,8 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     virtual std::unique_ptr<Toupie> copie() const;               // Copie polymorphique
     virtual std::ostream& affiche(std::ostream& sortie) const;   // Affichage des angles, dérivées et G
     virtual void dessine() override;                             // Dessin lié au support   
+    Vecteur getPoint_de_conact() const;                          // Accesseur du point de contact
+    void setPoint_de_contact(Vecteur const& autre);              // Setter du point de contact
     void update_A();                                             // Mise à jour du point de contact 
     Vecteur ref_G_to_O_point(Vecteur const& point)const override;// Changement de référentiel de G vers O
     void ajoute_position_CM();                                   // Pour garder en mémoire les positions du centre de masse
@@ -92,14 +95,29 @@ std::ostream& operator<<(std::ostream& sortie,Toupie const& toupie); // Surcharg
 // But : retrouver un Cône Simple avec des méthodes plus générales
 
 class ConeGeneral: public Toupie{   
+
    public: 
-    ConeGeneral(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur const& couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-            : Toupie(P, P_point,masse_volumique,hauteur,rayon,point_de_contact, couleur, support) {
+
+    // Constructeur plus adapté pour les graphismes : pas de support à apporter manuellement
+    ConeGeneral(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur const& couleur = blanc)
+            : Toupie(P, P_point,masse_volumique,point_de_contact, hauteur,rayon, couleur)
+            {
+                if (hauteur < eps) {
+                Erreur err = {"Un cône doit avoir une hauteur strictement positive!"};
+                throw err;
+                }
+            }
+
+    // Constructeur plus adapté aux parties textuelles : pas de couleur à fournir
+    ConeGeneral(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact,SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+            : Toupie(P, P_point,masse_volumique,point_de_contact, hauteur,rayon, blanc, support) {
             if (hauteur < eps) {
                 Erreur err = {"Un cône doit avoir une hauteur strictement positive!"};
-                throw err; 
+                throw err;
             }
         }
+
+
    private :
     virtual double rayon2(size_t i) const override;  // Redéfinition pour un cône du rayon2 défini plus haut
     std::unique_ptr<ConeGeneral> clone() const;
@@ -120,10 +138,8 @@ class ConeSimple : public ConeGeneral {
    
    public: 
 
-    // CONSTRUCTION - COPIE - DESTRUCTION
+   // CONSTRUCTION - COPIE - DESTRUCTION
 
-    //ConeSimple(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    //: ConeGeneral(P, P_point, masse_volumique, hauteur, rayon, point_de_contact, support) {} // Constructeur qui initialise par défaut le point de contact à (0,0,0) ainsi qu'un support textuel
     using ConeGeneral::ConeGeneral;
 
    private :
@@ -131,14 +147,14 @@ class ConeSimple : public ConeGeneral {
    public :
     virtual std::unique_ptr<Toupie> copie() const override; // Copie polymorphique
 
-    // MÉCANIQUE - GÉOMÉTRIE DU SOLIDE
+   // MÉCANIQUE - GÉOMÉTRIE DU SOLIDE
 
     virtual double masse() const override;
     virtual Matrice matrice_inertie_G() const override;  // Matrice d'inertie du cone simple en G (Ref G) 
     virtual Vecteur vecteurAG() const override;          // (Ref G)
     virtual Vecteur fonction_f() const override;         // Calcul spécifique des dérivées secondes pour un cône simple 
 
-    // AFFICHAGE - DESSIN
+   // AFFICHAGE - DESSIN
     
     virtual std::ostream& affiche_parametres(std::ostream& out) const override; // Affiche tous les paramètres d'une toupie
 
@@ -190,24 +206,44 @@ class ToupieChinoiseGenerale: public Toupie{
    
    // CONSTRUCTION - COPIE - DESTRUCTION 
    
-   public: 
-    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur const& couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    :Toupie(param, D_param, masse_volumique, hauteur, rayon, point_de_contact, couleur, support){
-        P.augmente(0.0);
-        P.augmente(0.0);
-        P.augmente(0.0);
+   public:
 
-        P_point.augmente(0.0); // Gx
-        P_point.augmente(vecteurGC().norme()*sin(P.coeff(1))); // Gy
-        P_point.augmente(getRayon()-vecteurGC().norme()*cos(P.coeff(1))); // Gz
 
-    } // On ajoute les paramètres de la position du centre de masse : ce n'est pas à l'utilisateur de le faire. /!\ N'est adapté que pour retrouver une toupie chinoise    
-  
+    // Constructeur plus adapté aux graphismes
+    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur const& couleur = blanc)
+    :Toupie(param, D_param, masse_volumique,  point_de_contact, hauteur, rayon, couleur)
+        {
+            P.augmente(0.0);
+            P.augmente(0.0);
+            P.augmente(0.0);
+
+            P_point.augmente(0.0); // Gx
+            P_point.augmente(vecteurGC().norme()*sin(P.coeff(1))); // Gy
+            P_point.augmente(getRayon()-vecteurGC().norme()*cos(P.coeff(1))); // Gz
+
+        } // On ajoute les paramètres de la position du centre de masse : ce n'est pas à l'utilisateur de le faire. /!\ N'est adapté que pour retrouver une toupie chinoise
+
+
+    // Constructeur plus adapté au textuel
+    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+        :Toupie(param, D_param, masse_volumique,  point_de_contact, hauteur, rayon, blanc, support)
+        {
+            P.augmente(0.0);
+            P.augmente(0.0);
+            P.augmente(0.0);
+
+            P_point.augmente(0.0); // Gx
+            P_point.augmente(vecteurGC().norme()*sin(P.coeff(1))); // Gy
+            P_point.augmente(getRayon()-vecteurGC().norme()*cos(P.coeff(1))); // Gz
+
+        }
+
     virtual std::unique_ptr<Toupie> copie() const override; // Copie polymorphique
-   private :
+
+  private :
     std::unique_ptr<ToupieChinoiseGenerale> clone() const;
 
-   // MÉCANIQUE - GÉOMÉTRIE : 
+  // MÉCANIQUE - GÉOMÉTRIE :
   
   public :
     virtual Vecteur fonction_f() const override;     // Calcul général des dérivées secondes pour une toupie roulante
@@ -232,8 +268,20 @@ class ToupieChinoise : public ToupieChinoiseGenerale{
 
    public: 
 
-    ToupieChinoise(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine, Couleur const& couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    : ToupieChinoiseGenerale(param, D_param, masse_volumique, hauteur, rayon, origine, couleur, support){
+    // Constructeur plus adapté pour les graphismes : pas de support à apporter manuellement
+    ToupieChinoise(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine, Couleur const& couleur = blanc)
+    : ToupieChinoiseGenerale(param, D_param, masse_volumique, hauteur, rayon, origine, couleur){
+        P.pop_back(); // On enlève la 6ème dimension construite par toupie roulante
+        P_point.pop_back();
+        P_point.set_coord(3,origine.coeff(0)); // Cx
+        P_point.set_coord(4,origine.coeff(1)); // Cy
+
+    } // On a ajouté les paramètres de position du centre C
+
+
+    // Constructeur plus adapté aux parties textuelles : pas de couleur à fournir
+    ToupieChinoise(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    : ToupieChinoiseGenerale(param, D_param, masse_volumique, hauteur, rayon, origine, support){
         P.pop_back(); // On enlève la 6ème dimension construite par toupie roulante
         P_point.pop_back();
         P_point.set_coord(3,origine.coeff(0)); // Cx
