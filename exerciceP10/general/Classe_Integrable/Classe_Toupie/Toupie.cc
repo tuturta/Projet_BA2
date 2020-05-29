@@ -95,6 +95,8 @@ double Toupie::distanceBG() const{ // où O est l'origine du solide de construct
 }
 
 Vecteur Toupie::vecteurAG() const{ // TEMPORAIRE POUR PAS QUE LA TOUPIE SOIT VIRTUELLE
+    cout << "appel vecteur AG de toupie" << endl;
+
     return {0.0,0.0, distanceBG()};
 }
 
@@ -141,11 +143,13 @@ Vecteur Toupie::LA() const {
 }
 
 Vecteur Toupie:: vecteurOG() const{
+    cout << "Vecteur OG = " <<(vecteurOA() + ref_G_to_O(vecteurAG())) <<  endl;
     return (vecteurOA() + ref_G_to_O(vecteurAG()));
 }
 
 Vecteur Toupie:: vecteurOA() const{         //Pour le moment
-    return Vecteur({0.0,0.0,0.0}); 
+    cout << "appel vecteur OA toupie" << endl;
+    return point_de_contact;
 }
 
 Vecteur Toupie::fonction_f() const{
@@ -182,6 +186,9 @@ void Toupie::setSupport(SupportADessin* nouveau_support) {
     support = nouveau_support;
 }
 
+Couleur Toupie::getColor() const {
+    return couleur_;
+}
 //=============================CLASSE CONE SIMPLE===================================//
 
 //METHODES:
@@ -331,6 +338,10 @@ Vecteur ConeGeneral::vecteurAG() const{
     return {0.0,0.0,distanceBG()};
 }
 
+Vecteur ConeGeneral::vecteurOA() const{
+    return point_de_contact;
+}
+
 unique_ptr<ConeGeneral> ConeGeneral::clone() const{
     return unique_ptr<ConeGeneral>(new ConeGeneral(*this));
 }
@@ -424,6 +435,7 @@ Vecteur ToupieChinoiseGenerale::fonction_f() const{
 }
 
 Vecteur ToupieChinoiseGenerale::vecteurAG() const{ // /!\ POUR UNE TOUPIE CHINOISE
+
     Vecteur AC (ref_O_to_G({0.0,0.0,rayon_}));
     return (AC - vecteurGC()); // AG dans le ref G
 }

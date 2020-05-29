@@ -5,8 +5,7 @@
 void GLSphere_Tronquee::initialize(double hauteur, double rayon, GLuint slices, GLuint stacks)
 {
 
-  hauteur = 0.02;
-  rayon = 0.15;
+
 
   QVector<GLfloat> positions;
 

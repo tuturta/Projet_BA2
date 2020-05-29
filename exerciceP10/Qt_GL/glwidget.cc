@@ -3,6 +3,8 @@
 #include <QMatrix4x4>
 #include "glwidget.h"
 
+
+double t(0.0);
 // ======================================================================
 
 void GLWidget::initializeGL()
@@ -119,7 +121,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event)
 void GLWidget::timerEvent(QTimerEvent* event)
 {
   Q_UNUSED(event);
-  double dt = chronometre.restart()/1000.0;
+  chronometre.restart()/1000.0;
+  t += dt;
+  std::cout << "=====Temps: " << t << std::endl;
+  std::cout << contenu << std::endl;
   contenu.evolue(dt);
   std::cout << contenu << std::endl;
   //pause();

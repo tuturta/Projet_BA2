@@ -4,12 +4,14 @@
 #include <vector>
 #include <cmath>
 #include <exception>
+#include "../../constantes.h"
 #include "../../../text/text_viewer.h"
 #include "../Integrable.h"
 #include "../../Classe_Matrice/Matrice.h"
 #include "../../Classe_Vecteur/Vecteur.h"
 #include "../../support_a_dessin.h"
 #include "../../erreurs.h"
+
 
 // =============================== TOUPIE ==================================
 class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P est défini comme étant les angles d'Euler dans l'ordre (psi, theta, phi)
@@ -21,14 +23,15 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     double masse_volumique;
     double hauteur_;                   // Hauteur du solide de révolution
     double rayon_;                     // Rayon de la base du cône / rayon de la sphère (tronquée)
+    Couleur couleur_;
     double zi(size_t i) const;         // Donne la hauteur en fonction du découpage
 
    // CONSTRUCTEUR
    
    public :
-    Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact = {0.0,0.0,0.0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-        : Integrable(P, P_point, support, point_de_contact), masse_volumique(masse_volumique),hauteur_(hauteur), rayon_(rayon) {
-            if ((hauteur<0.0) or (rayon<eps) or (masse_volumique<eps)) {
+    Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur const& couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+        : Integrable(P, P_point, support, point_de_contact), masse_volumique(masse_volumique),hauteur_(hauteur), rayon_(rayon), couleur_(couleur) {
+            if ((hauteur < 0.0) or (rayon < eps) or (masse_volumique < eps)) {
                 Erreur err = {"Votre objet doit avoir un sens physique!"};
                 throw err; 
             }
@@ -59,12 +62,13 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     virtual std::ostream& affiche(std::ostream& sortie) const;   // Affichage des angles, dérivées et G
     virtual void dessine() override;                             // Dessin lié au support   
     void update_A();                                             // Mise à jour du point de contact 
-    Vecteur ref_G_to_O_point(Vecteur const& point) const;        // Changement de référentiel de G vers O
+    Vecteur ref_G_to_O_point(Vecteur const& point)const override;// Changement de référentiel de G vers O
     void ajoute_position_CM();                                   // Pour garder en mémoire les positions du centre de masse
     std::vector<Vecteur> getPositions_CM() const;                // Accesseur des positions du centre de masse 
     double getHauteur() const;                                   // Accesseur hauteur du solide de révolution   
     double getRayon() const;                                     // Accesseur rayon du cône à sa base / sphère tronquée
     void setSupport(SupportADessin* nouveau_support);            // Permet de modifier le support dans le constructeur de GLWidget
+    Couleur getColor() const;                                    // Renvoie la couleur de la toupie
 
     // METHODES QUI DEPEND DE LA GEOMETRIE DE LA TOUPIE (--> METHODES VIRTUELLES):
 
@@ -89,9 +93,9 @@ std::ostream& operator<<(std::ostream& sortie,Toupie const& toupie); // Surcharg
 
 class ConeGeneral: public Toupie{   
    public: 
-    ConeGeneral(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact = {0.0,0.0,0.0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-            : Toupie(P, P_point,masse_volumique,hauteur,rayon,point_de_contact, support) {
-            if (hauteur<eps) {
+    ConeGeneral(Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur const& couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+            : Toupie(P, P_point,masse_volumique,hauteur,rayon,point_de_contact, couleur, support) {
+            if (hauteur < eps) {
                 Erreur err = {"Un cône doit avoir une hauteur strictement positive!"};
                 throw err; 
             }
@@ -104,6 +108,8 @@ class ConeGeneral: public Toupie{
     virtual Vecteur fonction_f() const override;            // Calcul général des dérivées secondes pour un cône
     virtual Vecteur vecteurAG() const override;             // (Ref G)
     virtual void dessine() override;
+    virtual Vecteur vecteurOA() const override;           // (Ref O)
+
 
 };
 
@@ -182,11 +188,11 @@ class Objet_en_chute_libre : public Toupie {
 
 class ToupieChinoiseGenerale: public Toupie{
    
-   // CONSTRUCTION - COPOIE - DESTRUCTION 
+   // CONSTRUCTION - COPIE - DESTRUCTION 
    
    public: 
-    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    :Toupie(param, D_param, masse_volumique, hauteur, rayon, origine, support){
+    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur const& couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    :Toupie(param, D_param, masse_volumique, hauteur, rayon, point_de_contact, couleur, support){
         P.augmente(0.0);
         P.augmente(0.0);
         P.augmente(0.0);
@@ -226,8 +232,8 @@ class ToupieChinoise : public ToupieChinoiseGenerale{
 
    public: 
 
-    ToupieChinoise(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    : ToupieChinoiseGenerale(param, D_param, masse_volumique, hauteur, rayon,origine, support){
+    ToupieChinoise(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine, Couleur const& couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    : ToupieChinoiseGenerale(param, D_param, masse_volumique, hauteur, rayon, origine, couleur, support){
         P.pop_back(); // On enlève la 6ème dimension construite par toupie roulante
         P_point.pop_back();
         P_point.set_coord(3,origine.coeff(0)); // Cx
