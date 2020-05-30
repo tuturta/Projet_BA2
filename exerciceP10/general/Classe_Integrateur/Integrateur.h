@@ -1,11 +1,13 @@
 #pragma once
 #include "../Classe_Integrable/Classe_Toupie/Toupie.h"
 #include <memory>
+#include <iostream>
 
 class Integrateur{
    public:
+    virtual ~Integrateur() {} // Juste pour la forme (l'absence d'attributs assure normalement une destruction complète même sans la virtualité du destructeur)
     virtual void evolue(Toupie& T, const double dt) const = 0;
-    virtual std::unique_ptr<Integrateur> copie() =0;
+    virtual std::unique_ptr<Integrateur> copie() = 0;
 };
 
 class IntegrateurEulerCromer : public Integrateur {

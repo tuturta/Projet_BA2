@@ -12,7 +12,7 @@
 
 CXX = g++
 CXXFLAGS = -Wall -std=c++11 -pedantic -Wall
-SRC = testMatrice.cc Matrice.cc ../Classe_Vecteur/Vecteur.cc
+SRC = testMatrice.cc Matrice.cc ../Classe_Vecteur/Vecteur.cc ../erreurs.cc
 
 
 OBJ = $(SRC:.cc=.o)

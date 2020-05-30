@@ -17,12 +17,10 @@ class Integrable : public Dessinable{ // Un intégrable est dessinable ( On a se
     Vecteur P_point;          // Dérivée temporelle des degrés de liberté
 
 
-   // CONSTRUCTEUR :
+   // CONSTRUCTEUR - DESTRUCTEUR
 
    public:
-    Integrable(Vecteur P, Vecteur P_point, SupportADessin* support)
-        : Dessinable(support), P(P), P_point(P_point)  {}
-
+    Integrable(Vecteur P, Vecteur P_point, SupportADessin* support) : Dessinable(support), P(P), P_point(P_point) {}
    // MANIPULATEURS :
 
     Vecteur getP() const;
@@ -30,10 +28,9 @@ class Integrable : public Dessinable{ // Un intégrable est dessinable ( On a se
     void setP(Vecteur const& autre);
     void setP_point(Vecteur const& autre);
 
-
     // AFFICHAGE
 
-    std::ostream& affiche(std::ostream& sortie) const;                     // Affiche seulement les angles d'euler, leur dérivée et le point de contact
+    std::ostream& affiche(std::ostream& sortie) const;                     // Affiche seulement les angles d'euler, et leur dérivées
     virtual std::ostream& affiche_parametres(std::ostream& out) const = 0; // Affichage complet des paramètres : il faut que chaque toupie puisse fournir ces données
 
     // MÉCANIQUE :

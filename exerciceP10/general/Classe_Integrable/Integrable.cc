@@ -13,7 +13,6 @@ Vecteur Integrable::getP_point() const {
     return P_point;
 }
 
-
 void Integrable::setP(Vecteur const& v) {
     P=v;
     for(size_t i(0); i<=2 ; ++i) { P.modulo2pi(i);   }
@@ -21,7 +20,6 @@ void Integrable::setP(Vecteur const& v) {
 void Integrable::setP_point(Vecteur const& v){
     P_point=v;
 }
-
 
 ostream& Integrable::affiche(ostream& sortie) const{
     sortie << "Ω = ("      << P.coeff(0)       << ", " << P.coeff(1)         << ", " << P.coeff(2) 

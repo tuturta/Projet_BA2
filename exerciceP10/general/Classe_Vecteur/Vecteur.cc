@@ -20,9 +20,9 @@ void Vecteur::pop_back() {
 
 void Vecteur::set_coord(size_t position, double valeur){ 
 	if (position<=dim()) {
-        coeff_[position]=valeur; ///Position 0=x/psi,position 1=y/theta, position 2=z/phi
+        coeff_[position]=valeur; /// Position 0 = x ou psi, position 1 = y ou theta, position 2 = z ou phi
 	}else{
-                Erreur Err = {"DIMENSIONS(set_coord)"}; //Erreur de dim, code 1, niveau 1, n'arrette pas le programme
+                Erreur Err = {"DIMENSIONS ! (set_coord)"};
 		throw Err;
 	}
 }
@@ -47,7 +47,13 @@ double Vecteur::norme2() const{
 	}
 	return retour;
 }
-double Vecteur::coeff(size_t x) const {return coeff_[x];}
+double Vecteur::coeff(size_t x) const {
+	if(dim()<x){
+		Erreur err = {"Vous cherchez à avoir accès au coeff "+to_string(x)+" d'un vecteur de dimension "+to_string(dim())+"!"};
+		throw err;
+	}
+	return coeff_[x];
+	}
 
 void Vecteur::correctif_0() {
 	 for (auto& c: coeff_) {
@@ -109,7 +115,7 @@ Vecteur& Vecteur::operator+=(Vecteur const& autre){
 }
 double Vecteur::operator*(Vecteur const& autre){
 	if(dim()!=autre.dim()) {
-                Erreur Err= {"DIMSIONS!(op*)"};
+                Erreur Err= {"DIMENSIONS! (op*)"};
 		throw Err;
 	} else {
         double x(0);
@@ -128,7 +134,7 @@ Vecteur& Vecteur::operator*=(double a) {
 }
 Vecteur& Vecteur::operator/=(double a) {
 	if ( a< 1e-8 ) {
-                Erreur err={"Dsion par 0"};
+                Erreur err={"Division par 0"};
 		throw err;
 	}
 	return *this*=1/a;
@@ -166,7 +172,7 @@ Vecteur Vecteur::operator~() const{
 bool Vecteur::operator==(Vecteur const& autre) const{
 	bool retour(true);
 	if(dim() != autre.dim()) {
-                Erreur Err = {"DIMENNS! (op==)"};
+                Erreur Err = {"DIMENTIONS! (op==)"};
 		throw Err;
 	}
 	for(size_t i(0) ; i < dim() ; ++i){

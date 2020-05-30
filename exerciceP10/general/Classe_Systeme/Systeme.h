@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include <iostream>
+#include "../erreurs.h"
 #include "../dessinable.h"
 #include "../Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../Classe_Integrable/Integrable.h"
@@ -19,18 +20,28 @@ class Systeme : public Dessinable {
 
    // CONSTRUCTION - COPIE - DESTRUCTION
 
+      /* L'utilisation de unique_ptr nous décharge de la désallocation de mémoire :
+       * le destructeur par défaut convient */
+
    public :
-    Systeme(Integrateur* integ, SupportADessin* support = new TextViewer(TextViewer(std::cout))) : Dessinable(support), integrateur((*integ).copie()) {} // On crée toujours un système vide, puis on lui ajoute des éléments
+    Systeme(Integrateur* integ, SupportADessin* support = new TextViewer(TextViewer(std::cout))) : Dessinable(support), integrateur((*integ).copie()) {
+        if (integrateur==nullptr) {
+            Erreur err ={"L'intégrateur doit déjà exister à la construction"};
+            throw err;
+        }
+    } // Construction d'un système vide, puis on lui ajoute des éléments
     
     Systeme(Systeme const& autre) : Dessinable(autre.support), integrateur((autre.integrateur)->copie()) {
         for(auto const& nouvelle: autre.objets) {
             ajoute_toupie(*nouvelle);
         }
-    }
+    } // Copie de système : avec copie profonde pour les pointeurs
+
 
    // MÉTHODES :
+
    private :
-    std::unique_ptr<Systeme> clone() const;
+    void test_numero(size_t i) const;                          // Teste si la toupie du numéro passé en argument existe
    public :
     void evolue(const double dt);                              // Faire évoluer les toupies du système avec l'integrateur choisi
     void ajoute_toupie(Toupie const& nouvelle);                // Ajout d'un nouvel élément au système
@@ -43,7 +54,7 @@ class Systeme : public Dessinable {
     double getRayon(size_t i) const;                           // Rayon de l'élément i de 'objets'
     size_t size() const;                                       // Nombre d'objets dans le système 
     void setSupport(SupportADessin* nouveau_support);          // Permet de modifier le support dans le constructeur de GLWidget
-
+   
 };
 
 std::ostream& operator<<(std::ostream& out, Systeme const& S);

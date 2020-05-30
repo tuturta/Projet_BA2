@@ -6,10 +6,13 @@
 
 class Vecteur 
 {
-    public:
 
-    // CONSTRUCTEURS :
+   // ATTRIBUTS :
+   private:
+    std::vector<double> coeff_;
 
+   // CONSTRUCTEURS :
+   public:
     Vecteur(double x, double y, double z): coeff_({x,y,z}) { correctif_0(); } // Vecteur 3D
     Vecteur(size_t dim) : coeff_(dim,0.0) {}                                  // Vecteur nul de la dimension voulue
     Vecteur (std::initializer_list<double> const& list) {                     // Initialiser le vecteur avec une liste de valeurs
@@ -40,12 +43,6 @@ class Vecteur
     void correctif_0();                                  // On l'utilise pour éviter d'avoir des valeurs extremement petites à la place de vrais 0 après certaines opérations.
     void modulo2pi(size_t i);                            // Modifie le coeff i en sa valeur principale modulo 2pi
     void pop_back();                                      // Diminue de 1 dimension le Vecteur --> Pour le constructeur de Toupie Chinoise
-
-    private:
-
-    // ATTRIBUTS :
-
-	std::vector<double> coeff_;
 
 };
 

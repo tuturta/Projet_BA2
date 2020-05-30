@@ -21,27 +21,24 @@ void IntegrateurNewmark::evolue(Toupie& T, const double dt) const {
         size_t dimension((T.getP()).dim());
         Vecteur q(dimension);
         Vecteur r(dimension);
-        Vecteur s(dimension); //initialise 3 vecteurs nuls de bonne dimension 
+        Vecteur s(dimension); // Initialisation 3 variables de type Vecteur nulles de bonne dimension 
 
-        s=T.copie()->fonction_f();
+        s=T.fonction_f();
         Vecteur diff(T.getP()-q);
         const Vecteur P_point_temp(T.getP_point());
         const Vecteur P_temp(T.getP());
 
         do {
                 q=T.getP();
-                r=T.copie()->fonction_f();
+                r=T.fonction_f();
                 T.setP_point(P_point_temp+(dt/2.0)*(r+s));
                 T.setP(P_temp+dt*P_point_temp+(dt*dt/3.0)*(0.5*r+s));
                 diff=T.getP()-q;
 
         } while (diff.norme()>=eps);
 
-        T.ajoute_position_CM(); // ajoute cette nouvelle position du CM dans le vector nécessaire pour la trace
+        T.ajoute_position_CM();
         T.update_A();
-
-        cout << "--Newmark--" << endl;
-
 }
 
 void IntegrateurRungeKutta::evolue(Toupie& T, const double dt) const {
@@ -60,34 +57,31 @@ void IntegrateurRungeKutta::evolue(Toupie& T, const double dt) const {
 
         //Intégration :
         k1=P_point_temp;
-        k1_p=T.copie()->fonction_f();
+        k1_p=T.fonction_f();
 
         k2=P_point_temp+dt/2.0*k1_p;
         T.setP(P_temp+dt/2.0*k1);
         T.setP_point(k2);
-        k2_p=T.copie()->fonction_f();
+        k2_p=T.fonction_f();
 
         k3=P_point_temp+dt/2.0*k2_p;
         T.setP(P_temp+dt/2.0*k2);
         T.setP_point(k3);
-        k3_p=T.copie()->fonction_f();
+        k3_p=T.fonction_f();
 
         k4=P_point_temp+dt*k3_p;
         T.setP(P_temp+dt*k3);
         T.setP_point(k4);
-        k4_p=T.copie()->fonction_f();
+        k4_p=T.fonction_f();
 
         T.setP(P_temp+dt/6.0*(k1+2*k2+2*k3+k4));
         T.setP_point(P_point_temp+dt/6.0*(k1_p+2*k2_p+2*k3_p+k4_p));
 
         T.ajoute_position_CM(); // ajoute cette nouvelle position du CM dans le vector nécessaire pour la trace
-        T.update_A();  
-
-        cout << "-RK-" << endl;
-      
+        T.update_A();        
 }
 
-// COPIE POLYMORPHIQUE :
+// COPIE POLYMORPHIQUE DES INTÉGRATEURS :
 
 unique_ptr<Integrateur> IntegrateurEulerCromer::copie() {
         return clone();

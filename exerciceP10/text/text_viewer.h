@@ -10,7 +10,7 @@ class TextViewer : public SupportADessin {
  TextViewer(std::ostream& flot)
     : flot(flot)
   {}
-  virtual ~TextViewer() {}
+  virtual ~TextViewer() { std::cout << "Destructeur virtuel (pas pur) de textviewer" << std::endl; }
   //Les methodes sont à modifier histoire que leurs sorties puissent être lu par gnu plot
   virtual void dessine(ConeGeneral const& objet) override;
   virtual void dessine(Objet_en_chute_libre const& objet) override;
