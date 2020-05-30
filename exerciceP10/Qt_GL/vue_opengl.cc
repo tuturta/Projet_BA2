@@ -33,6 +33,7 @@ void VueOpenGL::dessine(Toupie const& a_dessiner)
 // ======================================================================DESSINE(CONE)
 void VueOpenGL::dessine(ConeGeneral const& a_dessiner)
 {
+
    //On initialise la matrice de dessin
    QMatrix4x4 matrice;
    matrice.setToIdentity();
@@ -43,10 +44,6 @@ void VueOpenGL::dessine(ConeGeneral const& a_dessiner)
    double zA(a_dessiner.getPoint_de_conact().coeff(2));
 
 
-  dessineSol();      //On dessine le sol
-  dessineRepere();   //On dessine le repère d'inertie
-
-
   //On se place au niveau du point de contact, c'est de là que se dessine le cône:
   matrice.translate(xA,yA,zA);
 
@@ -54,11 +51,10 @@ void VueOpenGL::dessine(ConeGeneral const& a_dessiner)
   //On se place dans repère d'inertie:
   matrice_inertie(matrice, a_dessiner);
 
-  //On dessine la trace de la toupie et son centre de masse et son repère d'inertie:
-  dessineTrace(a_dessiner.getPositions_CM());
 
+  //En fonction des options choisies, on active/désactive le repère d'inertie, la trace et le sol
+  dessineAccessoires(matrice,a_dessiner);                                            //On dessine le repère d'inertie
   dessineCM(a_dessiner);
-  //dessineRepere(matrice);                                            //On dessine le repère d'inertie
 
   //On dessine le cone:
   cone.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon());   //établit le modèle du cône à dessiner.
@@ -69,11 +65,7 @@ void VueOpenGL::dessine(ConeGeneral const& a_dessiner)
 // ======================DESSINE(TOUPIE_CHINOISE)=============================
 void VueOpenGL::dessine(ToupieChinoiseGenerale const& a_dessiner)
 {
-
-  dessineRepere();      //Dessine le repère O
-  dessineSol();         //Marce pas pour le moment, surement un problème de shader
-
-
+  std::cout << "vecteur OC: " << a_dessiner.vecteurOC() << std::endl;
   //On place le repère du dessin au centre de la sphère(point à partir duquel s'effectue le dessin)
   QMatrix4x4 matrice;
   matrice.setToIdentity();
@@ -85,17 +77,16 @@ void VueOpenGL::dessine(ToupieChinoiseGenerale const& a_dessiner)
   //On se place dans repère d'inertie
   matrice_inertie(matrice, a_dessiner);
 
-
-  //On dessine la trace de la toupie et son centre de masse et son repère d'inertie
-  dessineTrace(a_dessiner.getPositions_CM());
+  //En fonction des options choisies, on active/désactive le repère d'inertie, le repère galiléen, la trace et le sol
+  dessineAccessoires(matrice,a_dessiner);
   dessineCM(a_dessiner);
-  //dessineRepere(matrice);
 
   //On dessine la sphère tronquée dans le repère du dessin
   sphere_tronquee.initialize(a_dessiner.getHauteur(),a_dessiner.getRayon()); //établit le modèle du cône à dessiner.
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);                                 // passe en mode "fil de fer"
   dessineToupieChinoise(matrice,a_dessiner.getColor());
 }
+
 
 // ======================DESSINE(OBJET EN ...)=============================
 void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
@@ -441,6 +432,7 @@ void VueOpenGL::dessineCM(Toupie const& a_dessiner, QMatrix4x4 const& point_de_v
     prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
 
     glBegin(GL_LINES);
+    std::cout << "vecteurOG() : " << a_dessiner.vecteurOG() << std::endl;
     double x(a_dessiner.vecteurOG().coeff(0));
     double y(a_dessiner.vecteurOG().coeff(1));
     double z(a_dessiner.vecteurOG().coeff(2));
@@ -453,5 +445,26 @@ void VueOpenGL::dessineCM(Toupie const& a_dessiner, QMatrix4x4 const& point_de_v
     prog.setAttributeValue(SommetId, x, y+delta, z);
     prog.setAttributeValue(SommetId, x, y-delta, z);
     glEnd();
+
+}
+
+void VueOpenGL::sol(bool option) {
+    sol_ = option;
+}
+void VueOpenGL::trace(bool option) {
+    trace_ = option;
+}
+void VueOpenGL::repere_inertie(bool option) {
+    repere_inertie_ = option;
+}
+void VueOpenGL::repere_galileen(bool option) {
+    repere_galileen_ = option;
+}
+
+void VueOpenGL::dessineAccessoires(QMatrix4x4 const& matrice_inertie, Toupie const& a_dessiner){
+    if(repere_inertie_){dessineRepere(matrice_inertie);}
+    if(trace_){dessineTrace(a_dessiner.getPositions_CM());}
+    if(sol_){dessineSol();}
+    if(repere_galileen_){dessineRepere();}
 
 }

@@ -64,12 +64,12 @@ void Vecteur::correctif_0() {
  }
 
 void Vecteur::modulo2pi(size_t i) {
-     if((coeff(i)>=2*M_PI)) {
-         coeff_[i] -= 2.0*M_PI*floor(coeff(i)/(2.0*M_PI));
-     } else {
-         coeff_[i] += 2.0*M_PI*(1+floor(-coeff(i)/(2.0*M_PI)));
-     }
-    // pour obtenir les angles modulo 2 pi
+    if(coeff(i)>=2.0*M_PI) {
+			   coeff_[i] -= 2.0*M_PI*floor(coeff(i)/(2.0*M_PI));
+	}else if(coeff(i)<0.0){
+			   coeff_[i] += 2.0*M_PI*(floor(-coeff(i)/(2.0*M_PI))+1.0);
+		   }
+     // pour obtenir les angles modulo 2 pi
 }
 // DÉFINITIONS DES OPERATEURS:
 // --> EXTERNES

@@ -122,7 +122,7 @@ void GLWidget::keyPressEvent(QKeyEvent* event)
 void GLWidget::timerEvent(QTimerEvent* event)
 {
   Q_UNUSED(event);
-  double dt(chronometre.restart()/500.0);
+  double dt = chronometre.restart()/1000.0;
   t += dt;
   std::cout << "=====Temps: " << t << std::endl;
   std::cout << contenu << std::endl;
@@ -175,5 +175,13 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
 
     update();
   }
+}
+
+void GLWidget::display_settings(bool repere_inertie, bool trace, bool sol, bool repere_galileen){
+    vue.repere_inertie(repere_inertie);
+    vue.trace(trace);
+    vue.sol(sol);
+    vue.repere_galileen(repere_galileen);
+
 }
 

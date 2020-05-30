@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
                    0.1,                   //Masse Volumique
                    1.5,                   //Hauteur
                    0.5,                   //Rayon
-                   {1.0,0.0,0.0},
+                   {5.0,5.0,0.0},
                    bleu);        //Origine dans le ref absolu
 
   //Toupie avec trace en fleur
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
                        0.1,                //Masse volumique
                        1.0,                //Hauteur
                        0.45,                //Rayon
-                       {0.0,1.0,0.0},       //Origine
+                       {0.0,9.0,0.0},       //Origine
                        jaune);
 
 //Toupies roulantes qui tournent
@@ -54,9 +54,9 @@ int main(int argc, char* argv[])
   ToupieChinoiseGenerale flipflopG({0.0,0.11,0.0},
                           {50.0,0.0,0.0},
                           0.1,
-                          0.08,
+                          0.028,
                           0.6,
-                          {0.0,3.0,0.0},
+                          {4.0,0.0,0.0},
                           bleu);
 
 
@@ -83,17 +83,26 @@ int main(int argc, char* argv[])
   Systeme systeme1(&integrateur_rk);
 
 
-  systeme1.ajoute_toupie(cone1);
-  systeme1.ajoute_toupie(cone1G);
-  systeme1.ajoute_toupie(coneTrace);
-  systeme1.ajoute_toupie(balancier);
-  systeme1.ajoute_toupie(balancierG);
+  //systeme1.ajoute_toupie(cone1);
+  //systeme1.ajoute_toupie(cone1G);
+  //systeme1.ajoute_toupie(coneTrace);
+  //systeme1.ajoute_toupie(balancier);
+  //systeme1.ajoute_toupie(balancierG);
   systeme1.ajoute_toupie(flipflop);
   systeme1.ajoute_toupie(flipflopG);
 
 
   QApplication a(argc, argv);
   GLWidget w(systeme1);
+
+  w.display_settings(
+              false,     //Repere inertie
+              true,      //Trace
+              true,      //Sol
+              true);     //Repere Galiléen
+
+
+
   w.show();
   return a.exec();
 }

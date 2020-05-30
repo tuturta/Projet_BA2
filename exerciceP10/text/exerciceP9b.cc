@@ -14,7 +14,7 @@ using namespace std;
 int main() {
     const double dt(0.01); // Pas de temps
     double t(0.0);         // Initialise le temps à 0
-    unsigned int nombre_de_tour(15);
+    unsigned int nombre_de_tour(5);
     try{
         //================SUPPORT TEXTUEL======================================================//
         ofstream fichier;

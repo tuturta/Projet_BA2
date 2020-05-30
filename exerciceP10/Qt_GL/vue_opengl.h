@@ -12,13 +12,15 @@
 
 class VueOpenGL : public SupportADessin {
  public:
-
+ VueOpenGL(bool repere_inertie = false, bool trace = true, bool sol = true, bool repere_galileen = true)
+ : SupportADessin(), repere_inertie_(repere_inertie), trace_(trace), sol_(sol), repere_galileen_(repere_galileen) {}
 
   // méthode(s) de dessin (héritée(s) de SupportADessin)
     virtual void dessine(ConeGeneral const& objet) override;
     virtual void dessine(Objet_en_chute_libre const& objet) override;
     virtual void dessine(Toupie const& objet) override;
     virtual void dessine(ToupieChinoiseGenerale const& objet) override;
+
 
 
   // méthodes de (ré-)initialisation
@@ -32,6 +34,10 @@ class VueOpenGL : public SupportADessin {
   // Méthodes set
   void translate(double x, double y, double z);
   void rotate(double angle, double dir_x, double dir_y, double dir_z);
+  void repere_inertie(bool option);
+  void trace(bool option);
+  void sol(bool option);
+  void repere_galileen(bool option);
 
   // méthode utilitaire offerte pour simplifier
   void dessineCube(QMatrix4x4 const& point_de_vue = QMatrix4x4());
@@ -43,7 +49,7 @@ class VueOpenGL : public SupportADessin {
   void matrice_inertie(QMatrix4x4& matrice, Toupie const& a_dessiner) const;
   void dessineTrace( std::vector<Vecteur> const& positions);
   void dessineCM( Toupie const& a_dessiner, QMatrix4x4 const& point_de_vue = QMatrix4x4());
-
+  void dessineAccessoires(QMatrix4x4 const& matrice_inertie, Toupie const& a_dessiner);
   RVBColor ColorTranslate(Couleur couleur) const;                                           //Convertit une couleur de type "Couleur" en couleur de type RVB lisible par le shader
 
 //test
@@ -60,6 +66,12 @@ class VueOpenGL : public SupportADessin {
   GLSphere_Tronquee sphere_tronquee;
   // Caméra
   QMatrix4x4 matrice_vue;
+  //Option de dessins (pour les toupies):
+  bool repere_inertie_;
+  bool trace_;
+  bool sol_;
+  bool repere_galileen_;
+
 };
 
 #endif

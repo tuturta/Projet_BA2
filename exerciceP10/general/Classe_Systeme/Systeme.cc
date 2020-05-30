@@ -97,6 +97,6 @@ void Systeme::setSupport(SupportADessin* nouveau_support) {
 
 void Systeme::evolue(const double dt) {
     for(auto const& ptr_toupie : objets) {
-        integrateur->evolue(*ptr_toupie, dt);;
+        integrateur->evolue(*ptr_toupie, dt);
     }
 }
