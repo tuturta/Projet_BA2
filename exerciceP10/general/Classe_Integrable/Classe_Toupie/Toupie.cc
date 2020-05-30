@@ -36,14 +36,6 @@ Vecteur Toupie::ref_G_to_O_point(Vecteur const& point) const {
     return (S().inv()*point + point_de_contact_ +ref_G_to_O(vecteurAG()));
 } 
 
-Vecteur Toupie::getPoint_de_conact() const{
-    return point_de_contact;
-}
-
-void Toupie::setPoint_de_contact(Vecteur const& v){
-    point_de_contact=v;
-}
-
 void Toupie::update_A() {
     point_de_contact_ = vecteurOA();
 } 
@@ -144,11 +136,8 @@ Vecteur Toupie::w() const{
     double phi_P(P_point.coeff(2));
     Vecteur w(3);
     double w1(theta_P);
-    cout << "w1 général : " << w1 << endl;
     double w2(psi_P*sin(theta));
-    cout << "w2 général : " << w2 << endl;
     double w3(psi_P*cos(theta)+phi_P);
-    cout << "w3 général : " << w1 << endl;
     w = {w1,w2,w3}; 
     return w;
 }
@@ -365,16 +354,6 @@ void ConeGeneral::dessine() {
 
 //=============================CLASSE TOUPIE ROULANTE===================================//
 
-ostream& ToupieChinoiseGenerale::affiche_parametres(ostream& out) const {
-    out << "[TOUPIE CHINOISE GENERALE]" << endl;
-    Toupie::affiche_parametres(out);
-    out << "Position G : " << P_point.coeff(3) << " " << P_point.coeff(4) << " " << P_point.coeff(5) << endl;
-    out << "Hauteur tronquée (m) : " << hauteur_ << endl;
-    out << "Rayon (m) : " << rayon_ << endl;
-    out << "Point de contact (A) : " << point_de_contact_ << endl;
-    return out;
-}
-
 Vecteur ToupieChinoiseGenerale::fonction_f() const{
     //cout << "--APPEL ToupieChinoiseGenerale::fonction_f()--" <<endl;
     //cout << ": " << vecteurOG() << endl;
@@ -395,8 +374,6 @@ Vecteur ToupieChinoiseGenerale::fonction_f() const{
         
     //On utilise la méthode w()
     Vecteur MA(masse()*(g.norme())*(vecteurAG().norme())*sin(theta),0.0,0.0); // On considère que le poids est la seule force appliquée ailleurs qu'en A
-    //cout << "MA_G = " << MA << endl;
-    //cout << "w_G = " << w() << endl;
 
     //2.Calcul de IA avec Huygens-Steiner
 
@@ -409,7 +386,6 @@ Vecteur ToupieChinoiseGenerale::fonction_f() const{
     Vecteur we(w());
     we.set_coord(2,we.coeff(2) - phi_P); //rotation du repère (ne prend pas en compte la rotation propre de la toupie
     w_point = matrice_inertie_A().inv()*(MA-(we^(matrice_inertie_A()*w())));
-    //cout << "Dw_G= " << w_point << endl;
     
     //4.CALCUL DE P_POINT_POINT: 
     Vecteur P_point_point(6);
@@ -423,10 +399,7 @@ Vecteur ToupieChinoiseGenerale::fonction_f() const{
     }
 
     //5.CALCUL DE LA POSITION DE G:
-    //cout << "General_dW: " << w() << endl;
     Vecteur vg( ref_G_to_O(-(w()^vecteurAG()))); //Vg=AG^w dans un solide
-    //cout << "General_vecteurAG: " << vecteurAG() << endl;
-    //Dérivées de Gx,Gy,Gz (P4_point_point, P5_point_point, P6_point_point
     P_point_point.set_coord(3,vg.coeff(0));
     P_point_point.set_coord(4,vg.coeff(1));
     P_point_point.set_coord(5,vg.coeff(2));
@@ -440,6 +413,21 @@ Vecteur ToupieChinoiseGenerale::fonction_f() const{
     //cout << "FIN APPEL ToupieChinoiseGenerale::fonction_f()" << endl;
     return P_point_point;
 }
+
+
+//=============================CLASSE TOUPIE CHINOISE GENERALE===================================//
+
+ostream& ToupieChinoiseGenerale::affiche_parametres(ostream& out) const {
+    out << "[TOUPIE CHINOISE GENERALE]" << endl;
+    Toupie::affiche_parametres(out);
+    out << "Position G : " << P_point.coeff(3) << " " << P_point.coeff(4) << " " << P_point.coeff(5) << endl;
+    out << "Hauteur tronquée (m) : " << hauteur_ << endl;
+    out << "Rayon (m) : " << rayon_ << endl;
+    out << "Point de contact (A) : " << point_de_contact_ << endl;
+    return out;
+}
+
+
 
 Vecteur ToupieChinoiseGenerale::vecteurAG() const{ // /!\ POUR UNE TOUPIE CHINOISE
     //cout << "appel vecteur ToupieChinoise::AG() " << endl;

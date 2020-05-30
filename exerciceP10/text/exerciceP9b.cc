@@ -79,10 +79,10 @@ int main() {
             Systeme systeme(&integrateur_e, &ecran);
             //systeme.ajoute_toupie(cone1);
             //systeme.ajoute_toupie(cone2);
-            //systeme.ajoute_toupie(Toupiechinoise);
+             systeme.ajoute_toupie(Toupiechinoise);
             //systeme.ajoute_toupie(ToupieChinoiseG);
-            systeme.ajoute_toupie(balancier);
-            systeme.ajoute_toupie(balancierG);
+            //systeme.ajoute_toupie(balancier);
+            //systeme.ajoute_toupie(balancierG);
 
             cout << systeme << endl;
             cout << "Le système évolue et se dessine à chaque pas de temps (dt=" << dt << ") :" << endl;

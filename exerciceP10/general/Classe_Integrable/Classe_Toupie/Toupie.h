@@ -32,7 +32,7 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
    public :
 
     Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, Vecteur const& point_de_contact, double hauteur, double rayon, Couleur const& couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-        : Integrable(P, P_point, support), masse_volumique(masse_volumique), point_de_contact(point_de_contact), hauteur_(hauteur), rayon_(rayon), couleur_(couleur) {
+        : Integrable(P, P_point, support), masse_volumique_(masse_volumique), point_de_contact_(point_de_contact), hauteur_(hauteur), rayon_(rayon), couleur_(couleur) {
             if ((hauteur < 0.0) or (rayon < eps) or (masse_volumique < eps)) {
                 Erreur err = {"Votre objet doit avoir un sens physique!"};
                 throw err; 
