@@ -5,9 +5,9 @@
 
 class Integrateur{
    public:
-    virtual ~Integrateur() { std::cout << "Destructeur virtuel(pas pur) Integrateur" << std::endl; }
+    virtual ~Integrateur() {} // Juste pour la forme (l'absence d'attributs assure normalement une destruction complète même sans la virtualité du destructeur)
     virtual void evolue(Toupie& T, const double dt) const = 0;
-    virtual std::unique_ptr<Integrateur> copie() =0;
+    virtual std::unique_ptr<Integrateur> copie() = 0;
 };
 
 class IntegrateurEulerCromer : public Integrateur {

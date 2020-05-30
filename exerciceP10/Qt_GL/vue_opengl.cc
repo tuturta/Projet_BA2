@@ -25,6 +25,7 @@ void VueOpenGL::matrice_inertie(QMatrix4x4& matrice, Toupie const& a_dessiner) c
 
 void VueOpenGL::dessine(Toupie const& a_dessiner)
 {
+
     dessineRepere();
 
 }
