@@ -21,7 +21,7 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     double hauteur_;                   // Hauteur du solide de révolution
     double rayon_;                     // Rayon de la base du cône / rayon de la sphère (tronquée)
     Couleur couleur_;
-    double zi(size_t i) const;         // Donne la hauteur en fonction du découpage
+    virtual double zi(size_t i) const;         // Donne la hauteur en fonction du découpage
 
    // CONSTRUCTEUR
    
@@ -186,15 +186,23 @@ class ToupieChinoiseGenerale: public Toupie{
    // CONSTRUCTION - COPOIE - DESTRUCTION 
    
    public: 
-    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    :Toupie(param, D_param, masse_volumique, hauteur, rayon, point_de_contact, couleur, support){
+    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact_, Couleur couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    :Toupie(param, D_param, masse_volumique, hauteur, rayon, point_de_contact_, couleur, support){
+        
+       // std::cout << "<<<<<<<<<<<<<<<<<<<CONSTRUCTEUR TG>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
         P.augmente(0.0);
         P.augmente(0.0);
         P.augmente(0.0);
 
-        P_point.augmente(0.0); // Gx
-        P_point.augmente(vecteurGC().norme()*sin(P.coeff(1))); // Gy
-        P_point.augmente(getRayon()-vecteurGC().norme()*cos(P.coeff(1))); // Gz
+
+        Vecteur AG(ref_G_to_O(vecteurAG()));  //On choisit d'utiliser ici d'appeler qu'une seule fois le vecteurAG() pour accélèrer la vitesse de calcul: chaque fois que la
+                                  // méthode vecteurAG() est appelée, elle doit utiliser la méthode distanceBC() dans le cas génèrale (ie approché cette distance par des sommes)  
+        P_point.augmente(point_de_contact.coeff(0) + AG.coeff(0)); // Gx
+        P_point.augmente(point_de_contact.coeff(1) + AG.coeff(1)); // Gy
+        P_point.augmente(point_de_contact.coeff(2) + AG.coeff(2)); // Gz
+                
+        //std::cout << "<<<<<<<<<<<<<<<<<<<FIN CONSTRUCTEUR TG>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+
 
     } // On ajoute les paramètres de la position du centre de masse : ce n'est pas à l'utilisateur de le faire. /!\ N'est adapté que pour retrouver une toupie chinoise    
   
@@ -216,6 +224,8 @@ class ToupieChinoiseGenerale: public Toupie{
     // AFFICHAGE / DESSIN :
     virtual std::ostream& affiche(std::ostream& sortie) const override;
     virtual std::ostream& affiche_parametres(std::ostream& out) const override;
+    virtual double zi(size_t i) const override;         // Donne la hauteur en fonction du découpage
+
     };
 
 // ===============================TOUPIE CHINOISE=====================================

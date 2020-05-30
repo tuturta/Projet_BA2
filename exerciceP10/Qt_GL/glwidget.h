@@ -17,11 +17,14 @@ class GLWidget : public QOpenGLWidget
   public:
     GLWidget(Systeme const& a_dessiner, QWidget* parent = nullptr)
       : QOpenGLWidget(parent), contenu(a_dessiner)
-      {contenu.setSupport(&vue);
-      std::cout << "constructeur GLwidget" << std::endl;}
+    {contenu.setSupport(&vue);}
     virtual ~GLWidget() {}
 
   // MÉTHODES : 
+
+    // Activer/Désactiver divers options d'affichage
+
+    void display_settings(bool repere_inertie, bool trace = true , bool sol = true, bool repere_galileen = true );
 
   private:
   // Les 3 méthodes clés de la classe QOpenGLWidget à réimplémenter
@@ -51,6 +54,7 @@ class GLWidget : public QOpenGLWidget
 
   // position de la souris
    QPoint lastMousePosition;
+
 };
 
 #endif // GLWIDGET_H

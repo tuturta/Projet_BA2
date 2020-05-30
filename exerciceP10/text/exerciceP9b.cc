@@ -12,9 +12,9 @@ using namespace std;
 
 
 int main() {
-    const double dt(0.1); // Pas de temps
+    const double dt(0.01); // Pas de temps
     double t(0.0);         // Initialise le temps à 0
-    unsigned int nombre_de_tour(15);
+    unsigned int nombre_de_tour(5);
     try{
         //================SUPPORT TEXTUEL======================================================//
         ofstream fichier;
@@ -29,18 +29,18 @@ int main() {
             IntegrateurNewmark  integrateur_n;
             IntegrateurRungeKutta integrateur_rk;
 
-            ConeSimple cone1({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, blanc, &ecran);
-            ConeGeneral cone2({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0},blanc,  &ecran);
+            //ConeSimple cone1({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, blanc, &ecran);
+            //ConeGeneral cone2({0.0,0.523599,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0},blanc,  &ecran);
             ToupieChinoise Toupiechinoise({0.0,0.11,0.0},{50.0,0.0,0.0},0.1,0.02,0.15,{0.0,0.0,0.0}, blanc, &ecran);
             ToupieChinoiseGenerale ToupieChinoiseG({0.0,0.11,0.0},{50.0,0.0,0.0},0.1,0.02,0.15,{0.0,0.0,0.0}, blanc, &ecran);
-            ToupieChinoise balancier( {0.0,0.75,0.0},{0.0,0.0,0.0},0.1,0.02,0.15,{0.0,0.0,0.0}, blanc, &ecran);
+            //ToupieChinoise balancier( {0.0,0.75,0.0},{0.0,0.0,0.0},0.1,0.02,0.15,{0.0,0.0,0.0}, blanc, &ecran);
 
-            Systeme systeme(&integrateur_n, &ecran);
+            Systeme systeme(&integrateur_rk, &ecran);
             //systeme.ajoute_toupie(cone1);
             //systeme.ajoute_toupie(cone2);
-            //systeme.ajoute_toupie(Toupiechinoise);
-            //systeme.ajoute_toupie(ToupieChinoiseG);
-            systeme.ajoute_toupie(balancier);
+            systeme.ajoute_toupie(Toupiechinoise);
+            systeme.ajoute_toupie(ToupieChinoiseG);
+            //systeme.ajoute_toupie(balancier);
 
 
             cout << systeme << endl;

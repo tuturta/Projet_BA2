@@ -46,7 +46,6 @@ size_t Systeme::size() const{ return objets.size(); }
 
 void Systeme::dessine() {
 
-    cout << "appel Systeme::dessine()" << endl;
     unsigned int compteur(1);
     for (auto const& ptr_toupie : objets){
         if(ptr_toupie != nullptr){
@@ -86,6 +85,6 @@ void Systeme::setSupport(SupportADessin* nouveau_support) {
 
 void Systeme::evolue(const double dt) {
     for(auto const& ptr_toupie : objets) {
-        integrateur->evolue(*ptr_toupie, dt);;
+        integrateur->evolue(*ptr_toupie, dt);
     }
 }
