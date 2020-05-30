@@ -16,16 +16,10 @@ using namespace std;
 ostream& Toupie::affiche_parametres(ostream& out) const {
     out << "Angles Ω = (" << P.coeff(0) << ", " << P.coeff(1) << ", " << P.coeff(2) << ")" <<endl; //on affiche seulement les angles
     out << "Dérivées Ω' = " << P_point.coeff(0) << " " << P_point.coeff(1) << " " << P_point.coeff(2) << endl;
-    out << "Masse volumique (kg m-3) : " << masse_volumique << endl;
+    out << "Masse volumique (kg m-3) : " << masse_volumique_ << endl;
     return out;
 }
 
-unique_ptr<Toupie> Toupie::clone() const{
-    return unique_ptr<Toupie>(new Toupie(*this));
-}
-unique_ptr<Toupie> Toupie::copie() const{
-    return clone();
-}
 double Toupie::getHauteur() const{ return hauteur_;}
 double Toupie::getRayon() const{ return rayon_;}
 
@@ -37,21 +31,31 @@ std::vector<Vecteur> Toupie::getPositions_CM() const {
     return positions_CM;
 }
 Vecteur Toupie::ref_G_to_O_point(Vecteur const& point) const {
-    return (S().inv()*point + point_de_contact +ref_G_to_O(vecteurAG()));
+    return (S().inv()*point + point_de_contact_ +ref_G_to_O(vecteurAG()));
 } 
 
 void Toupie::update_A() {
-    point_de_contact = vecteurOA();
+    point_de_contact_ = vecteurOA();
 } 
 
 void Toupie::dessine() {
     support->dessine(*this);
 }
 
+Vecteur Toupie::getPoint_de_contact() const{
+    return point_de_contact_;
+}
+
+void Toupie::setPoint_de_contact(Vecteur const& v){
+    point_de_contact_=v;
+}
+
 std::ostream& Toupie::affiche(std::ostream& sortie) const {
+    cout << "-------------" << endl;
     Integrable::affiche(sortie);
-    sortie << "A : " << point_de_contact << endl;
+    sortie << "A : " << point_de_contact_ << endl;
     sortie << "G : " << positions_CM.back() << endl;
+
     sortie << "             Energie totale (J) : "         <<  energie_totale()  << endl
            << "             Projection de LA sur z (m) : " <<       LAz()        << endl 
            << "             Projection de LA sur a (m) : " <<       LA3()        << endl
@@ -72,7 +76,7 @@ double Toupie::masse() const{
     for(size_t i(1) ; i <= N; ++i){
         masse += rayon2(i);
     }
-    masse *= M_PI * masse_volumique * hauteur_ / N;
+    masse *= M_PI * masse_volumique_ * hauteur_ / N;
     return masse;
 }
 
@@ -80,11 +84,6 @@ double Toupie::zi(size_t i) const{
     return (2.0*i-1)*hauteur_/(2.0*N);
 }
 
-double Toupie::rayon2(size_t i) const {  //TEMPORAIRE, DOIT ETRE REDEFINI DANS CHAQUE CLASSE
-    //cout << "*************************appel toupie rayon2" << endl;
-
-    return pow(((zi(i)/hauteur_)*rayon_),2);
-}
 
 
 double Toupie::distanceBG() const{ // où O est l'origine du solide de construction et G le centre de masse
@@ -114,8 +113,8 @@ Matrice Toupie::matrice_inertie_G() const {   // Matrice d'inertie au point A da
         somme1 += ri2*ri2;                  //Somme des ri^4 
         somme2 += pow(zi(i),2)* ri2;
     }
-    double I3 (M_PI/2.0 * masse_volumique*somme1*hauteur_/N);
-    double I1 (1.0/2.0*I3 + M_PI*masse_volumique*hauteur_/N*somme2 - masse()*pow(vecteurAG().norme(),2)); 
+    double I3 (M_PI/2.0 * masse_volumique_*somme1*hauteur_/N);
+    double I1 (1.0/2.0*I3 + M_PI*masse_volumique_*hauteur_/N*somme2 - masse()*pow(vecteurAG().norme(),2)); 
     Matrice IG (I1, I1, I3);
     return IG;
 
@@ -152,7 +151,7 @@ Vecteur Toupie:: vecteurOG() const{
 }
 
 Vecteur Toupie:: vecteurOA() const{         //Pour le moment
-    return point_de_contact;
+    return point_de_contact_;
 }
 
 Vecteur Toupie::fonction_f() const{
@@ -197,16 +196,16 @@ Couleur Toupie::getColor() const {
 //METHODES:
 
 ostream& ConeSimple::affiche_parametres(ostream& out) const {
-    out << " CONIQUE SIMPLE " << endl;
+    out << " [CONE SIMPLE] " << endl;
     Toupie::affiche_parametres(out);
     out << "Hauteur (m) : " << hauteur_ << endl;
     out << "Rayon   (m) : " << rayon_ << endl;
-    out << "Point de contact (A) : " << point_de_contact << endl;
+    out << "Point de contact (A) : " << point_de_contact_ << endl;
     return out;
 }
 
 double ConeSimple::masse() const{ //masse calculée grace a la formule p8
-    return (1.0/3.0)*M_PI*masse_volumique*pow(rayon_,2)*hauteur_;
+    return (1.0/3.0)*M_PI*masse_volumique_*pow(rayon_,2)*hauteur_;
 }
 
 
@@ -266,25 +265,15 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi
 
 
 
-//============================CLASSE OBJ CHUTE==========================================//
-
-void Objet_en_chute_libre::dessine() {
-    support->dessine(*this);
-}
-
-Vecteur Objet_en_chute_libre::fonction_f() const{
-        return {0,-9.81,0.0};
-}
-
-unique_ptr<Objet_en_chute_libre> Objet_en_chute_libre::clone() const{
-    return unique_ptr<Objet_en_chute_libre>(new Objet_en_chute_libre(*this));
-}
-unique_ptr<Toupie> Objet_en_chute_libre::copie() const{
-    return clone();
-}
-
 //=============================CLASSE CONE GENERAL=======================================//
-
+ostream& ConeGeneral::affiche_parametres(ostream& out) const {
+    out << " [CONE GENERAL] " << endl;
+    Toupie::affiche_parametres(out);
+    out << "Hauteur (m) : " << hauteur_ << endl;
+    out << "Rayon   (m) : " << rayon_ << endl;
+    out << "Point de contact (A) : " << point_de_contact_ << endl;
+    return out;
+}
 
 Vecteur ConeGeneral::fonction_f() const{
    // cout << "--APPEL ConeGeneral::fonction_f()--" <<endl;
@@ -340,7 +329,7 @@ Vecteur ConeGeneral::vecteurAG() const{
 }
 
 Vecteur ConeGeneral::vecteurOA() const{
-    return point_de_contact;
+    return point_de_contact_;
 }
 
 unique_ptr<ConeGeneral> ConeGeneral::clone() const{
@@ -367,7 +356,7 @@ ostream& ToupieChinoiseGenerale::affiche_parametres(ostream& out) const {
     out << "Position G : " << P_point.coeff(3) << " " << P_point.coeff(4) << " " << P_point.coeff(5) << endl;
     out << "Hauteur tronquée (m) : " << hauteur_ << endl;
     out << "Rayon (m) : " << rayon_ << endl;
-    out << "Point de contact (A) : " << point_de_contact << endl;
+    out << "Point de contact (A) : " << point_de_contact_ << endl;
     return out;
 }
 
@@ -421,7 +410,6 @@ Vecteur ToupieChinoiseGenerale::fonction_f() const{
     //5.CALCUL DE LA POSITION DE G:
     //cout << "General_dW: " << w() << endl;
     Vecteur vg( ref_G_to_O(-(w()^vecteurAG()))); //Vg=AG^w dans un solide
-    cout << "VG (cas général): " << vg << endl;
     //cout << "General_vecteurAG: " << vecteurAG() << endl;
     //Dérivées de Gx,Gy,Gz (P4_point_point, P5_point_point, P6_point_point
     P_point_point.set_coord(3,vg.coeff(0));
@@ -499,12 +487,12 @@ ostream& ToupieChinoise::affiche_parametres(ostream& out) const {
     out << "Centre C en : " << P_point.coeff(3) << " " << P_point.coeff(4) << endl;
     out << "Hauteur tronquée (m) : " << hauteur_ << endl;
     out << "Rayon (m) : " << rayon_ << endl;
-    out << "Point de contact (A) : " << point_de_contact << endl;
+    out << "Point de contact (A) : " << point_de_contact_ << endl;
     return out;
 }
 
 std::ostream& ToupieChinoise::affiche(std::ostream& sortie) const {
-    sortie << "[TOUPIE CHINOISE]" << endl;
+    //sortie << "[TOUPIE CHINOISE]" << endl;
     Toupie::affiche(sortie);
     sortie << "C : (" << P_point.coeff(3) << ", " << P_point.coeff(4) << ", " << rayon_ << ")" << endl;
     return sortie;
@@ -516,7 +504,7 @@ void ToupieChinoise::dessine() {
 
 
 double ToupieChinoise::masse() const{
-    return (M_PI*masse_volumique*((4.0/3.0)*pow(rayon_,3) - hauteur_*hauteur_*(rayon_-(1.0/3.0)*hauteur_)));
+    return (M_PI*masse_volumique_*((4.0/3.0)*pow(rayon_,3) - hauteur_*hauteur_*(rayon_-(1.0/3.0)*hauteur_)));
 }
 
 double ToupieChinoise::alpha() const{
@@ -531,8 +519,8 @@ Vecteur ToupieChinoise::vecteurGC() const{
 Matrice ToupieChinoise::matrice_inertie_G() const{
     //cout << "APPEL Toupiechinoise::matrice_inertie_A()" << endl;
     
-    double I3 ((M_PI/30.0)*masse_volumique*pow((2.0*rayon_-hauteur_),3)*(2.0*pow(rayon_,2)+3.0*hauteur_*rayon_+3.0*pow(hauteur_,2)));
-    double I1 ((1.0/2.0)*I3 + ((M_PI/15.0)*masse_volumique*pow((2.0*rayon_-hauteur_),2)*(pow(rayon_,3)+ hauteur_*pow(rayon_,2) - 3.0*pow(hauteur_,2)*rayon_+3.0*pow(hauteur_,3))) -masse()*vecteurGC().norme2());
+    double I3 ((M_PI/30.0)*masse_volumique_*pow((2.0*rayon_-hauteur_),3)*(2.0*pow(rayon_,2)+3.0*hauteur_*rayon_+3.0*pow(hauteur_,2)));
+    double I1 ((1.0/2.0)*I3 + ((M_PI/15.0)*masse_volumique_*pow((2.0*rayon_-hauteur_),2)*(pow(rayon_,3)+ hauteur_*pow(rayon_,2) - 3.0*pow(hauteur_,2)*rayon_+3.0*pow(hauteur_,3))) -masse()*vecteurGC().norme2());
     
    // cout << "APPEL Toupiechinoise::matrice_inertie_A()" << Matrice(I1,I1,I3) << endl;
 
@@ -584,8 +572,6 @@ Vecteur ToupieChinoise::fonction_f() const{
     
     // Cy: composante en y du milieu C de la sphère dans le repère O
     P_p_p.set_coord(4,  -rayon_*(theta_p*cos(psi)+phi_p*sin(psi)*sin(theta)));
-
-    cout << "VG (cas spécifique): " << -(w()^vecteurAG()) << endl;
 
 
     return P_p_p;

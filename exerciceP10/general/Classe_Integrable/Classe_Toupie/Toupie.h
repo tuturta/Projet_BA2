@@ -17,17 +17,18 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
 
    protected : 
     std::vector<Vecteur> positions_CM; // Coordonnées du CM depuis le début de la simulation, dans le repère absolu
-    double masse_volumique;
+    double masse_volumique_;
     double hauteur_;                   // Hauteur du solide de révolution
     double rayon_;                     // Rayon de la base du cône / rayon de la sphère (tronquée)
     Couleur couleur_;
+    Vecteur point_de_contact_;         // (Ref O) 
     virtual double zi(size_t i) const;         // Donne la hauteur en fonction du découpage
 
    // CONSTRUCTEUR
    
    public :
     Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-        : Integrable(P, P_point, support, point_de_contact), masse_volumique(masse_volumique),hauteur_(hauteur), rayon_(rayon), couleur_(couleur) {ajoute_position_CM();} //Initialise la premiere position du centre de masse
+        : Integrable(P, P_point, support), masse_volumique_(masse_volumique),hauteur_(hauteur), rayon_(rayon), couleur_(couleur), point_de_contact_(point_de_contact) {} //Initialise la premiere position du centre de masse
 
 
    // METHODES COMMUNES A TOUTES LES TOUPIES (INDEPENDANTES DE LA GEOMETRIE DE LA TOUPIE)
@@ -47,12 +48,11 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     double produitMixte_awL() const;    // Produit mixte a.(w^L) (invariant) 
     
         // Autres :  
-   private : 
-    std::unique_ptr<Toupie> clone() const;                       // Privée, outil utilisé seulement par copie()
+
    public  : 
-    virtual std::unique_ptr<Toupie> copie() const;               // Copie polymorphique
+    virtual std::unique_ptr<Toupie> copie() const =0;           // Copie polymorphique
     virtual std::ostream& affiche(std::ostream& sortie) const;   // Affichage des angles, dérivées et G
-    virtual void dessine() override;                             // Dessin lié au support   
+    virtual void dessine() = 0;                                  // Dessin lié au support   
     void update_A();                                             // Mise à jour du point de contact 
     Vecteur ref_G_to_O_point(Vecteur const& point)const override;// Changement de référentiel de G vers O
     void ajoute_position_CM();                                   // Pour garder en mémoire les positions du centre de masse
@@ -61,19 +61,22 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     double getRayon() const;                                     // Accesseur rayon du cône à sa base / sphère tronquée
     void setSupport(SupportADessin* nouveau_support);            // Permet de modifier le support dans le constructeur de GLWidget
     Couleur getColor() const;                                    // Renvoie la couleur de la toupie
+    void setPoint_de_contact(Vecteur const& autre);
+    Vecteur getPoint_de_contact() const;
 
     // METHODES QUI DEPEND DE LA GEOMETRIE DE LA TOUPIE (--> METHODES VIRTUELLES):
 
     virtual Matrice matrice_inertie_G() const;   // Matrice d'inertie en G (solide de révolution) (Ref G)
-    virtual Vecteur vecteurAG() const;           // (Ref G)
-    virtual Vecteur vecteurOA() const;           // (Ref O)
-    virtual Vecteur fonction_f() const override; // Calcul des dérivées secondes (/!\ Toupie Roulante ? conique ? ou =0 ?)
+
     virtual std::ostream& affiche_parametres(std::ostream& out) const override; // Affichage complet des paramètres d'une toupie
     
-    virtual double masse() const; // Masse d'un solide de révolution en fonction des rayons successifs + sa masse volumique      
-    virtual double distanceBG() const; // Distance origine du solide de révolution - centre de masse
+    virtual double masse() const; // Masse d'un solide de révolution en fonction des rayons successifs + sa masse volumique  
+    virtual double distanceBG() const;     
+    virtual Vecteur vecteurAG() const =0;           // (Ref G)
+    virtual Vecteur vecteurOA() const =0;           // (Ref O)
+    virtual Vecteur fonction_f() const = 0; // Calcul des dérivées secondes (/!\ Toupie Roulante ? conique ? ou =0 ?) // Distance origine du solide de révolution - centre de masse
    private :
-    virtual double rayon2(size_t i) const; // Définit le solide de révolution : distance au carré à l'axe de révolution selon la hauteur zi. Doit être redéfini dans chaque classe --> A TRANSFORMER EN VIRTUELLE PURE
+    virtual double rayon2(size_t i) const=0; // Définit le solide de révolution : distance au carré à l'axe de révolution selon la hauteur zi. Doit être redéfini dans chaque classe --> A TRANSFORMER EN VIRTUELLE PURE
 
 };
 
@@ -95,6 +98,7 @@ class ConeGeneral: public Toupie{
     virtual Vecteur vecteurAG() const override;             // (Ref G)
     virtual void dessine() override;
     virtual Vecteur vecteurOA() const override;           // (Ref O)
+    virtual std::ostream& affiche_parametres(std::ostream& out) const override; // Affiche tous les paramètres d'une toupie
 
 
 };
@@ -129,20 +133,6 @@ class ConeSimple : public ConeGeneral {
 
 };
 
-
-// =============================Objet en chute libre======================================
-
-
-class Objet_en_chute_libre : public Toupie {
-   private:
-    std::unique_ptr<Objet_en_chute_libre> clone() const;
-   public:   
-    using Toupie::Toupie;
-    virtual Vecteur fonction_f() const override;
-    virtual void dessine() override;
-    virtual std::unique_ptr<Toupie> copie() const override; // Copie polymorphique
-   
-};
 
 
 
@@ -186,20 +176,20 @@ class ToupieChinoiseGenerale: public Toupie{
    // CONSTRUCTION - COPOIE - DESTRUCTION 
    
    public: 
-    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact_, Couleur couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    :Toupie(param, D_param, masse_volumique, hauteur, rayon, point_de_contact_, couleur, support){
+    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& point_de_contact, Couleur couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
+    :Toupie(param, D_param, masse_volumique, hauteur, rayon, point_de_contact, couleur, support){
         
        // std::cout << "<<<<<<<<<<<<<<<<<<<CONSTRUCTEUR TG>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
         P.augmente(0.0);
         P.augmente(0.0);
         P.augmente(0.0);
-
-
+ 
         Vecteur AG(ref_G_to_O(vecteurAG()));  //On choisit d'utiliser ici d'appeler qu'une seule fois le vecteurAG() pour accélèrer la vitesse de calcul: chaque fois que la
                                   // méthode vecteurAG() est appelée, elle doit utiliser la méthode distanceBC() dans le cas génèrale (ie approché cette distance par des sommes)  
-        P_point.augmente(point_de_contact.coeff(0) + AG.coeff(0)); // Gx
-        P_point.augmente(point_de_contact.coeff(1) + AG.coeff(1)); // Gy
-        P_point.augmente(point_de_contact.coeff(2) + AG.coeff(2)); // Gz
+    
+        P_point.augmente(point_de_contact_.coeff(0) + AG.coeff(0)); // Gx
+        P_point.augmente(point_de_contact_.coeff(1) + AG.coeff(1)); // Gy
+        P_point.augmente(point_de_contact_.coeff(2) + AG.coeff(2)); // Gz
                 
         //std::cout << "<<<<<<<<<<<<<<<<<<<FIN CONSTRUCTEUR TG>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 

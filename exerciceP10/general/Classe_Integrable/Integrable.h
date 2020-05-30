@@ -15,23 +15,20 @@ class Integrable : public Dessinable{ // Un intégrable est dessinable ( On a se
    protected : 
     Vecteur P;                // Paramètres psi-theta-phi + autres paramètres supplémentaires si plus de 3 degrés de liberté
     Vecteur P_point;          // Dérivée temporelle des degrés de liberté
-    Vecteur point_de_contact; // (Ref O) 
 
 
    // CONSTRUCTEUR :
 
    public:
-    Integrable(Vecteur P, Vecteur P_point, SupportADessin* support, Vecteur point_de_contact = {0,0,0})
-        : Dessinable(support), P(P), P_point(P_point), point_de_contact(point_de_contact)  {}
+    Integrable(Vecteur P, Vecteur P_point, SupportADessin* support)
+        : Dessinable(support), P(P), P_point(P_point)  {}
 
    // MANIPULATEURS :
 
     Vecteur getP() const;
     Vecteur getP_point() const;
-    Vecteur getPoint_de_conact() const;
     void setP(Vecteur const& autre);
     void setP_point(Vecteur const& autre);
-    void setPoint_de_contact(Vecteur const& autre);
 
 
     // AFFICHAGE
@@ -49,5 +46,26 @@ class Integrable : public Dessinable{ // Un intégrable est dessinable ( On a se
     Matrice S() const; // Matrice de transition de Ref G vers Ref O
 
 };
+
+
+
+// =============================Objet en chute libre======================================
+
+
+class Objet_en_chute_libre : public Integrable {
+   private:
+    //std::unique_ptr<Objet_en_chute_libre> clone() const;
+   public:   
+    using Integrable::Integrable;
+    virtual Vecteur fonction_f() const override;
+    virtual void dessine() override;
+    //virtual std::unique_ptr<Toupie> copie() const; // Copie polymorphique
+   
+};
+
+
+
+
+
 
 #endif

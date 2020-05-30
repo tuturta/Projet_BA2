@@ -1,6 +1,7 @@
 #include "Integrable.h"
 #include "../Classe_Matrice/Matrice.h"
 #include "../Classe_Vecteur/Vecteur.h"
+#include "../constantes.h"
 #include <iostream>
 
 using namespace std;
@@ -11,9 +12,7 @@ Vecteur Integrable::getP() const {
 Vecteur Integrable::getP_point() const {
     return P_point;
 }
-Vecteur Integrable::getPoint_de_conact() const{
-    return point_de_contact;
-}
+
 
 void Integrable::setP(Vecteur const& v) {
     P=v;
@@ -23,9 +22,6 @@ void Integrable::setP_point(Vecteur const& v){
     P_point=v;
 }
 
-void Integrable::setPoint_de_contact(Vecteur const& v){
-    point_de_contact=v;
-}
 
 ostream& Integrable::affiche(ostream& sortie) const{
     sortie << "Ω = ("      << P.coeff(0)       << ", " << P.coeff(1)         << ", " << P.coeff(2) 
@@ -48,4 +44,16 @@ Matrice Integrable::S() const  {
     return Matrice ( {cos(psi)            ,   sin(psi)            ,  0          },
                      {-cos(theta)*sin(psi),   cos(psi)*cos(theta) ,  sin(theta) },
                      {sin(theta)*sin(psi) ,   -sin(theta)*cos(psi),  cos(theta) }   );
+}
+
+
+
+//============================CLASSE OBJ CHUTE==========================================//
+
+void Objet_en_chute_libre::dessine() {
+    support->dessine(*this);
+}
+
+Vecteur Objet_en_chute_libre::fonction_f() const{
+        return g;
 }
