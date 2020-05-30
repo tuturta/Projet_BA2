@@ -121,7 +121,7 @@ void GLWidget::keyPressEvent(QKeyEvent* event)
 void GLWidget::timerEvent(QTimerEvent* event)
 {
   Q_UNUSED(event);
-  double dt = chronometre.restart()/1000.0;
+  double dt = chronometre.restart()/20000.0;
   //double dt(0.01);
     t += dt;
   std::cout << "=====Temps: " << t << std::endl;

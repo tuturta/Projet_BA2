@@ -24,7 +24,7 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     double hauteur_;                   // Hauteur du solide de révolution
     double rayon_;                     // Rayon de la base du cône / rayon de la sphère (tronquée)
     Couleur couleur_;
-    virtual double zi(size_t i) const; // Donne la hauteur en fonction du découpage
+    double zi(size_t i) const;         // Donne la hauteur en fonction du découpage
     std::vector<Vecteur> positions_CM; // Coordonnées du CM depuis le début de la simulation, dans le repère absolu
 
    // CONSTRUCTION - COPIE -DESTRUCTION
@@ -65,7 +65,8 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     Vecteur ref_G_to_O_point(Vecteur const& point)const override;// Changement de référentiel de G vers O
     void ajoute_position_CM();                                   // Pour garder en mémoire les positions du centre de masse
     std::vector<Vecteur> getPositions_CM() const;                // Accesseur des positions du centre de masse 
-    double getHauteur() const;                                   // Accesseur hauteur du solide de révolution   
+    double getHauteur() const;                                   // Accesseur pour la hauteur du cône/ hauteur tronquée des sphères tronquées   
+    virtual double hauteur_toupie() const;                       // Renvoie la hauteur de la toupie depuis son point de contact
     double getRayon() const;                                     // Accesseur rayon du cône à sa base / sphère tronquée
     void setSupport(SupportADessin* nouveau_support);            // Permet de modifier le support dans le constructeur de GLWidget
     Couleur getColor() const;                                    // Renvoie la couleur de la toupie
@@ -242,6 +243,7 @@ class ToupieChinoiseGenerale: public Toupie{
     virtual Vecteur fonction_f() const override;     // Calcul général des dérivées secondes pour une toupie roulante
     virtual Vecteur vecteurAG() const override;      // (Ref G)
     virtual double rayon2(size_t i) const override;  // Redéfinition de rayon2 pour une toupie roulante
+    virtual double hauteur_toupie() const override;  // Renvoie la hauteur totale d'une sphère et non sa hauteur tronquée
     virtual Vecteur vecteurGC() const;               // (Ref G) /!\ N'est adaptée qu'aux toupies chinoises
     virtual void dessine() override;
     virtual Vecteur  vecteurOA() const override;
@@ -250,7 +252,6 @@ class ToupieChinoiseGenerale: public Toupie{
     // AFFICHAGE / DESSIN :
     virtual std::ostream& affiche(std::ostream& sortie) const override;
     virtual std::ostream& affiche_parametres(std::ostream& out) const override;
-    virtual double zi(size_t i) const override;         // Donne la hauteur en fonction du découpage
 
     };
 

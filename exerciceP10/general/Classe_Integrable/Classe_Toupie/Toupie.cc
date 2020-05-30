@@ -22,8 +22,11 @@ ostream& Toupie::affiche_parametres(ostream& out) const {
     return out;
 }
 
-double Toupie::getHauteur() const{ return hauteur_;}
+double Toupie::getHauteur() const{ return hauteur_;} // Hauteur totale d'un cône, hauteur tronquée d'une sphère
 double Toupie::getRayon() const{ return rayon_;}
+double Toupie::hauteur_toupie() const {return hauteur_;} // On redéfinira la méthode pour les toupies chinoises  
+
+
 
 void Toupie::ajoute_position_CM() {
     positions_CM.push_back(vecteurOG());
@@ -78,12 +81,12 @@ double Toupie::masse() const{
     for(size_t i(1) ; i <= N; ++i){
         masse += rayon2(i);
     }
-    masse *= M_PI * masse_volumique_ * hauteur_ / N;
+    masse *= M_PI * masse_volumique_ * hauteur_toupie() / N;
     return masse;
 }
 
 double Toupie::zi(size_t i) const{
-    return (2.0*i-1.0)*hauteur_/(2.0*N);
+    return ((2.0*i-1.0)*hauteur_toupie()/(2.0*N));
 }
 
 
@@ -91,21 +94,14 @@ double Toupie::zi(size_t i) const{
 double Toupie::distanceBG() const{ // où O est l'origine du solide de construction et G le centre de masse
     double somme1(0.0), somme2(0.0); 
     //cout << "===============debut distance bg" << endl;
-   
     for(size_t i(1) ; i <= N; ++i){
-                somme1 += rayon2(i) * zi(i); 
+                somme1 += (rayon2(i) * zi(i));
                 somme2 += rayon2(i);
     }
     return somme1/somme2; // On est assurés que N>0 et rayon>0, donc somme2 !=0
 }
 
-Vecteur Toupie::vecteurAG() const{ // TEMPORAIRE POUR PAS QUE LA TOUPIE SOIT VIRTUELLE
-    //cout << "appel vecteur AG de toupie" << endl;
-    return {0.0,0.0, distanceBG()};
-}
-
 Matrice Toupie::matrice_inertie_G() const {   // Matrice d'inertie au point A dans G calculé grace à la formule de Huygens-Steiner  
-    
     double ri2(0.0); //représente ri^ (le rayon du solide de révolution à la hauteur zo). OPTIMISATION: RI2 permet d'éviter au programme à calculer 2 fois ri ^2 pour les deux sommes
     double somme1(0.0),somme2(0.0);
     for(size_t i(1) ; i <= N; ++i){
@@ -113,8 +109,8 @@ Matrice Toupie::matrice_inertie_G() const {   // Matrice d'inertie au point A da
         somme1 += ri2*ri2;                  //Somme des ri^4 
         somme2 += pow(zi(i),2)* ri2;
     }
-    double I3 (M_PI/2.0 * masse_volumique_*somme1*hauteur_/N);
-    double I1 (1.0/2.0*I3 + M_PI*masse_volumique_*hauteur_/N*somme2 - masse()*pow(vecteurAG().norme(),2)); 
+    double I3 (M_PI/2.0 * masse_volumique_*somme1*hauteur_toupie()/N);
+    double I1 ((1.0/2.0)*I3 + M_PI*masse_volumique_*(hauteur_toupie()/N)*somme2 - masse()*pow(distanceBG(),2));
     Matrice IG (I1, I1, I3);
     return IG;
 
@@ -149,15 +145,6 @@ Vecteur Toupie::LA() const {
 Vecteur Toupie:: vecteurOG() const{
     return (vecteurOA() + ref_G_to_O(vecteurAG()));
 }
-
-Vecteur Toupie:: vecteurOA() const{         //Pour le moment
-    return point_de_contact_;
-}
-
-Vecteur Toupie::fonction_f() const{
-    //cout << "--APPEL Toupie::fonction_f()--" << endl;
-    return 2*P;
-} //juste pour le test : à terme, fonction f de la toupie roulante
 
 // SURCHARGES D'OPÉRATEURS 
 
@@ -352,41 +339,34 @@ void ConeGeneral::dessine() {
 } 
 
 
-//=============================CLASSE TOUPIE ROULANTE===================================//
+//=============================CLASSE TOUPIE CHINOISE GENERALE===================================//
 
 Vecteur ToupieChinoiseGenerale::fonction_f() const{
-    //cout << "--APPEL ToupieChinoiseGenerale::fonction_f()--" <<endl;
-    //cout << ": " << vecteurOG() << endl;
+    //cout << "******APPEL ToupieChinoiseGenerale::fonction_f()*******" << endl;
+
     //Lisibilité:
     double theta(P.coeff(1));
     double psi_P(P_point.coeff(0));
     double theta_P(P_point.coeff(1));
     double phi_P(P_point.coeff(2));
- 
-    //cout << "psi = " << psi << endl;
-    //cout << "theta = " << theta << endl;
-    //cout << "Dpsi = " << psi_P << endl;
-    //cout << "Dtheta = " << theta_P << endl;
-    //cout << "Dphi = " << phi_P << endl;
-
     
     //1.CALCUL DE w et MA dans RG (repère d'inertie)
         
-    //On utilise la méthode w()
+       // On a déjà une méthode qui calcule w
+
     Vecteur MA(masse()*(g.norme())*(vecteurAG().norme())*sin(theta),0.0,0.0); // On considère que le poids est la seule force appliquée ailleurs qu'en A
 
     //2.Calcul de IA avec Huygens-Steiner
-
-       //methode matrice_inertie_A()
-    Matrice IA(matrice_inertie_A());
     
+    Matrice IA(matrice_inertie_A());
+
     //3.CALCUL DE W_POINT: (dans Repère d'inertie)
     
-    Vecteur w_point(3);
+    Vecteur w_point(3); 
     Vecteur we(w());
-    we.set_coord(2,we.coeff(2) - phi_P); //rotation du repère (ne prend pas en compte la rotation propre de la toupie
-    w_point = matrice_inertie_A().inv()*(MA-(we^(matrice_inertie_A()*w())));
-    
+    we.set_coord(2,we.coeff(2) - phi_P); // Rotation du repère G (ne prend pas en compte la rotation propre de la toupie)
+    w_point = IA.inv()*(MA-(we^( IA*w() )));
+
     //4.CALCUL DE P_POINT_POINT: 
     Vecteur P_point_point(6);
     P_point_point.set_coord(1, w_point.coeff(0)); //Calcul de théta point point
@@ -399,10 +379,12 @@ Vecteur ToupieChinoiseGenerale::fonction_f() const{
     }
 
     //5.CALCUL DE LA POSITION DE G:
-    Vecteur vg( ref_G_to_O(-(w()^vecteurAG()))); //Vg=AG^w dans un solide
+    Vecteur vg( ref_G_to_O((w()^vecteurAG()))); //Vg=w x AG dans un solide
     P_point_point.set_coord(3,vg.coeff(0));
     P_point_point.set_coord(4,vg.coeff(1));
     P_point_point.set_coord(5,vg.coeff(2));
+
+    //cout << "P_p_p gén : " <<P_point_point << endl;
 
     //6.CALCUL DE LA POSITION DE A:
 
@@ -413,9 +395,6 @@ Vecteur ToupieChinoiseGenerale::fonction_f() const{
     //cout << "FIN APPEL ToupieChinoiseGenerale::fonction_f()" << endl;
     return P_point_point;
 }
-
-
-//=============================CLASSE TOUPIE CHINOISE GENERALE===================================//
 
 ostream& ToupieChinoiseGenerale::affiche_parametres(ostream& out) const {
     out << "[TOUPIE CHINOISE GENERALE]" << endl;
@@ -439,6 +418,9 @@ double ToupieChinoiseGenerale::rayon2(size_t i) const {
     return (2.0*rayon_*zi(i) -  pow(zi(i),2));
 }
 
+double ToupieChinoiseGenerale::hauteur_toupie() const {
+    return 2.0*rayon_-hauteur_;
+}
 
 Vecteur ToupieChinoiseGenerale::vecteurGC() const{ //  /!\POUR UNE TOUPIE CHINOISE
     //cout << "GENERAL GC= " << rayon_ - distanceBG() << endl;
@@ -483,9 +465,6 @@ Vecteur ToupieChinoiseGenerale::vecteurOC() const{
     return (vecteurOA() + AC);
 }
 
-double ToupieChinoiseGenerale::zi(size_t i) const{
-    return (2.0*i-1)*(2.0*rayon_ -hauteur_)/(2.0*N);
-}
 //=============================CLASSE TOUPIE CHINOISE===================================//
 
 ostream& ToupieChinoise::affiche_parametres(ostream& out) const {
@@ -524,18 +503,13 @@ Vecteur ToupieChinoise::vecteurGC() const{
 }
 
 Matrice ToupieChinoise::matrice_inertie_G() const{
-    //cout << "APPEL Toupiechinoise::matrice_inertie_A()" << endl;
-    
     double I3 ((M_PI/30.0)*masse_volumique_*pow((2.0*rayon_-hauteur_),3)*(2.0*pow(rayon_,2)+3.0*hauteur_*rayon_+3.0*pow(hauteur_,2)));
     double I1 ((1.0/2.0)*I3 + ((M_PI/15.0)*masse_volumique_*pow((2.0*rayon_-hauteur_),2)*(pow(rayon_,3)+ hauteur_*pow(rayon_,2) - 3.0*pow(hauteur_,2)*rayon_+3.0*pow(hauteur_,3))) -masse()*vecteurGC().norme2());
-    
-   // cout << "APPEL Toupiechinoise::matrice_inertie_A()" << Matrice(I1,I1,I3) << endl;
-
     return Matrice(I1,I1,I3);
 }
 
 Vecteur ToupieChinoise::fonction_f() const{   
-    //cout << "APPEL ToupieChinoise::fonction_f()" << endl;
+    //cout << "*******APPEL ToupieChinoise::fonction_f()********" << endl;
     //cout << "vecteurOG: " << vecteurOG() << endl;
     double psi(P.coeff(0));
     double theta(P.coeff(1));
@@ -547,7 +521,7 @@ Vecteur ToupieChinoise::fonction_f() const{
     double f1(phi_p + psi_p*cos(theta));    
     double f3( I1*I3 +masse()*pow(rayon_,2)*I1*pow(sin(theta),2) + masse()*pow(rayon_,2)*I3*pow( (alpha()-cos(theta)),2 ) );
     double f2( (theta_p/sin(theta))*f1* (I3*(I3 + masse()*pow(rayon_,2)* (1.0-alpha()*cos(theta))))/f3 -(2.0*psi_p*theta_p)/tan(theta) );
-
+        
     Vecteur P_p_p(5); // Vecteur P_point_point que l'on veut calculer et retourner, initalisé à (0,0,0,0,0)
     
     if (abs(theta) < eps){ // Dans le cas ou theta = 0, on rajoute un petit angle pour ("approcher la solution"). De plus, cela simule aussi l'équilibre instable en theta = 0 (pas franchement notre volonté première... )
@@ -559,7 +533,6 @@ Vecteur ToupieChinoise::fonction_f() const{
     }
 
    // cout << "dW: " << w() << endl;
-   // cout << "vecteurAG: " << vecteurAG() << endl;
 
     // Psi_point_point
     P_p_p.set_coord(0,  f2);
@@ -579,8 +552,7 @@ Vecteur ToupieChinoise::fonction_f() const{
     
     // Cy: composante en y du milieu C de la sphère dans le repère O
     P_p_p.set_coord(4,  -rayon_*(theta_p*cos(psi)+phi_p*sin(psi)*sin(theta)));
-
-
+    //cout << "P_p_p spé : " << P_p_p << endl; 
     return P_p_p;
     
 }

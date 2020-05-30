@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
                    0.1,                   //Masse Volumique
                    1.5,                   //Hauteur
                    0.5,                   //Rayon
-                   {5.0,5.0,0.0},
+                   {5.0,0.0,0.0},
                    bleu);        //Origine dans le ref absolu
 
   //Toupie avec trace en fleur
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
                        0.1,                //Masse volumique
                        1.0,                //Hauteur
                        0.45,                //Rayon
-                       {0.0,9.0,0.0},       //Origine
+                       {0.0,5.0,0.0},       //Origine
                        jaune);
 
 //Toupies roulantes qui tournent
@@ -48,15 +48,15 @@ int main(int argc, char* argv[])
                   0.1,
                   0.08,
                   0.6,
-                  {3.0,0.0,0.0},
+                  {0.0,0.0,0.0},
                   vert         );
 
   ToupieChinoiseGenerale flipflopG({0.0,0.11,0.0},
                           {50.0,0.0,0.0},
                           0.1,
-                          0.028,
+                          0.08,
                           0.6,
-                          {4.0,0.0,0.0},
+                          {0.0,0.0,0.0},
                           bleu);
 
 
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
                             0.1,
                             0.08,
                             0.6,
-                            {0.0,0.0,0.0},
+                            {10.0,0.0,0.0},
                             vert);
 
   ToupieChinoiseGenerale balancierG ( {0.0,0.75,0.0},
@@ -75,20 +75,20 @@ int main(int argc, char* argv[])
                             0.1,
                             0.08,
                             0.6,
-                            {0.0,0.0,0.0},
+                            {0.0,10.0,0.0},
                             violet);
 
 
 
-  Systeme systeme1(&integrateur_e);
+  Systeme systeme1(&integrateur_n);
 
 
   //systeme1.ajoute_toupie(cone1);
   //systeme1.ajoute_toupie(cone1G);
   //systeme1.ajoute_toupie(coneTrace);
-  systeme1.ajoute_toupie(balancier);
-  systeme1.ajoute_toupie(balancierG);
-  //systeme1.ajoute_toupie(flipflop);
+  //systeme1.ajoute_toupie(balancier);
+  //systeme1.ajoute_toupie(balancierG);
+  systeme1.ajoute_toupie(flipflop);
   //systeme1.ajoute_toupie(flipflopG);
 
 

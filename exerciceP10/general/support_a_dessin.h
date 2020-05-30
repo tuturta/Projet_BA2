@@ -12,7 +12,7 @@ class ToupieChinoiseGenerale;
 
 class SupportADessin {
    public :
-    virtual ~SupportADessin() { std::cout << "Destructeur virtuel de SupportADessin" << std::endl; }
+    virtual ~SupportADessin() {}
   
     // Toutes les méthodes pour dessiner tous les objets que l'on veut dessiner :
     virtual void dessine(ConeGeneral const& objet) =0;

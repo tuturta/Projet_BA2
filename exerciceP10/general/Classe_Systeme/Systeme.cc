@@ -61,7 +61,7 @@ void Systeme::dessine() {
 }
 
 void Systeme::test_numero(size_t i) const {
-    if(i<size()) {
+    if(i>size()) {
         Erreur err = {"Impossible d'accéder à la toupie "+to_string(i)+", il n'y en a que "+to_string(size())};
         throw err;
     }

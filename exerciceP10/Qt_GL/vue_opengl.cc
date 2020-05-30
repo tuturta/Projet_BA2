@@ -39,9 +39,9 @@ void VueOpenGL::dessine(ConeGeneral const& a_dessiner)
    matrice.setToIdentity();
 
    //Coordonnées du point de contact
-   double xA(a_dessiner.getPoint_de_conact().coeff(0));
-   double yA(a_dessiner.getPoint_de_conact().coeff(1));
-   double zA(a_dessiner.getPoint_de_conact().coeff(2));
+   double xA(a_dessiner.getPoint_de_contact().coeff(0));
+   double yA(a_dessiner.getPoint_de_contact().coeff(1));
+   double zA(a_dessiner.getPoint_de_contact().coeff(2));
 
 
   //On se place au niveau du point de contact, c'est de là que se dessine le cône:

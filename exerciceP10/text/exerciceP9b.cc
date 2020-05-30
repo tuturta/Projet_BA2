@@ -14,7 +14,7 @@ using namespace std;
 int main() {
     const double dt(0.01); // Pas de temps
     double t(0.0);         // Initialise le temps à 0
-    unsigned int nombre_de_tour(10);
+    unsigned int nombre_de_tour(20);
     try{
         //================SUPPORT TEXTUEL======================================================//
         ofstream fichier;
@@ -33,7 +33,7 @@ int main() {
                              {0.0,0.0,60.0},     // Leurs dérivées
                              0.1,                // Masse volumique
                              1.5,                // Hauteur
-                             0.7,                // Rayon
+                             0.5,                // Rayon
                              {0.0,0.0,0.0},      // Point de contact   
                              &ecran);            // Support
 
@@ -56,8 +56,8 @@ int main() {
             ToupieChinoiseGenerale ToupieChinoiseG({0.0,0.11,0.0},
                                                    {50.0,0.0,0.0},
                                                    0.1,
-                                                   0.02,
-                                                   0.15,
+                                                   0.08,
+                                                   0.6,
                                                    {0.0,0.0,0.0},
                                                    &ecran);
             ToupieChinoise balancier({0.0,0.75,0.0},
@@ -79,7 +79,7 @@ int main() {
             Systeme systeme(&integrateur_e, &ecran);
             //systeme.ajoute_toupie(cone1);
             //systeme.ajoute_toupie(cone2);
-             systeme.ajoute_toupie(Toupiechinoise);
+            systeme.ajoute_toupie(Toupiechinoise);
             //systeme.ajoute_toupie(ToupieChinoiseG);
             //systeme.ajoute_toupie(balancier);
             //systeme.ajoute_toupie(balancierG);
@@ -92,8 +92,8 @@ int main() {
                 cout << "Temps : " << t << "s" <<endl;
                 systeme.evolue(dt);
                 systeme.dessine();
+            }
 
-            }  
         }
     }
     catch (Erreur& err) {

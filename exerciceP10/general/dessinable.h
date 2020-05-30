@@ -19,9 +19,7 @@ class Dessinable {
       throw err;
     }
   }
-  virtual ~Dessinable() {
-      std::cout << "Destructeur virtuel Dessinable" << std::endl;
-  } // pas delete support : on n'a pas alloué de la mémoire ici !
+  virtual ~Dessinable() {} // pas delete support : on n'a pas alloué de la mémoire ici !
 
   virtual void dessine() = 0;
 
