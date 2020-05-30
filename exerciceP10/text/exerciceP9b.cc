@@ -14,7 +14,7 @@ using namespace std;
 int main() {
     const double dt(0.01); // Pas de temps
     double t(0.0);         // Initialise le temps à 0
-    unsigned int nombre_de_tour(5);
+    unsigned int nombre_de_tour(10);
     try{
         //================SUPPORT TEXTUEL======================================================//
         ofstream fichier;
@@ -22,7 +22,7 @@ int main() {
         if (fichier.fail()) {
             //gérer l'erreur
         } else  {
-            TextViewer ecran(cout); //mettre fichier si on veut écrire dans test.txt
+            TextViewer ecran(cout); //mettre fichier si on veut écrire dans test.txt***********
     
        //================SYSTEME=============================================================//
             IntegrateurEulerCromer integrateur_e; // Diverge très rapidement
@@ -33,7 +33,7 @@ int main() {
                              {0.0,0.0,60.0},     // Leurs dérivées
                              0.1,                // Masse volumique
                              1.5,                // Hauteur
-                             0.5,                // Rayon
+                             0.7,                // Rayon
                              {0.0,0.0,0.0},      // Point de contact   
                              &ecran);            // Support
 
@@ -68,13 +68,21 @@ int main() {
                                      {0.0,0.0,0.0},
                                      &ecran);
 
-            Systeme systeme(&integrateur_rk, &ecran);
+            ToupieChinoiseGenerale balancierG({0.0,0.75,0.0},
+                                              {0.0,0.0,0.0},
+                                              0.1,
+                                              0.02,
+                                              0.15,
+                                              {0.0,0.0,0.0},
+                                              &ecran);
+
+            Systeme systeme(&integrateur_e, &ecran);
             //systeme.ajoute_toupie(cone1);
             //systeme.ajoute_toupie(cone2);
             //systeme.ajoute_toupie(Toupiechinoise);
-            systeme.ajoute_toupie(ToupieChinoiseG);
-            //systeme.ajoute_toupie(balancier);
-
+            //systeme.ajoute_toupie(ToupieChinoiseG);
+            systeme.ajoute_toupie(balancier);
+            systeme.ajoute_toupie(balancierG);
 
             cout << systeme << endl;
             cout << "Le système évolue et se dessine à chaque pas de temps (dt=" << dt << ") :" << endl;
@@ -83,7 +91,7 @@ int main() {
                 cout <<endl << "----------------------------------------------------" << endl;
                 cout << "Temps : " << t << "s" <<endl;
                 systeme.evolue(dt);
-                systeme.dessine(); 
+                systeme.dessine();
 
             }  
         }

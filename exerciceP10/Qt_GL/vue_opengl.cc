@@ -62,10 +62,10 @@ void VueOpenGL::dessine(ConeGeneral const& a_dessiner)
   dessineConeSimple(matrice,a_dessiner.getColor());
 }
 
-// ======================DESSINE(TOUPIE_CHINOISE)=============================
+// ======================DESSINE(TOUPIE_CHINOISE)========================================
 void VueOpenGL::dessine(ToupieChinoiseGenerale const& a_dessiner)
 {
-  std::cout << "vecteur OC: " << a_dessiner.vecteurOC() << std::endl;
+  //std::cout << "vecteur OC: " << a_dessiner.vecteurOC() << std::endl;
   //On place le repère du dessin au centre de la sphère(point à partir duquel s'effectue le dessin)
   QMatrix4x4 matrice;
   matrice.setToIdentity();
@@ -88,7 +88,7 @@ void VueOpenGL::dessine(ToupieChinoiseGenerale const& a_dessiner)
 }
 
 
-// ======================DESSINE(OBJET EN ...)=============================
+// ======================DESSINE(OBJET EN ...)==========================================
 void VueOpenGL::dessine(Objet_en_chute_libre const& a_dessiner)
 {
   QMatrix4x4 matrice;
@@ -432,7 +432,6 @@ void VueOpenGL::dessineCM(Toupie const& a_dessiner, QMatrix4x4 const& point_de_v
     prog.setUniformValue("vue_modele", matrice_vue * point_de_vue);
 
     glBegin(GL_LINES);
-    std::cout << "vecteurOG() : " << a_dessiner.vecteurOG() << std::endl;
     double x(a_dessiner.vecteurOG().coeff(0));
     double y(a_dessiner.vecteurOG().coeff(1));
     double z(a_dessiner.vecteurOG().coeff(2));

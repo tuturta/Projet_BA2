@@ -15,7 +15,6 @@ void IntegrateurEulerCromer::evolue(Toupie& T, const double dt) const {
         T.setP((T.getP() + dt*(T.getP_point())));
         T.ajoute_position_CM(); // ajoute cette nouvelle position du CM ds le vector nécessaire pour la trace
         T.update_A(); // mise à jour des coordonnées du point de contact
-        cout << "--EULERCROMER--" << endl;
 
 }
 
@@ -41,8 +40,6 @@ void IntegrateurNewmark::evolue(Toupie& T, const double dt) const {
 
         T.ajoute_position_CM();
         T.update_A();
-
-        std::cout << "- NEWMARK -" << endl;
 }
 
 void IntegrateurRungeKutta::evolue(Toupie& T, const double dt) const {
@@ -82,10 +79,7 @@ void IntegrateurRungeKutta::evolue(Toupie& T, const double dt) const {
         T.setP_point(P_point_temp+dt/6.0*(k1_p+2*k2_p+2*k3_p+k4_p));
 
         T.ajoute_position_CM(); // ajoute cette nouvelle position du CM dans le vector nécessaire pour la trace
-        T.update_A();  
-
-        std::cout << "- RUNGE-KUTTA -" << endl;
-      
+        T.update_A();        
 }
 
 // COPIE POLYMORPHIQUE DES INTÉGRATEURS :

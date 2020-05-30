@@ -143,8 +143,11 @@ Vecteur Toupie::w() const{
     double phi_P(P_point.coeff(2));
     Vecteur w(3);
     double w1(theta_P);
+    cout << "w1 général : " << w1 << endl;
     double w2(psi_P*sin(theta));
+    cout << "w2 général : " << w2 << endl;
     double w3(psi_P*cos(theta)+phi_P);
+    cout << "w3 général : " << w1 << endl;
     w = {w1,w2,w3}; 
     return w;
 }
@@ -387,7 +390,7 @@ ostream& ToupieChinoiseGenerale::affiche_parametres(ostream& out) const {
 
 Vecteur ToupieChinoiseGenerale::fonction_f() const{
     //cout << "--APPEL ToupieChinoiseGenerale::fonction_f()--" <<endl;
-    //cout << "Vecteur OG(): " << vecteurOG() << endl;
+    //cout << ": " << vecteurOG() << endl;
     //Lisibilité:
     double theta(P.coeff(1));
     double psi_P(P_point.coeff(0));
@@ -434,7 +437,9 @@ Vecteur ToupieChinoiseGenerale::fonction_f() const{
 
     //5.CALCUL DE LA POSITION DE G:
     //cout << "General_dW: " << w() << endl;
-    Vecteur vg( ref_G_to_O(-(w()^vecteurAG()))); //Vg=AG^w dans un solide
+    cout << "w général : " << w() << endl;
+    cout << "AG général : " << vecteurAG() << endl;
+    Vecteur vg( ref_G_to_O((w()^vecteurAG()))); //Vg=GA^w dans un solide
     cout << "VG (cas général): " << vg << endl;
     //cout << "General_vecteurAG: " << vecteurAG() << endl;
     //Dérivées de Gx,Gy,Gz (P4_point_point, P5_point_point, P6_point_point
@@ -514,7 +519,7 @@ double ToupieChinoiseGenerale::zi(size_t i) const{
 ostream& ToupieChinoise::affiche_parametres(ostream& out) const {
     out << " [TOUPIE CHINOISE] " << endl;
     Toupie::affiche_parametres(out);
-    out << "Centre C en : " << P_point.coeff(3) << " " << P_point.coeff(4) << endl;
+    out << "Centre C en : " << P_point.coeff(3) << " " << P_point.coeff(4) << " " << rayon_ <<  endl;
     out << "Hauteur tronquée (m) : " << hauteur_ << endl;
     out << "Rayon (m) : " << rayon_ << endl;
     out << "Point de contact (A) : " << point_de_contact << endl;
@@ -524,7 +529,7 @@ ostream& ToupieChinoise::affiche_parametres(ostream& out) const {
 std::ostream& ToupieChinoise::affiche(std::ostream& sortie) const {
     sortie << "[TOUPIE CHINOISE]" << endl;
     Toupie::affiche(sortie);
-    sortie << "C : (" << P_point.coeff(3) << ", " << P_point.coeff(4) << ", " << rayon_ << ")" << endl;
+    sortie << "C : (" << P_point.coeff(3) << ", " << P_point.coeff(4) << ", " << rayon_ << ")" << endl << endl;
     return sortie;
 }
 
@@ -603,7 +608,7 @@ Vecteur ToupieChinoise::fonction_f() const{
     // Cy: composante en y du milieu C de la sphère dans le repère O
     P_p_p.set_coord(4,  -rayon_*(theta_p*cos(psi)+phi_p*sin(psi)*sin(theta)));
 
-    cout << "VG (cas spécifique): " << -(w()^vecteurAG()) << endl;
+    cout << "VG (cas spécifique): " << (w()^vecteurAG()) << endl;
 
 
     return P_p_p;

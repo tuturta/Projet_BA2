@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
                    {0.0,0.0,60.0},    //P_point
                    0.1,                //Masse volumique
                    1.5,                //Hauteur
-                   0.5,                //Rayon
+                   0.7,                //Rayon
                    {0.0,0.0,0.0},       //Origine
                    vert);
 
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
                             0.1,
                             0.08,
                             0.6,
-                            {5.0,0.0,0.0},
+                            {0.0,0.0,0.0},
                             vert);
 
   ToupieChinoiseGenerale balancierG ( {0.0,0.75,0.0},
@@ -75,21 +75,21 @@ int main(int argc, char* argv[])
                             0.1,
                             0.08,
                             0.6,
-                            {0.0,7.0,0.0},
+                            {0.0,0.0,0.0},
                             violet);
 
 
 
-  Systeme systeme1(&integrateur_rk);
+  Systeme systeme1(&integrateur_e);
 
 
   //systeme1.ajoute_toupie(cone1);
   //systeme1.ajoute_toupie(cone1G);
   //systeme1.ajoute_toupie(coneTrace);
-  //systeme1.ajoute_toupie(balancier);
-  //systeme1.ajoute_toupie(balancierG);
-  systeme1.ajoute_toupie(flipflop);
-  systeme1.ajoute_toupie(flipflopG);
+  systeme1.ajoute_toupie(balancier);
+  systeme1.ajoute_toupie(balancierG);
+  //systeme1.ajoute_toupie(flipflop);
+  //systeme1.ajoute_toupie(flipflopG);
 
 
   QApplication a(argc, argv);
