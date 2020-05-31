@@ -44,9 +44,7 @@ int main() {
         fichier.close();
     }
     catch (Erreur& err) {
-        if (err.code == 1) {
-            cerr << err.message;
-        }
+        cerr << err.message;
     }
     return 0;
 }

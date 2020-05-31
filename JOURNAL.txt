@@ -136,3 +136,50 @@ COrriger fonction f() de toupie chinoise de sorte à considérer le déplacement
 dessineToupieChinoise dans Gl widget
 essayer de rendre virtuelle la classe de toupie pour supprimer toutes les definitions de fonctions virtuelles dans toupie
 - reprendre toutes les méthodes et définir si elles doivent être publiques ou privées 
+
+SEMAINE 12 : 
+
+[V] Retour sur la trace /les graphismes............................5h
+[V] Toupie chinoise - retouche.....................................4h 
+[V] Retour sur la trace /les graphismes............................5h
+[V] Toupie chinoise - résolution de problèmes......................6h
+[V] Integrateur Runge-Kutta........................................2h 
+
+   Malgré la consultation de deux assistants et du professeur, personne
+   ne comprend ce qu'il se passe dans notre problène de trace ni dans
+   celui des graphismes...
+   celui des graphismes...
+
+   [edit:] Nous avons résolu le problème: il nous a suffi d'inverser
+   l'ordre des rotations d'euler (dans vue_opengl.cc, dans la méthode
+   matrice_dessin). Nous avions pourtant compris que les opérations sur 
+   les matrices openGL se faisaient "de bas en haut" (ex : si l'on 
+   voulait translater puis faire une rotation, il fallait écrire la
+   rotation puis, en dessous, la translation), donc nous ne savons pas
+   pourquoi ici il semble que ce soit l'inverse qui fonctionne...
+
+SEMAINE 13 : 
+
+[V] Résolution de problèmes sur la toupie chinoise...............15h
+[V] Modifications de la conception................................3h
+[V] Finitions touipe roulante (toupie chinoise générale).........10h
+[V] Tests sur la vm...............................................2h
+
+   À ce stade, tout fonctionne sur la vm de l'epfl, mais il nous
+   reste quelques problèmes d'évolution de la toupie roulante,
+   ainsi que la manière de la dessiner avec qt.7
+   À FAIRE :  restructuration des fichiers pour la forme du rendu,
+   corriger ces erreurs, revoir tout le code à clarifier.
+
+SEMAINE 14 : 
+
+[V] Clarification, restructuration du code........................6h 
+[V] Corrections toupie roulante (évolution)......................30h
+[V] Correction toupie roulante (graphisme).......................15h
+[V] Virtualisation de la classe Toupie............................2h
+[V] Restructuration des dossiers.................................15h
+[V] Préparation de données tirées de nos tests pour le rendu......2h
+
+   Nous passons presque toute la semaine sur les problèmes de la 
+   toupie roulante, ainsi que sur une restructuration de la méthode 
+   dessine de Systeme conseillée par un assistant.

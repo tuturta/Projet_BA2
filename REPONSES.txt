@@ -1,23 +1,31 @@
 ﻿Réponse P1.1:
 
     Les vecteurs sont représentés par une classe.
-    On a choisi de mettre en attribut seulement les composantes (x, y, z, …) du vecteur représentées dans un tableau dynamique (vector). Cela facilite la définition des méthodes qui effectuent des opérations sur les vecteurs et qui nécessitent très souvent des boucles sur les composantes du vecteurs.
-    Pour le moment, on a choisi de mettre l’ensemble des méthodes en public et les attributs en private: 
+    On a choisi de mettre en attribut seulement les composantes (x, y, z, …) du vecteur représentées dans un tableau dynamique (vector). 
+    Cela facilite la définition des méthodes qui effectuent des opérations sur les vecteurs et qui nécessitent très souvent des boucles sur les composantes du vecteurs.
+    Pour le moment, on a choisi de mettre l’ensemble des méthodes en public (en effet, elles seront sûrement toutes appelées par des classes autres que Vecteur) et les attributs en private: 
+    
     Méthodes : 
-        augmente():
-        set_coord():
-        affiche():
-        compare():
-        dim():
-        addition():
-        soustraction():
-        oppose():
-        mult():
-        prod_scal():
-        prod_vect():
-        norme() :
-        norme2() :
-        unitaire()
+        augmente(): ajoute une dimension au vecteur 
+        set_coord(): modifie la coordonnée i du vecteur 
+        affiche(): affiche le vecteur 
+        compare(): test d'égalité
+        dim(): renvoie la dimension du vecteur
+        addition(): additionne deux vecteurs
+        soustraction(): soustrait deux vecteurs
+        oppose(): renvoie l'opposé du vecteur
+        mult(): multiplie deux vecteurs
+        prod_scal(): produit scalaire de deux vecteurs
+        prod_vect(): produit vectoriel de deux vecteurs
+        norme() : renvoie la norme du vecteur
+        norme2() : renvoie la norme au carré du vecteur
+        unitaire() : renvoie le vecteur unitaire colinéaire au vecteur passé
+        
+        [EDIT] Par la suite, grâce aux redéfinitions des opérateurs nous enlevons les méthodes :
+               compare,mult,prod_scal,prod_vect,addition,soustraction,oppose, et unitaire
+               Et nous rajoutons plus tard les méthodes :
+               - correctif_0 qui arrondit les faux 0 (ex 2*10^-17) à 0.0
+               - modulo2pi, qui modifie le coeff voulu en sa valeur modulo 2 pi  
 
     Attributs:
 
@@ -34,46 +42,88 @@ Réponse P4.1:
 
 Réponse P4.2:
 
-    a] On peut ajouter un constructeur par coordonnées sphériques sans que cela ne change quoi que ce soit aux attributs.
-    b] ****aucune idée : des formules de conversion existent pour passer des coordonnées sphériques aux cartésiennes (pour garder des coordonnees cartesiennes en attributs). Cela implquerait seulement de rajouter un paramètre dans le constructeur, pour ne pas avoir deux constructeurs qui prennent comme arguments 3 'double'.
+    a] On peut ajouter un constructeur par coordonnées sphériques sans que cela ne change quoi que ce soit aux attributs : 
+       on peut garder les coordonnées cartésiennes en attribut si on fait la conversion dans le corps du constructeur.
+       Ainsi, il n'y aurait pas de problème d'interprétation.
+    b] Si l'on voulait un constructeur prenant deux angles et une longueur, cela engendrerait une confusion puisque les deux constructueurs prendraient comme arguments 3 'double'.
+       Pour régler ce problème, on pourrait ajouter un argument dans l'un des constructeurs, par exemple un booléen, qui permettrait de distinguer les deux cas.
 
 Réponse P4.3:
 
     Pour affiche(), on introduit l'opérateur externe : std::ostream& operator<<(std::ostream& sortie, Vecteur const& vecteur);
     Pour compare(), on introduit l'opérateur interne : bool Vecteur::operator==(Vecteur const& autre) const; //test d'egalite
 
-Réponse P6.1:
-    Une toupie en cone simple EST UNE toupie, donc la classe ConeSimple est une classe-enfant de la classe Toupie. Elle hérite ainsi de tous les attributs et méthodes de la classe-parente Toupie.
+    En plus de ces deux opérateurs, nous redéfinissons aussi les opérateurs ==, ~, *, /, +, -, ^, +=, -=, ^=, *=, /=
 
-Réponse P8.1: 
-    On souhaite que la methode dessine() ait un comportement polymorphique à deux paramètres: dans notre cas, qu'elle s'adapte en fonction du support à dessin et du type d'objet (double dispatch). On ne peut pas écrire une méthode dessine() commune à tous les dessinables.
-    Pour cela, dessine doit être une methode virtuelle pure.
+Réponse P6.1:
+    Une toupie en cone simple EST UNE toupie, donc la classe ConeSimple est une classe-enfant de la classe Toupie.
+    Elle hérite ainsi de tous les attributs et méthodes de la classe-parente Toupie.
+
+Réponse P7:
+
+    Notre classe intégrateur n'a pas d'attributs. Elle a une méthode publique  : 
+     - evolue(Toupie& , double) qui fait évoluer la toupie passée en argument pour le pas de temps voulu (passé en argument)
+     
+    [EDIT] Par la suite, nous implémentons une autre méthode : 
+     - evolue(Systeme& , double) qui fait évoluer tour à tour chaque toupie d'un systeme pour le pas de temps données
+        [EDIT] Finalement nous enlevons cette méthode, qui nous faisait faire du copié-collé pour chaque sous-classe d'intégrateur.
+               Nous la plaçons directement dans la classe Systeme, qui comporte maintenant un attribut de type pointeur sur un Integrateur.
+               Elle est donc de prototype void Systeme::evolue(double)
+
+Réponse P8.1:
+
+    On souhaite que la méthode dessine() ait un comportement polymorphique à deux paramètres: 
+    dans notre cas, qu'elle s'adapte en fonction du support à dessin et du type d'objet (double dispatch). 
+    On ne peut pas écrire une méthode dessine() commune à tous les dessinables.
+    Pour cela, dessine doit être une méthode virtuelle pure.
 
 Réponse P8.2: 
+
     La bonne façon de faire une collection hétérogène est de représenter les données dans un tableaux de pointeurs. 
     Ceci permettra d'utiliser le polymorphisme pour chaque élèment du tableau.
     Pour choisir le type de pointeurs, nous étudions les questions évoquées en cours :
+    
     - Qui est propriétaire des toupies ? Ce n'est pas le Syteme, les toupies doivent être gérées par la classe toupie.
-    - Les toupies sont-elles partagées ? Non. /////REPRENDRE/ COMPLETER*************************************
+    - Les toupies sont-elles partagées ? Non, elles sont 'personnelles'
+    - Les toupies sont uniques.
 
+    Ces choix nous portent donc vers l'utilisation unique_ptr.
 
-
-
-    Dans notre cas, l'avantage d'utiliser un tableaux de pointeurs de Toupie pour représenter un système est d'avoir, notamment, la bonne equation du mouvement pour chacune des toupies (car l'équation du mouvement est propre à chaque toupie car dépendant de la taille, masse, etc..).
+    Dans notre cas, l'avantage d'utiliser un tableaux de pointeurs de Toupie pour représenter un système est d'avoir,
+    notamment, la bonne equation du mouvement pour chacune des toupies (car l'équation du mouvement est propre à chaque toupie car dépendant de la taille, masse, etc..).
 
 Réponse P8.3: 
 
-    Les classes contenant des pointeurs vont devoir allouer de l'espace dynamiquement. Il faut donc faire attention à bien gérer cette mémoire dynamique (surtout la désallocation et la durée de vie de chaque pointeurs/objets pointés).
-    Pour cela, on peut redéfinir le destructeur de la classe. En revanche, on devra, très certainement, également redéfinir les constructeurs de copie et l'opérateur d'affcetion "=".
-    Pour éviter la problème de la gestion de mémoire, on peut aussi opter pour des unique_ptr (notre choix) qui désallouent automatiquement la mémoire et qui empêchent les problèmes liés au fait que plusieurs pointeurs pointent la même variable.
+    Les classes contenant des pointeurs vont devoir allouer de l'espace dynamiquement. 
+    Il faut donc faire attention à bien gérer cette mémoire dynamique (surtout la désallocation et la durée de vie de chaque pointeurs/objets pointés).
+    Pour cela, on peut redéfinir le destructeur de la classe. En revanche, on devra très certainement également redéfinir les constructeurs de copie
+    et l'opérateur d'affectation "=".
+    Pour éviter la problème de la gestion de mémoire, on peut aussi opter pour des unique_ptr (notre choix) qui désallouent automatiquement la mémoire
+    et qui empêchent les problèmes liés au fait que plusieurs pointeurs pointent la même variable.
+    Il nous faut donc seulement veiller à ce que les toupies aient une durée de vie aussi longue que le pointeur (qu'on ne les supprimme pas avant la 
+    suppression du pointeur).
 
+Réponse P8.4:
 
-Réponse P8.4: 
+    ATTRIBUTS : - tableaux de unique_ptr<Toupie> (raisons expliquées ci-dessus)
+                - pointeur sur un intégrateur (Integrateur étant classe abstraite, et nous devons garder l'info de la sous-classe à utiliser)
+    MÉTHODES  : - la méthode évolue citée en question 7
+                - divers accesseurs/modificateurs (pour chacun, nous avons choisi avec soin  leur statut privé/publique)
+                - des méthodes d'affichage, de dessin
 
-    Pour le moment : 
-    ATTRIBUTS: tableaux de unique_ptr<Intégrable> (raisons expliquées ci-dessus) //On choisit de prendre tous les intégrables afin d'élargir les possibilités et d'étendre le problème
+    Si nous avons le temps, une améioration possible serait de faire un tableau de pointeurs sur des integrables et non des toupies, pour plus de généricité.
+    Mais actuellement, les seuls intégrables que nous avons sont des toupies.
+    [EDIT] Nous avons malheureusement pas eu le temps d'implémenter cela.
 
 Réponse P10 :
 
     Concernant la classe contenu, nous choississons pour le moment de ne pas la garder : notre contenu est en fait la classe Dessinable préalablement crée. 
     
+Réponse P11 :
+
+    Nous implémentons les méthodes calculant les invariants dans la classe abstraite Toupie, en effet le calcul des invariants ne dépend pas de la géométrie de la toupie,
+    mais n'ont de sens que si l'on parle d'une toupie, d'où notre choix.
+
+Réponse P13 :
+
+    Dans notre projet, nous choisissons l'intégrateur au moment de construire un système : il n'y a donc aucun changement, nous avons seulement plus de choix.

@@ -43,11 +43,10 @@ class Systeme : public Dessinable {
    private :
     void test_numero(size_t i) const;                          // Teste si la toupie du numéro passé en argument existe
    public :
+    
     void evolue(const double dt);                              // Faire évoluer les toupies du système avec l'integrateur choisi
+    
     void ajoute_toupie(Toupie const& nouvelle);                // Ajout d'un nouvel élément au système
-    std::ostream& affiche_parametres(std::ostream& out) const; // Affiche l'ensemble des paramètres du système
-    std::ostream& affiche(std::ostream& out) const;            // Affichage plus succin
-    virtual void dessine() override;                           // Dessine selon le support
     std::unique_ptr<Toupie> getToupie(size_t i) const;         // Accesseur de l'élément i de 'objets'
     void setToupie(size_t i, Toupie const& autre);             // Setter de l'élement i de 'objets' 
     double getHauteur(size_t i) const;                         // Hauteur de l'élément i de 'objets' 
@@ -55,6 +54,10 @@ class Systeme : public Dessinable {
     size_t size() const;                                       // Nombre d'objets dans le système 
     void setSupport(SupportADessin* nouveau_support);          // Permet de modifier le support dans le constructeur de GLWidget
    
+    std::ostream& affiche_parametres(std::ostream& out) const; // Affiche l'ensemble des paramètres du système
+    std::ostream& affiche(std::ostream& out) const;            // Affichage plus succin
+    virtual void dessine() override;                           // Dessine selon le support
+    
 };
 
 std::ostream& operator<<(std::ostream& out, Systeme const& S);
