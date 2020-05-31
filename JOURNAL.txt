@@ -164,6 +164,7 @@ SEMAINE 13 :
 [V] Modifications de la conception................................3h
 [V] Finitions touipe roulante (toupie chinoise générale).........10h
 [V] Tests sur la vm...............................................2h
+[V] Implémentation de throw d'Erreurs un peu partout..............2h 
 
    À ce stade, tout fonctionne sur la vm de l'epfl, mais il nous
    reste quelques problèmes d'évolution de la toupie roulante,
