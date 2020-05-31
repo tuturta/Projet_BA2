@@ -27,7 +27,7 @@ int main() {
             IntegrateurEulerCromer integrateur_e;
             ConeSimple cone1({0.523599,0.0,0.0},{0.0,0.0,60.0},0.1,1.5,0.5,{0.0,0.0,0.0}, &ecran);
             ConeGeneral cone2({0.523599, 0.0,0.0}, {0,0.0,60.0} ,0.1, 1.5, 0.5, {0.0,0.0,0.0}, &ecran);
-            Systeme systeme(&ecran);
+            Systeme systeme(&integrateur_e,&ecran);
             systeme.ajoute_toupie(cone1);
             systeme.ajoute_toupie(cone2);
 

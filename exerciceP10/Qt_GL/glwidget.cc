@@ -4,7 +4,6 @@
 #include "glwidget.h"
 
 
-double t(0.0); // à enlever !!!
 // ======================================================================
 
 void GLWidget::initializeGL()
@@ -121,13 +120,8 @@ void GLWidget::keyPressEvent(QKeyEvent* event)
 void GLWidget::timerEvent(QTimerEvent* event)
 {
   Q_UNUSED(event);
-  double dt = chronometre.restart()/20000.0;
-  //double dt(0.01);
-    t += dt;
-  std::cout << "=====Temps: " << t << std::endl;
-  std::cout << contenu << std::endl;
+  double dt = chronometre.restart()/1000.0;
   contenu.evolue(dt);
-  std::cout << contenu << std::endl;
   //pause();
   update();
 }

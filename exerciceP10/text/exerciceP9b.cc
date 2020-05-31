@@ -77,9 +77,9 @@ int main() {
                                               &ecran);
 
             Systeme systeme(&integrateur_e, &ecran);
-            //systeme.ajoute_toupie(cone1);
+            systeme.ajoute_toupie(cone1);
             //systeme.ajoute_toupie(cone2);
-            systeme.ajoute_toupie(Toupiechinoise);
+            //systeme.ajoute_toupie(Toupiechinoise);
             //systeme.ajoute_toupie(ToupieChinoiseG);
             //systeme.ajoute_toupie(balancier);
             //systeme.ajoute_toupie(balancierG);

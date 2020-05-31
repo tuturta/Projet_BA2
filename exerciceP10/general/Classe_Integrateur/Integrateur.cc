@@ -9,14 +9,14 @@
 using namespace std;
 
 
-void IntegrateurEulerCromer::evolue(Toupie& T, const double dt) const {
+void IntegrateurEulerCromer::evolue(Integrable& T, const double dt) const {
         T.setP_point(T.getP_point() + dt*(T.fonction_f()));
         T.setP((T.getP() + dt*(T.getP_point())));
         T.ajoute_position_CM(); // ajoute cette nouvelle position du CM ds le vector nécessaire pour la trace
         T.update_A(); // mise à jour des coordonnées du point de contact
 }
 
-void IntegrateurNewmark::evolue(Toupie& T, const double dt) const {
+void IntegrateurNewmark::evolue(Integrable& T, const double dt) const {
         size_t dimension((T.getP()).dim());
         Vecteur q(dimension);
         Vecteur r(dimension);
@@ -40,7 +40,7 @@ void IntegrateurNewmark::evolue(Toupie& T, const double dt) const {
         T.update_A();
 }
 
-void IntegrateurRungeKutta::evolue(Toupie& T, const double dt) const {
+void IntegrateurRungeKutta::evolue(Integrable& T, const double dt) const {
 
         //Variables nécessaires :
         Vecteur P_temp(T.getP()); 

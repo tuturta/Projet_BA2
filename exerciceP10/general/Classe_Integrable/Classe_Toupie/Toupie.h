@@ -22,11 +22,9 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
 
    protected : 
     double masse_volumique_;
-    Vecteur point_de_contact_;          // Coordonnées du point de contact, actualisées à chaque évolution
     double hauteur_;                   // Hauteur du solide de révolution
     double rayon_;                     // Rayon de la base du cône / rayon de la sphère (tronquée)
     Couleur couleur_;
-    std::vector<Vecteur> positions_CM; // Coordonnées du CM depuis le début de la simulation, dans le repère absolu
 
    // MÉTHODE PRIVÉE :
 
@@ -37,7 +35,7 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
    public :
 
     Toupie (Vecteur const& P, Vecteur const& P_point, double masse_volumique, Vecteur const& point_de_contact, double hauteur, double rayon, Couleur const& couleur = blanc, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-        : Integrable(P, P_point, support), masse_volumique_(masse_volumique), point_de_contact_(point_de_contact), hauteur_(hauteur), rayon_(rayon), couleur_(couleur) {
+        : Integrable(P, P_point, point_de_contact, support), masse_volumique_(masse_volumique), hauteur_(hauteur), rayon_(rayon), couleur_(couleur) {
             if ((hauteur < 0.0) or (rayon < eps) or (masse_volumique < eps)) {
                 Erreur err = {"Votre objet doit avoir un sens physique!"};
                 throw err; 
@@ -51,7 +49,7 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     Matrice matrice_inertie_A() const;          // Applique le théorème d'Huygens-Steiner pour translater la matrice d'inertie du point G au point A (en restant dans le ref G)
     Vecteur moment_poids() const;               // Moment du poids au point A
     Vecteur LA() const;                         // Moment d'inertie au point A (ref G)
-    virtual Vecteur vecteurOG() const;                  // (ref O)
+    virtual Vecteur vecteurOG() const override;          // (ref O)
     
         
         // Invariants du mouvement: 
@@ -66,17 +64,13 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     virtual std::unique_ptr<Toupie> copie() const =0;           // Copie polymorphique
     virtual std::ostream& affiche(std::ostream& sortie) const;   // Affichage des angles, dérivées et G
     virtual void dessine() = 0;                                  // Dessin lié au support   
-    void update_A();                                             // Mise à jour du point de contact 
     Vecteur ref_G_to_O_point(Vecteur const& point)const override;// Changement de référentiel de G vers O
-    void ajoute_position_CM();                                   // Pour garder en mémoire les positions du centre de masse
-    std::vector<Vecteur> getPositions_CM() const;                // Accesseur des positions du centre de masse 
     double getHauteur() const;                                   // Accesseur pour la hauteur du cône/ hauteur tronquée des sphères tronquées   
     virtual double hauteur_toupie() const;                       // Renvoie la hauteur de la toupie depuis son point de contact
     double getRayon() const;                                     // Accesseur rayon du cône à sa base / sphère tronquée
     void setSupport(SupportADessin* nouveau_support);            // Permet de modifier le support dans le constructeur de GLWidget
     Couleur getColor() const;                                    // Renvoie la couleur de la toupie
-    void setPoint_de_contact(Vecteur const& autre);
-    Vecteur getPoint_de_contact() const;
+    
 
     // MÉTHODES QUI DÉPENDENT DE LA GÉOMÉTRIE DE LA TOUPIE (--> MÉTHODES VIRTUELLES):
 
@@ -171,28 +165,6 @@ class ConeSimple : public ConeGeneral {
 
 
 // =============================== TOUPIE ROULANTE ===================================
-// BUT : Retrouver une toupie chinoise avec une méthode plus générale
-
-
-/*class ToupieRoulante: public Toupie{
-
-    public:
-
-    ToupieChinoiseGenerale(Vecteur param, Vecteur D_param, double masse_volumique, double hauteur, double rayon, Vecteur const& origine = {0,0,0}, SupportADessin* support = new TextViewer(TextViewer(std::cout)))
-    :Toupie(param, D_param, masse_volumique, hauteur, rayon, origine, support){
-        P.augmente(0.0);
-        P.augmente(0.0);
-        P.augmente(0.0);
-
-        P_point.augmente(0.0); // Gx
-        P_point.augmente(vecteurGC().norme()*sin(P.coeff(1))); // Gy
-        P_point.augmente(getRayon()-vecteurGC().norme()*cos(P.coeff(1))); // Gz
-
-    } // On ajoute les paramètres de la position du centre de masse : ce n'est pas à l'utilisateur de le faire. /!\ N'est adapté que pour retrouver une toupie chinoise  
-
-
-
-};*/
 
 
 class ToupieChinoiseGenerale: public Toupie{

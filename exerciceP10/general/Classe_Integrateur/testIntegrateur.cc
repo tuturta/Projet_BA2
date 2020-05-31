@@ -3,8 +3,8 @@
 #include <fstream>
 #include "Integrateur.h" 
 #include "../Classe_Integrable/Integrable.h" //Pour getP(), setP(),...
-#include "../Classe_Integrable/Classe_Toupie/Toupie.h"
-#include "../Classe_Vecteur/Vecteur.h" //Besoin pour les <<
+#include "../Classe_Integrable/Classe_Toupie/Toupie.h" // Si jamais on veut tester avec des toupies
+#include "../Classe_Vecteur/Vecteur.h" // Besoin pour les affichages de vecteurs
 #include "../../text/text_viewer.h"
 #include "../erreurs.h"
 
@@ -21,8 +21,8 @@ int main () {
         //Gestion de l'erreur d'ouverture du fichier "test.txt"
     }else{
         try{
-            TextViewer ecran(cout);
-            Objet_en_chute_libre toupie({0.0,1.0,0.0},{1.0,2.0,0.0},2.1, 0.0, 0.0, {0.0,0.0,0.0}, blanc,&ecran);
+            TextViewer ecran(cout); // Mettre fichier à la place de cout si on veut écire dans test.txt
+            Objet_en_chute_libre toupie({0.0,1.0,0.0},{1.0,2.0,0.0}, {0.0,0.0,0.0},&ecran);
             IntegrateurEulerCromer integrateur_e;
             IntegrateurNewmark integrateur_n;
             IntegrateurRungeKutta integrateur_rk;

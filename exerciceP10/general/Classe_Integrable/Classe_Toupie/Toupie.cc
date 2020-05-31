@@ -26,33 +26,12 @@ double Toupie::getHauteur() const{ return hauteur_;} // Hauteur totale d'un côn
 double Toupie::getRayon() const{ return rayon_;}
 double Toupie::hauteur_toupie() const {return hauteur_;} // On redéfinira la méthode pour les toupies chinoises  
 
-
-
-void Toupie::ajoute_position_CM() {
-    positions_CM.push_back(vecteurOG());
-}
-
-std::vector<Vecteur> Toupie::getPositions_CM() const {
-    return positions_CM;
-}
 Vecteur Toupie::ref_G_to_O_point(Vecteur const& point) const {
     return (S().inv()*point + point_de_contact_ +ref_G_to_O(vecteurAG()));
 } 
 
-void Toupie::update_A() {
-    point_de_contact_ = vecteurOA();
-} 
-
 void Toupie::dessine() {
     support->dessine(*this);
-}
-
-Vecteur Toupie::getPoint_de_contact() const{
-    return point_de_contact_;
-}
-
-void Toupie::setPoint_de_contact(Vecteur const& v){
-    point_de_contact_=v;
 }
 
 std::ostream& Toupie::affiche(std::ostream& sortie) const {
@@ -183,7 +162,7 @@ Couleur Toupie::getColor() const {
 //METHODES:
 
 ostream& ConeSimple::affiche_parametres(ostream& out) const {
-    out << " [CONE SIMPLE] " << endl;
+    out << "[CONE SIMPLE] " << endl;
     Toupie::affiche_parametres(out);
     out << "Hauteur (m) : " << hauteur_ << endl;
     out << "Rayon   (m) : " << rayon_ << endl;
@@ -254,7 +233,7 @@ Vecteur ConeSimple::fonction_f() const{ //(Cf cadre rouge page 12) //avec P= psi
 
 //=============================CLASSE CONE GENERAL=======================================//
 ostream& ConeGeneral::affiche_parametres(ostream& out) const {
-    out << " [CONE GENERAL] " << endl;
+    out << "[CONE GENERAL] " << endl;
     Toupie::affiche_parametres(out);
     out << "Hauteur (m) : " << hauteur_ << endl;
     out << "Rayon   (m) : " << rayon_ << endl;
@@ -467,7 +446,7 @@ Vecteur ToupieChinoiseGenerale::vecteurOC() const{
 //=============================CLASSE TOUPIE CHINOISE===================================//
 
 ostream& ToupieChinoise::affiche_parametres(ostream& out) const {
-    out << " [TOUPIE CHINOISE] " << endl;
+    out << "[TOUPIE CHINOISE] " << endl;
     Toupie::affiche_parametres(out);
     out << "Centre C en : " << P_point.coeff(3) << " " << P_point.coeff(4) << " " << rayon_ <<  endl;
     out << "Hauteur tronquée (m) : " << hauteur_ << endl;

@@ -36,8 +36,8 @@ int main(int argc, char* argv[])
   ConeSimple coneTrace({0.0,0.4,0.0},      //P (psi-theta-phi)
                        {0.0,0.0,70.0},    //P_point
                        0.1,                //Masse volumique
-                       1.0,                //Hauteur
-                       0.45,                //Rayon
+                       2.0,                //Hauteur
+                       0.9,                //Rayon
                        {0.0,5.0,0.0},       //Origine
                        jaune);
 
@@ -79,16 +79,19 @@ int main(int argc, char* argv[])
                             violet);
 
 
-
+  /* /!\ On ne peut pas faire de système avec des objets en chute libre, ni les dessiner avec qt (pas d'intéret, il s'agissait
+  //     plus d'un premier test que d'un vrai élément du projet, de plus on peut voir le graphisme de la chute du point grâce
+  //     à gnuplot, comme expliqué dans le readme */
+  
   Systeme systeme1(&integrateur_n);
 
 
   //systeme1.ajoute_toupie(cone1);
   //systeme1.ajoute_toupie(cone1G);
-  //systeme1.ajoute_toupie(coneTrace);
+  systeme1.ajoute_toupie(coneTrace);
   //systeme1.ajoute_toupie(balancier);
   //systeme1.ajoute_toupie(balancierG);
-  systeme1.ajoute_toupie(flipflop);
+  //systeme1.ajoute_toupie(flipflop);
   //systeme1.ajoute_toupie(flipflopG);
 
 

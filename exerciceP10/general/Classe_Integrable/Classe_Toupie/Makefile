@@ -1,11 +1,20 @@
-CXX = g++
-CC = $(CXX)
-ADRESS =  ../Classe_Vecteur/
-CXXFLAGS = -std=c++11 -Wall
+XX = g++
+CXXFLAGS = -Wall -std=c++11 -pedantic -Wall
 
-all: testToupie
+NB_EXO = 9B
+SRC = testToupie.cc \
+	Toupie.cc \
+	../../Classe_Integrateur/Integrateur.cc \
+	../../../text/text_viewer.cc \
+	../../Classe_Systeme/Systeme.cc \
+	../Integrable.cc \
+	../../Classe_Matrice/Matrice.cc \
+	../../Classe_Vecteur/Vecteur.cc \
+	../../constantes.cc \
 
-testToupie : Toupie.o testToupie.o $(ADRESS)Vecteur.o
-testToupie.o: testToupie.cc Toupie.h $(ADRESS)Vecteur.h ../erreurs.h
-Toupie.o: Toupie.h $(ADRESS)Vecteur.h 
-Vecteur.o : $(ADRESS)Vecteur.cc $(ADRESS)Vecteur.h
+
+OBJ = $(SRC:.cc=.o)
+EXEC = testToupie
+
+$(EXEC): $(OBJ)
+	$(CXX) -o $@ $(OBJ) $(LBLIBS)
