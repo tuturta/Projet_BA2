@@ -1,8 +1,6 @@
 #ifndef SUPPORT_A_DESSIN_H
 #define SUPPORT_A_DESSIN_H
 
-#include <iostream>
-
 class ConeGeneral;
 class ConeSimple;
 class Objet_en_chute_libre;

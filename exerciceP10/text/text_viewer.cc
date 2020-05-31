@@ -1,4 +1,4 @@
-#include <iostream> // pour endl
+#include <iostream>
 #include "text_viewer.h"
 #include "../general/Classe_Integrable/Classe_Toupie/Toupie.h"
 #include "../general/Classe_Integrable/Integrable.h"

@@ -10,6 +10,9 @@
 #include "glsphere_tronquee.h"
 
 
+typedef std::array<double,3> RVBColor;
+
+
 class VueOpenGL : public SupportADessin {
  public:
  VueOpenGL(bool repere_inertie = false, bool trace = true, bool sol = true, bool repere_galileen = true)

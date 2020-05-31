@@ -1,9 +1,7 @@
 #define  _USE_MATH_DEFINES
 #include <cmath>
 #include "glcone.h"
-/********/
-#include <iostream>
-/********/
+
 
 void GLCone::initialize( double h, double r, GLuint slices, GLuint stacks)
 {

@@ -5,7 +5,6 @@
 #include "../general/Classe_Systeme/Systeme.h"
 #include "../general/Classe_Vecteur/Vecteur.h"
 #include <cmath>
-#include <iostream>
 #include <vector>
 
 // ======================================================================MATRICE DESSIN
@@ -65,7 +64,6 @@ void VueOpenGL::dessine(ConeGeneral const& a_dessiner)
 // ======================DESSINE(TOUPIE_CHINOISE)========================================
 void VueOpenGL::dessine(ToupieChinoiseGenerale const& a_dessiner)
 {
-  //std::cout << "vecteur OC: " << a_dessiner.vecteurOC() << std::endl;
   //On place le repère du dessin au centre de la sphère(point à partir duquel s'effectue le dessin)
   QMatrix4x4 matrice;
   matrice.setToIdentity();

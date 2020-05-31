@@ -14,6 +14,8 @@
 
 
 // =============================== TOUPIE ==================================
+enum Couleur {blanc, noir, rouge, jaune, bleu, vert, violet, orange};
+
 class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P est défini comme étant les angles d'Euler dans l'ordre (psi, theta, phi)
 
    // ATTRIBUTS PROTÉGÉS :
@@ -24,8 +26,11 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     double hauteur_;                   // Hauteur du solide de révolution
     double rayon_;                     // Rayon de la base du cône / rayon de la sphère (tronquée)
     Couleur couleur_;
-    double zi(size_t i) const;         // Donne la hauteur en fonction du découpage
     std::vector<Vecteur> positions_CM; // Coordonnées du CM depuis le début de la simulation, dans le repère absolu
+
+   // MÉTHODE PRIVÉE :
+
+    double zi(size_t i) const;         // Donne la hauteur en fonction du découpage
 
    // CONSTRUCTION - COPIE -DESTRUCTION
    
@@ -73,19 +78,19 @@ class Toupie : public Integrable {     // Dans Toupie, le vecteur paramètre P e
     void setPoint_de_contact(Vecteur const& autre);
     Vecteur getPoint_de_contact() const;
 
-    // METHODES QUI DEPEND DE LA GEOMETRIE DE LA TOUPIE (--> METHODES VIRTUELLES):
+    // MÉTHODES QUI DÉPENDENT DE LA GÉOMÉTRIE DE LA TOUPIE (--> MÉTHODES VIRTUELLES):
 
     virtual Matrice matrice_inertie_G() const;   // Matrice d'inertie en G (solide de révolution) (Ref G)
 
     virtual std::ostream& affiche_parametres(std::ostream& out) const override; // Affichage complet des paramètres d'une toupie
     
-    virtual double masse() const; // Masse d'un solide de révolution en fonction des rayons successifs + sa masse volumique  
-    virtual double distanceBG() const;     
-    virtual Vecteur vecteurAG() const =0;           // (Ref G)
-    virtual Vecteur vecteurOA() const =0;           // (Ref O)
-    virtual Vecteur fonction_f() const = 0; // Calcul des dérivées secondes (/!\ Toupie Roulante ? conique ? ou =0 ?) // Distance origine du solide de révolution - centre de masse
+    virtual double masse() const;            // Masse d'un solide de révolution en fonction des rayons successifs + sa masse volumique  
+    virtual double distanceBG() const;       // Distance 'origine de construction' du solide - centre de masse
+    virtual Vecteur vecteurAG() const =0;    // (Ref G)
+    virtual Vecteur vecteurOA() const =0;    // (Ref O)
+    virtual Vecteur fonction_f() const = 0;  // Calcul des dérivées secondes 
    private :
-    virtual double rayon2(size_t i) const=0; // Définit le solide de révolution : distance au carré à l'axe de révolution selon la hauteur zi. Doit être redéfini dans chaque classe --> A TRANSFORMER EN VIRTUELLE PURE
+    virtual double rayon2(size_t i) const=0; // Définit le solide de révolution : distance au carré à l'axe de révolution selon la hauteur zi. Doit être redéfini dans chaque classe
 
 };
 
@@ -301,7 +306,6 @@ class ToupieChinoise : public ToupieChinoiseGenerale{
     virtual Vecteur vecteurOG() const override;
 
    // AFFICHAGE - DESSIN :
-    virtual std::ostream& affiche(std::ostream& sortie) const override;
     virtual void dessine() override;
     virtual std::ostream& affiche_parametres(std::ostream& out) const override;
 

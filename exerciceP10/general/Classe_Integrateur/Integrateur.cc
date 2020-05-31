@@ -4,7 +4,6 @@
 #include "../Classe_Vecteur/Vecteur.h" // Pour les produits entre vecteurs
 #include "../constantes.h"
 
-#include <iostream>
 #include <memory>
 
 using namespace std;

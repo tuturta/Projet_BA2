@@ -51,6 +51,13 @@ SEMAINE 7 :
     chaque opération sur les matrices/vecteurs qui retourneraient éventuellement 
     ce genre de valeurs, au moyen d'une nouvelle constante 'eps' valant 10e-8.  
 
+    Nous ajoutons une classe Integrable, classe mère de Toupie, dans un but de 
+    généricité: par exemple, l'objet en chute libre étudié au cours du projet 
+    n'est pas une toupie, nous pourrions donc le dissocier de la classe toupie.
+    La classe Integrable regrouperait toutes les entités physiques pouvant évoluer
+    dans le temps : elle ont en commun les vecteurs des dégrés de liberté et leurs
+    dérivées, ainsi que des méthodes concernnt l'évolution.
+
 SEMAINE 8 :
 
  [V] Mise en place de l'architecture de l'exercice P10 pour Qt.......2h

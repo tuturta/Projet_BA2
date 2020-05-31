@@ -446,7 +446,6 @@ void ToupieChinoiseGenerale::dessine() {
 } 
 
 std::ostream& ToupieChinoiseGenerale::affiche(std::ostream& sortie) const {
-    sortie << "[TOUPIE CHINOISE GÉNÉRALE]" << endl;
     Toupie::affiche(sortie);
     sortie << "C : (" << P_point.coeff(3) << ", " << P_point.coeff(4) << ", " << rayon_ << ")" << endl;
     return sortie;
@@ -475,13 +474,6 @@ ostream& ToupieChinoise::affiche_parametres(ostream& out) const {
     out << "Rayon (m) : " << rayon_ << endl;
     out << "Point de contact (A) : " << point_de_contact_ << endl;
     return out;
-}
-
-std::ostream& ToupieChinoise::affiche(std::ostream& sortie) const {
-    //sortie << "[TOUPIE CHINOISE]" << endl;
-    Toupie::affiche(sortie);
-    sortie << "C : (" << P_point.coeff(3) << ", " << P_point.coeff(4) << ", " << rayon_ << ")" << endl << endl;
-    return sortie;
 }
 
 void ToupieChinoise::dessine() {

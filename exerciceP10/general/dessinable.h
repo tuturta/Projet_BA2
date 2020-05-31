@@ -2,12 +2,6 @@
 #define DESSINABLE_H
 
 #include "erreurs.h"
-#include <array>
-#include <iostream>
-
-
-enum Couleur {blanc, noir, rouge, jaune, bleu, vert, violet, orange};
-typedef std::array<double,3> RVBColor;
 
 class SupportADessin;
 
